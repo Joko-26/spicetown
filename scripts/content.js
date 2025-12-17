@@ -58,13 +58,17 @@ function applySettingsSync() {
     if (value !== undefined) {
       const screenshareModeCheckbox = document.getElementById('screenshare_mode');
       if (!screenshareModeCheckbox) return;
-      
+
       screenshareModeCheckbox.checked = value;
     }
   })
 }
 
 function applyUISync() {
+  function initializeCensor(el) {el.classList.add("api-key-display-secure"); el.classList.add("api-key-display-censored"); el.textContent = "";}
+  function applyCensor(el) {el.classList.add("api-key-display-censored"); el.classList.remove("api-key-display-visible"); el.textContent = "";}
+  function removeCensor(el, text) {el.classList.remove("api-key-display-censored"); el.classList.add("api-key-display-visible"); el.textContent = text;}
+
   chrome.storage.local.get(['screenshareMode'], function(result) {
     let value = result.screenshareMode;
     if (value !== undefined && value) {
@@ -74,8 +78,7 @@ function applyUISync() {
       let censored = true;
       let apiKey = apiKeyDisplay.textContent;
 
-      apiKeyDisplay.classList.add("api-key-display-secure");
-      apiKeyDisplay.classList.add("api-key-display-censored");
+      initializeCensor(apiKeyDisplay);
       apiKeyDisplay.textContent = "";
 
       apiKeyDisplay.addEventListener('mouseleave', (e) => {
@@ -85,14 +88,10 @@ function applyUISync() {
       apiKeyDisplay.addEventListener('mouseup', () => {
         if (censored) {
           censored = false;
-          apiKeyDisplay.classList.remove("api-key-display-censored");
-          apiKeyDisplay.classList.add("api-key-display-visible");
-          apiKeyDisplay.textContent = apiKey;
+          applyCensor(apiKeyDisplay)
         } else {
           censored = true;
-          apiKeyDisplay.classList.remove("api-key-display-visible");
-          apiKeyDisplay.classList.add("api-key-display-censored");
-          apiKeyDisplay.textContent = "";
+          removeCensor(apiKeyDisplay, apiKey)
         }
       }, true);
     }
