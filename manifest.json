@@ -19,15 +19,9 @@
   "content_scripts": [
     {
       "js": ["scripts/content.js"],
-      "matches": [
-        "https://flavortown.hackclub.com/*"
-      ]
-    },
-    {
       "css": ["scripts/content.css"],
-      "matches": [
-        "https://flavortown.hackclub.com/*"
-      ]
+      "matches": ["https://flavortown.hackclub.com/*"],
+      "run_at": "document_idle"
     }
   ],
   "background": {

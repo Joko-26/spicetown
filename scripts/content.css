@@ -29,3 +29,23 @@
 .dropdown__menu--open {
   visibility: visible;
 }
+
+.theming-menu__btn {
+  background-color: var(--color-brown-500);
+  font-size: 1.1rem;
+  padding: .3rem .7rem;
+  border: 2px solid var(--color-brown-700);
+  border-radius: 5px;
+  color: var(--color-bg);
+  cursor: pointer;
+  width: 100%;
+}
+
+.settings-form > .modal__actions {
+  flex-wrap: wrap;
+}
+
+.settings-form > .modal__actions > input {
+  flex: 1 0 50%;
+  margin: 0;
+}

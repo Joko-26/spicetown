@@ -18,9 +18,9 @@ function initialize() {
   addBannerTemplateHint();
 }
 
-function addSpicetownSettings() {
-  const settingsForm = document.querySelector(".settings-form");
-  const modalActions = settingsForm.querySelector(".modal__actions");
+async function addSpicetownSettings() {
+  const settingsForm = await document.querySelector(".settings-form");
+  const modalActions = await settingsForm.querySelector(".modal__actions");
   const saveBtn = modalActions.querySelector(".modal__actions-close");
 
   if (!settingsForm || !modalActions || !saveBtn) return;
@@ -50,6 +50,13 @@ function addSpicetownSettings() {
   screenshareModeDiv.appendChild(screenshareModeHint);
 
   settingsForm.insertBefore(screenshareModeDiv, modalActions);
+
+  // theming menu
+  const themingMenuBtn = document.createElement("button");
+  themingMenuBtn.classList.add("theming-menu__btn");
+  themingMenuBtn.textContent = "Themes"
+
+  settingsForm.insertBefore(themingMenuBtn, modalActions);
 
   saveBtn.addEventListener("click", function() {
     saveSetting(screenshareModeBoxInput.checked);
