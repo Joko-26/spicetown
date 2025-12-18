@@ -136,48 +136,15 @@ async function addSpicetownSettings() {
     themesNavIcon.setAttribute("width", "24");
     themesNavIcon.setAttribute("height", "24");
     themesNavIcon.setAttribute("viewBox", "0 0 24 24");
-    themesNavIcon.setAttribute("stroke", "currentColor");
-    themesNavIcon.setAttribute("stroke-width", "2");
-    themesNavIcon.setAttribute("stroke-linecap", "round");
-    themesNavIcon.setAttribute("stroke-linejoin", "round")
     themesNavIcon.classList.add("sidebar__nav-icon");
     themesNavIconSpan.appendChild(themesNavIcon);
 
-    const themesNavIconG = document.createElementNS("http://www.w3.org/2000/svg", "g");
-    themesNavIconG.setAttribute("fill", "currentColor");
-    themesNavIcon.appendChild(themesNavIconG);
-
     const themesNavIconPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
-    themesNavIconPath.setAttribute("d", "M12 22a1 1 0 0 1 0-20 10 9 0 0 1 10 9 5 5 0 0 1-5 5h-2.25a1.75 1.75 0 0 0-1.4 2.8l.3.4a1.75 1.75 0 0 1-1.4 2.8z");
-    themesNavIconG.appendChild(themesNavIconPath);
-
-    const themesNavIconCircle1 = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-    themesNavIconCircle1.setAttribute("cx", "13.5");
-    themesNavIconCircle1.setAttribute("cy", "6.5");
-    themesNavIconCircle1.setAttribute("r", ".5");
-    themesNavIconCircle1.setAttribute("fill", "none");
-    themesNavIconG.appendChild(themesNavIconCircle1);
-
-    const themesNavIconCircle2 = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-    themesNavIconCircle2.setAttribute("cx", "17.5");
-    themesNavIconCircle2.setAttribute("cy", "10.5");
-    themesNavIconCircle2.setAttribute("r", ".5");
-    themesNavIconCircle2.setAttribute("fill", "none");
-    themesNavIconG.appendChild(themesNavIconCircle2);
-
-    const themesNavIconCircle3 = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-    themesNavIconCircle3.setAttribute("cx", "6.5");
-    themesNavIconCircle3.setAttribute("cy", "12.5");
-    themesNavIconCircle3.setAttribute("r", ".5");
-    themesNavIconCircle3.setAttribute("fill", "none");
-    themesNavIconG.appendChild(themesNavIconCircle3);
-
-    const themesNavIconCircle4 = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-    themesNavIconCircle4.setAttribute("cx", "8.5");
-    themesNavIconCircle4.setAttribute("cy", "7.5");
-    themesNavIconCircle4.setAttribute("r", ".5");
-    themesNavIconCircle4.setAttribute("fill", "none");
-    themesNavIconG.appendChild(themesNavIconCircle4);
+    themesNavIconPath.setAttribute("d", "M10.8468 21.9342C5.86713 21.3624 2 17.1328 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.1565 18.7173 16.7325 15.9135 16.3703C14.2964 16.1614 12.8386 15.9731 12.2619 16.888C11.8674 17.5136 12.2938 18.2938 12.8168 18.8168C13.4703 19.4703 13.4703 20.5297 12.8168 21.1832C12.2938 21.7062 11.5816 22.0186 10.8468 21.9342ZM11.085 6.99976C11.085 7.82818 10.4134 8.49976 9.585 8.49976C8.75658 8.49976 8.085 7.82818 8.085 6.99976C8.085 6.17133 8.75658 5.49976 9.585 5.49976C10.4134 5.49976 11.085 6.17133 11.085 6.99976ZM6.5 13C7.32843 13 8 12.3284 8 11.5C8 10.6716 7.32843 9.99998 6.5 9.99998C5.67157 9.99998 5 10.6716 5 11.5C5 12.3284 5.67157 13 6.5 13ZM17.5 13C18.3284 13 19 12.3284 19 11.5C19 10.6716 18.3284 9.99998 17.5 9.99998C16.6716 9.99998 16 10.6716 16 11.5C16 12.3284 16.6716 13 17.5 13ZM14.5 8.49998C15.3284 8.49998 16 7.82841 16 6.99998C16 6.17156 15.3284 5.49998 14.5 5.49998C13.6716 5.49998 13 6.17156 13 6.99998C13 7.82841 13.6716 8.49998 14.5 8.49998Z");
+    themesNavIconPath.setAttribute("fill", "currentColor");
+    themesNavIconPath.setAttribute("fill-rule", "evenodd");
+    themesNavIconPath.setAttribute("clip-rule", "evenodd");
+    themesNavIcon.appendChild(themesNavIconPath);
 
     const themesNavLabel = document.createElement("span");
     themesNavLabel.classList.add("sidebar__nav-label");
