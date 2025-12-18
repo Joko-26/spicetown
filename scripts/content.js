@@ -9,9 +9,13 @@ function initialize() {
     topCollabDiv.insertAdjacentElement("afterend", spicetownIcon);
   }
 
+  // settings related
   addSpicetownSettings(); // must go BEFORE applySettingsSync()
   applySettingsSync();
   applyUISync();
+
+  // non settings related
+  addBannerTemplateHint();
 }
 
 function addSpicetownSettings() {
@@ -21,6 +25,7 @@ function addSpicetownSettings() {
 
   if (!settingsForm || !modalActions || !saveBtn) return;
 
+  // screenshare mode
   const screenshareModeDiv = document.createElement("div");
   screenshareModeDiv.classList.add("settings-form__field");
 
@@ -49,6 +54,23 @@ function addSpicetownSettings() {
   saveBtn.addEventListener("click", function() {
     saveSetting(screenshareModeBoxInput.checked);
   });
+}
+
+function addBannerTemplateHint() {
+  const bannerInputDiv = document.querySelector(".input.file-upload.input--green");
+  const bannerInputSubtitle = bannerInputDiv.querySelector(".input__subtitle");
+
+  if (!bannerInputDiv || !bannerInputSubtitle) return;
+  bannerInputSubtitle.textContent += " ";
+
+  const bannerTemplateFileUrl = chrome.runtime.getURL("/download/banner-template.png")
+
+  const bannerTemplateDownloadHint = document.createElement("a");
+  bannerTemplateDownloadHint.textContent = "Download the banner template.";
+  bannerTemplateDownloadHint.href = bannerTemplateFileUrl;
+  bannerTemplateDownloadHint.target = "_blank";
+
+  bannerInputSubtitle.appendChild(bannerTemplateDownloadHint);
 }
 
 function saveSetting(value) {

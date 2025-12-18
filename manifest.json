@@ -10,7 +10,8 @@
     "128": "images/icon-128.png"
   },
   "permissions": [
-    "storage"
+    "storage",
+    "downloads"
   ],
   "action": {
     "default_popup": "popup/popup.html"
@@ -29,10 +30,14 @@
       ]
     }
   ],
+  "background": {
+    "service_worker": "scripts/background.js",
+    "type": "module"
+  },
   "web_accessible_resources": [
     {
-      "resources": ["images/hc-gh&st-collab.png"],
-      "matches": ["https://flavortown.hackclub.com/*"]
+      "resources": ["images/*.png", "download/*.png"],
+      "matches": ["<all_urls>"] 
     }
   ]
 }
