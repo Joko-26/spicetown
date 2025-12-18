@@ -61,6 +61,7 @@ function addBannerTemplateHint() {
   const bannerInputSubtitle = bannerInputDiv.querySelector(".input__subtitle");
 
   if (!bannerInputDiv || !bannerInputSubtitle) return;
+
   bannerInputSubtitle.textContent += " ";
 
   const bannerTemplateFileUrl = chrome.runtime.getURL("/download/banner-template.png")
@@ -87,51 +88,66 @@ function applySettingsSync() {
     if (value !== undefined && value) {
       // apiKeyDisplay blurring change
       const apiKeyDisplay = document.querySelector(".api-key-display");
-      if (!apiKeyDisplay) return;
 
-      let censoredA = true;
-      let apiKey = apiKeyDisplay.textContent;
+      if (apiKeyDisplay) {
+        let censoredA = true;
+        const apiKey = apiKeyDisplay.textContent;
 
-      initializeCensor(apiKeyDisplay);
+        initializeCensor(apiKeyDisplay);
 
-      apiKeyDisplay.addEventListener('mouseleave', (e) => {
-        e.stopImmediatePropagation();
-      }, true);
+        apiKeyDisplay.addEventListener('mouseleave', (e) => {
+          e.stopImmediatePropagation();
+        }, true);
 
-      apiKeyDisplay.addEventListener('mouseup', () => {
-        if (censoredA) {
-          censoredA = false;
-          removeCensor(apiKeyDisplay, apiKey);
-        } else {
-          censoredA = true;
-          applyCensor(apiKeyDisplay);
-        }
-      }, true);
+        apiKeyDisplay.addEventListener('mouseup', () => {
+          if (censoredA) {
+            censoredA = false;
+            removeCensor(apiKeyDisplay, apiKey);
+          } else {
+            censoredA = true;
+            applyCensor(apiKeyDisplay);
+          }
+        }, true);
+      }
 
       // homeAddress blurring change
       const homeAddressDisplay = document.querySelector(".my-orders__header-value.my-orders__blurred-when-inactive");
-      if (!homeAddressDisplay) return;
 
-      let censoredH = true;
-      let homeAddress = homeAddressDisplay.textContent;
+      if (homeAddressDisplay) {
+        let censoredH = true;
+        const homeAddress = homeAddressDisplay.textContent;
 
-      initializeCensor(homeAddressDisplay);
-      homeAddressDisplay.textContent = str_rand(homeAddress.length);
-      
-      homeAddressDisplay.addEventListener('mouseleave', (e) => {
-        e.stopImmediatePropagation();
-      }, true);
+        initializeCensor(homeAddressDisplay);
+        homeAddressDisplay.textContent = str_rand(homeAddress.length);
+        
+        homeAddressDisplay.addEventListener('mouseleave', (e) => {
+          e.stopImmediatePropagation();
+        }, true);
 
-      homeAddressDisplay.addEventListener('mouseup', () => {
-        if (censoredH) {
-          censoredH = false;
-          removeCensor(homeAddressDisplay, homeAddress);
-        } else {
-          censoredH = true;
-          applyCensor(homeAddressDisplay);
-          homeAddressDisplay.textContent = str_rand(homeAddress.length);
-        }
-      }, true)
+        homeAddressDisplay.addEventListener('mouseup', () => {
+          if (censoredH) {
+            censoredH = false;
+            removeCensor(homeAddressDisplay, homeAddress);
+          } else {
+            censoredH = true;
+            applyCensor(homeAddressDisplay);
+            homeAddressDisplay.textContent = str_rand(homeAddress.length);
+          }
+        }, true);
+      }
+
+      // shipping address black out
+      const shippingAddressText = document.querySelector(".dropdown__char-span");
+
+      if (shippingAddressText) {
+        let censoredS = true;
+        const shippingAddress = shippingAddressText.textContent;
+
+        document.querySelector(".dropdown__menu").classList.add("dropdown__menu-secure")
+
+        initializeCensor(shippingAddressText);
+        shippingAddressText.textContent = str_rand(shippingAddress.length);
+      }
     }
   })
 }
