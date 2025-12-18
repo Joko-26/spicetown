@@ -85,28 +85,53 @@ function applySettingsSync() {
   chrome.storage.local.get(['screenshareMode'], function(result) {
     let value = result.screenshareMode;
     if (value !== undefined && value) {
+      // apiKeyDisplay blurring change
       const apiKeyDisplay = document.querySelector(".api-key-display");
       if (!apiKeyDisplay) return;
 
-      let censored = true;
+      let censoredA = true;
       let apiKey = apiKeyDisplay.textContent;
 
       initializeCensor(apiKeyDisplay);
-      apiKeyDisplay.textContent = "";
 
       apiKeyDisplay.addEventListener('mouseleave', (e) => {
         e.stopImmediatePropagation();
       }, true);
 
       apiKeyDisplay.addEventListener('mouseup', () => {
-        if (censored) {
-          censored = false;
-          removeCensor(apiKeyDisplay, apiKey)
+        if (censoredA) {
+          censoredA = false;
+          removeCensor(apiKeyDisplay, apiKey);
         } else {
-          censored = true;
-          applyCensor(apiKeyDisplay)
+          censoredA = true;
+          applyCensor(apiKeyDisplay);
         }
       }, true);
+
+      // homeAddress blurring change
+      const homeAddressDisplay = document.querySelector(".my-orders__header-value.my-orders__blurred-when-inactive");
+      if (!homeAddressDisplay) return;
+
+      let censoredH = true;
+      let homeAddress = homeAddressDisplay.textContent;
+
+      initializeCensor(homeAddressDisplay);
+      homeAddressDisplay.textContent = str_rand(homeAddress.length);
+      
+      homeAddressDisplay.addEventListener('mouseleave', (e) => {
+        e.stopImmediatePropagation();
+      }, true);
+
+      homeAddressDisplay.addEventListener('mouseup', () => {
+        if (censoredH) {
+          censoredH = false;
+          removeCensor(homeAddressDisplay, homeAddress);
+        } else {
+          censoredH = true;
+          applyCensor(homeAddressDisplay);
+          homeAddressDisplay.textContent = str_rand(homeAddress.length);
+        }
+      }, true)
     }
   })
 }
@@ -121,6 +146,17 @@ function applyUISync() {
       screenshareModeCheckbox.checked = value;
     }
   })
+}
+
+function str_rand(length) {
+    let result = '';
+    const characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
+
+    for (let i = 0; i < length; i++) {
+        const randomInd = Math.floor(Math.random() * characters.length);
+        result += characters.charAt(randomInd);
+    }
+    return result;
 }
 
 initialize();
