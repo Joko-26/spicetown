@@ -24,6 +24,7 @@ function initialize() {
   // non settings related
   addImprovedUI();
   addExtraProjectInfo();
+  addAchievementInfo();
   addThemesPage();
   addBannerTemplateHint();
 }
@@ -45,53 +46,83 @@ function addImprovedUI() {
 
 function addExtraProjectInfo() {
   const projectFullPageCard = document.querySelector(".project-show-card");
-  if (projectFullPageCard) {
-    const projectFullPageInfoCard = projectFullPageCard.querySelector(".project-show-card__content.project-card__content");
-    const devlogs = projectFullPageInfoCard.querySelector(".project-show-card__stats").firstElementChild.querySelector("span").textContent.match(/\d+/g).join('');
-    const timeRaw = projectFullPageInfoCard.querySelector(".project-show-card__stats .project-show-card__stat:nth-child(2)").querySelector("span").textContent.match(/\d+/g).join(' ');
-    const timeParts = timeRaw.split(" ");
-    const timeMins = Number(timeParts[0]) * 60 + Number(timeParts[1]);
-    const hoursPerDevlog = timeMins / devlogs;
-    // const devlogsPerHr = 
-    const projectExtraInfoDiv = document.createElement("div");
-    projectExtraInfoDiv.classList.add("project-extra-info__div");
-    projectFullPageInfoCard.insertBefore(projectExtraInfoDiv, projectFullPageCard.querySelector(".project-show-card__description"));
-    const projectDevlogsPerHrDiv = document.createElement("div");
-    projectDevlogsPerHrDiv.classList.add("project-extra-info__container");
-    projectDevlogsPerHrDiv.innerHTML = `
-      <svg width="32" height="32" viewBox="0 0 512 512" fill="currentColor" xmlns="http://www.w3.org/2000/svg" style="color: var(--color-tan-400)">
-        <g clip-path="url(#clip0_21_12)">
-          <path d="M190.5 381C295.683 381 381 295.683 381 190.5C381 85.3166 295.683 0 190.5 0C85.3166 0 0 85.3166 0 190.5C0 295.683 85.3166 381 190.5 381ZM176.892 81.643C176.892 74.1588 183.016 68.0355 190.5 68.0355C197.984 68.0355 204.108 74.1588 204.108 81.643V183.969L267.041 234.315C272.892 239.01 273.844 247.582 269.149 253.433C267.879 255.028 266.265 256.316 264.427 257.199C262.589 258.083 260.575 258.54 258.536 258.536C255.542 258.536 252.548 257.583 250.031 255.542L181.996 201.114C178.798 198.528 176.894 194.651 176.894 190.5L176.892 81.643Z" fill="currentColor"/>
-          <path d="M504.005 368.521L462.996 326.967C458.004 322.017 451.004 319.054 443.009 319.054H383.992C368.997 318.06 356 330.924 356 345.766V484.294C355.994 487.935 356.714 491.542 358.119 494.907C359.524 498.271 361.586 501.329 364.188 503.903C366.79 506.477 369.879 508.517 373.279 509.907C376.679 511.296 380.323 512.008 384.002 512H483.998C487.677 512.008 491.321 511.296 494.721 509.907C498.121 508.517 501.21 506.477 503.812 503.903C506.414 501.329 508.476 498.271 509.881 494.907C511.286 491.542 512.006 487.935 512 484.294V387.329C512 380.4 508.997 373.471 504.005 368.521ZM403.999 397.221H434C437.997 397.221 441.995 400.193 441.995 405.134C441.995 410.084 439.002 413.047 434 413.047H403.999C402.946 413.06 401.9 412.864 400.924 412.471C399.948 412.078 399.062 411.495 398.317 410.758C397.572 410.021 396.983 409.143 396.586 408.177C396.189 407.211 395.991 406.176 396.004 405.134C396.004 400.183 400.002 397.221 403.999 397.221ZM464.001 452.632H403.999C400.002 452.632 396.004 449.66 396.004 444.719C396.004 439.778 398.998 436.806 403.999 436.806H464.001C467.998 436.806 471.996 439.768 471.996 444.719C471.996 449.669 467.998 452.632 464.001 452.632Z" fill="currentColor"/>
-        </g>
-        <defs>
-          <clipPath id="clip0_21_12">
-            <rect width="512" height="512" fill="white"/>
-          </clipPath>
-        </defs>
-      </svg>
-      <p>${Math.round(hoursPerDevlog)} minutes / devlog <span class="project-devlogs-hr__span" id="devlogs-per-hr-span">(?)</span></p>
-    `
-    projectExtraInfoDiv.appendChild(projectDevlogsPerHrDiv);
-    const devlogsPerHrSpan = document.getElementById("devlogs-per-hr-span");
-    if (!devlogsPerHrSpan) return;
-    if (hoursPerDevlog > 150) {
-      devlogsPerHrSpan.textContent = "(Awful)";
-      devlogsPerHrSpan.classList.add("project-devlogs-hr__span--awful");
-    } else if (hoursPerDevlog > 120) {
-      devlogsPerHrSpan.textContent = "(Bad)";
-      devlogsPerHrSpan.classList.add("project-devlogs-hr__span--bad");
-    } else if (hoursPerDevlog >= 40 && hoursPerDevlog <= 80) {
-      devlogsPerHrSpan.textContent = "(Great)";
-      devlogsPerHrSpan.classList.add("project-devlogs-hr__span--great");
-    } else if (hoursPerDevlog >= 20 && hoursPerDevlog <= 100) {
-      devlogsPerHrSpan.textContent = "(Good)";
-      devlogsPerHrSpan.classList.add("project-devlogs-hr__span--good");
-    } else {
-      devlogsPerHrSpan.textContent = "(Okay)";
-      devlogsPerHrSpan.classList.add("project-devlogs-hr__span--okay");
-    }
+  if (!projectFullPageCard) return;
+  const projectFullPageInfoCard = projectFullPageCard.querySelector(".project-show-card__content.project-card__content");
+  const devlogs = projectFullPageInfoCard.querySelector(".project-show-card__stats").firstElementChild.querySelector("span").textContent.match(/\d+/g).join('');
+  const timeRaw = projectFullPageInfoCard.querySelector(".project-show-card__stats .project-show-card__stat:nth-child(2)").querySelector("span").textContent.match(/\d+/g).join(' ');
+  const timeParts = timeRaw.split(" ");
+  const timeMins = Number(timeParts[0]) * 60 + Number(timeParts[1]);
+  const hoursPerDevlog = timeMins / devlogs;
+  // const devlogsPerHr = 
+  const projectExtraInfoDiv = document.createElement("div");
+  projectExtraInfoDiv.classList.add("project-extra-info__div");
+  projectFullPageInfoCard.insertBefore(projectExtraInfoDiv, projectFullPageCard.querySelector(".project-show-card__description"));
+  const projectDevlogsPerHrDiv = document.createElement("div");
+  projectDevlogsPerHrDiv.classList.add("project-extra-info__container");
+  projectDevlogsPerHrDiv.innerHTML = `
+    <svg width="32" height="32" viewBox="0 0 512 512" fill="currentColor" xmlns="http://www.w3.org/2000/svg" style="color: var(--color-tan-400)">
+      <g clip-path="url(#clip0_21_12)">
+        <path d="M190.5 381C295.683 381 381 295.683 381 190.5C381 85.3166 295.683 0 190.5 0C85.3166 0 0 85.3166 0 190.5C0 295.683 85.3166 381 190.5 381ZM176.892 81.643C176.892 74.1588 183.016 68.0355 190.5 68.0355C197.984 68.0355 204.108 74.1588 204.108 81.643V183.969L267.041 234.315C272.892 239.01 273.844 247.582 269.149 253.433C267.879 255.028 266.265 256.316 264.427 257.199C262.589 258.083 260.575 258.54 258.536 258.536C255.542 258.536 252.548 257.583 250.031 255.542L181.996 201.114C178.798 198.528 176.894 194.651 176.894 190.5L176.892 81.643Z" fill="currentColor"/>
+        <path d="M504.005 368.521L462.996 326.967C458.004 322.017 451.004 319.054 443.009 319.054H383.992C368.997 318.06 356 330.924 356 345.766V484.294C355.994 487.935 356.714 491.542 358.119 494.907C359.524 498.271 361.586 501.329 364.188 503.903C366.79 506.477 369.879 508.517 373.279 509.907C376.679 511.296 380.323 512.008 384.002 512H483.998C487.677 512.008 491.321 511.296 494.721 509.907C498.121 508.517 501.21 506.477 503.812 503.903C506.414 501.329 508.476 498.271 509.881 494.907C511.286 491.542 512.006 487.935 512 484.294V387.329C512 380.4 508.997 373.471 504.005 368.521ZM403.999 397.221H434C437.997 397.221 441.995 400.193 441.995 405.134C441.995 410.084 439.002 413.047 434 413.047H403.999C402.946 413.06 401.9 412.864 400.924 412.471C399.948 412.078 399.062 411.495 398.317 410.758C397.572 410.021 396.983 409.143 396.586 408.177C396.189 407.211 395.991 406.176 396.004 405.134C396.004 400.183 400.002 397.221 403.999 397.221ZM464.001 452.632H403.999C400.002 452.632 396.004 449.66 396.004 444.719C396.004 439.778 398.998 436.806 403.999 436.806H464.001C467.998 436.806 471.996 439.768 471.996 444.719C471.996 449.669 467.998 452.632 464.001 452.632Z" fill="currentColor"/>
+      </g>
+      <defs>
+        <clipPath id="clip0_21_12">
+          <rect width="512" height="512" fill="white"/>
+        </clipPath>
+      </defs>
+    </svg>
+    <p>${Math.round(hoursPerDevlog)} minutes / devlog <span class="project-devlogs-hr__span" id="devlogs-per-hr-span">(?)</span></p>
+  `
+  projectExtraInfoDiv.appendChild(projectDevlogsPerHrDiv);
+  const devlogsPerHrSpan = document.getElementById("devlogs-per-hr-span");
+  if (!devlogsPerHrSpan) return;
+  if (hoursPerDevlog > 150) {
+    devlogsPerHrSpan.textContent = "(Awful)";
+    devlogsPerHrSpan.classList.add("project-devlogs-hr__span--awful");
+  } else if (hoursPerDevlog > 120) {
+    devlogsPerHrSpan.textContent = "(Bad)";
+    devlogsPerHrSpan.classList.add("project-devlogs-hr__span--bad");
+  } else if (hoursPerDevlog >= 40 && hoursPerDevlog <= 80) {
+    devlogsPerHrSpan.textContent = "(Great)";
+    devlogsPerHrSpan.classList.add("project-devlogs-hr__span--great");
+  } else if (hoursPerDevlog >= 20 && hoursPerDevlog <= 100) {
+    devlogsPerHrSpan.textContent = "(Good)";
+    devlogsPerHrSpan.classList.add("project-devlogs-hr__span--good");
+  } else {
+    devlogsPerHrSpan.textContent = "(Okay)";
+    devlogsPerHrSpan.classList.add("project-devlogs-hr__span--okay");
   }
+}
+
+function addAchievementInfo() {
+  const achievementGridDiv = document.querySelector(".achievements__grid");
+  if (!achievementGridDiv) return;
+  const achievementMap = {
+    "Anyone Can Cook!": "Sign up to Flavortown",
+    "Very Fried": "Verify your identity",
+    "Home Cookin'": "Make your first project",
+    "Recipe Notes": "Post a devlog",
+    "Yapper": "Comment on a devlog",
+    "Off the Menu": "Buy something from the shop (cannot be free stickers)",
+    "Regular Customer": "Buy 5 items from the shop",
+    "VIP Diner": "Buy 10 items from the shop",
+    "Line Cook": "Have 5 or more projects",
+    "???": "Post 10 devlogs",
+    "Cookbook Author": "Post 10 devlogs"
+  };
+  const achievementCards = achievementGridDiv.querySelectorAll(".achievements__card");
+  achievementCards.forEach(achievementCard => {
+    const achievementCardNameEl = achievementCard.querySelector(".achievements__name");
+    const achievementCardDescriptionEl = achievementCard.querySelector(".achievements__description");
+
+    if (achievementCardNameEl && achievementCardDescriptionEl) {
+      const achievementCardName = achievementCardNameEl.textContent.trim();
+
+      if (achievementMap[achievementCardName]) {
+        achievementCardDescriptionEl.textContent = achievementMap[achievementCardName];
+      }
+    }
+  })
 }
 
 async function addSpicetownSettings() {
