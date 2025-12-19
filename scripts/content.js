@@ -156,6 +156,14 @@ async function addSpicetownSettings() {
 function addThemesPage() {
   if (window.location.pathname === "/themes") {
     document.head.querySelector("style").remove();
+    document.title = "Flavortown";
+
+    const faviconLinkEl = document.createElement("link");
+    faviconLinkEl.setAttribute("rel", "icon");
+    faviconLinkEl.setAttribute("type", "image/x-icon");
+    faviconLinkEl.href = "https://flavortown.hackclub.com/assets/favicon-5ea28202.ico";
+    document.head.appendChild(faviconLinkEl);
+    
     document.head.innerHTML += `<link rel="stylesheet" href="https://flavortown.hackclub.com/assets/application-e01c3cfb.css" data-turbo-track="reload">`;
 
     document.body.classList.add("signed-in");
