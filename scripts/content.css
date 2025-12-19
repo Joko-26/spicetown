@@ -189,3 +189,43 @@
   margin-left: 0 !important;
   transform: translateX(0%) !important;
 }
+
+.project-extra-info__div {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: .5rem 1.5rem;
+  border-radius: 8px;
+  background-color: var(--color-brown-700);
+}
+
+.project-extra-info__container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: .5rem;
+}
+
+.project-devlogs-hr__span {
+  font-size: 1rem;
+}
+
+.project-devlogs-hr__span--awful {
+  color: var(--color-red-400);
+}
+
+.project-devlogs-hr__span--bad {
+  color: var(--color-red-400);
+}
+
+.project-devlogs-hr__span--great {
+  color: var(--color-blue-300);
+}
+
+.project-devlogs-hr__span--good {
+  color: var(--color-green-400);
+}
+
+.project-devlogs-hr__span--okay {
+  color: var(--color-yellow-400);
+}
