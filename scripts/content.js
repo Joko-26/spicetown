@@ -254,7 +254,7 @@ function addThemesPage() {
               <p class="themes__div-option-name">Vanilla</p>
             </div>
             <div class="themes__div-option themes__div-option--bg-color" name="bg-color-option" id="bg-color-ruby">
-              <p class="themes__div-option-name">Ruby</p>
+              <p class="themes__div-option-name">Ruby [⚠️ Major WIP]</p>
             </div>
           <div>
         </div>
