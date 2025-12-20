@@ -243,9 +243,14 @@
   display: flex;
   flex-direction: row;
   gap: .25rem;
-  margin-bottom: 1rem;
+  margin-bottom: .5rem;
 }
 
 .shop-goals-quantity__input {
   margin-right: auto;
+  border: 0;
+  border-radius: 8px;
+  background: var(--color-bg);
+  color: var(--color-text-body);
+  padding: 0 1rem;
 }
