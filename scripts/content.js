@@ -76,22 +76,31 @@ function addExtraProjectInfo() {
   projectExtraInfoDiv.appendChild(projectDevlogsPerHrDiv);
   const devlogsPerHrSpan = document.getElementById("devlogs-per-hr-span");
   if (!devlogsPerHrSpan) return;
-  if (hoursPerDevlog > 150) { // more than 150 mins
+  if (hoursPerDevlog >= 150) {
     devlogsPerHrSpan.textContent = "(Awful)";
     devlogsPerHrSpan.classList.add("project-extra-info__rating--awful");
-  } else if (hoursPerDevlog > 120) { // more than 120 mins
+  } else if (hoursPerDevlog >= 120) {
     devlogsPerHrSpan.textContent = "(Bad)";
     devlogsPerHrSpan.classList.add("project-extra-info__rating--bad");
-  } else if (hoursPerDevlog >= 40 && hoursPerDevlog <= 80) { // 40-80
-    devlogsPerHrSpan.textContent = "(Great)";
-    devlogsPerHrSpan.classList.add("project-extra-info__rating--great");
-  } else if (hoursPerDevlog >= 20 && hoursPerDevlog <= 90) { // 20-39, 81-90
-    devlogsPerHrSpan.textContent = "(Good)";
-    devlogsPerHrSpan.classList.add("project-extra-info__rating--good");
-  } else if (hoursPerDevlog >= 15 && hoursPerDevlog <= 100) { // 15-19, 91-100
+  } else if (hoursPerDevlog >= 101) {
     devlogsPerHrSpan.textContent = "(Okay)";
     devlogsPerHrSpan.classList.add("project-extra-info__rating--okay");
-  } else { // 0-19
+  } else if (hoursPerDevlog >= 81) {
+    devlogsPerHrSpan.textContent = "(Good)";
+    devlogsPerHrSpan.classList.add("project-extra-info__rating--good");
+  } else if (hoursPerDevlog >= 40) {
+    devlogsPerHrSpan.textContent = "(Great)";
+    devlogsPerHrSpan.classList.add("project-extra-info__rating--great");
+  } else if (hoursPerDevlog >= 20) {
+    devlogsPerHrSpan.textContent = "(Good)";
+    devlogsPerHrSpan.classList.add("project-extra-info__rating--good");
+  } else if (hoursPerDevlog >= 15) {
+    devlogsPerHrSpan.textContent = "(Okay)";
+    devlogsPerHrSpan.classList.add("project-extra-info__rating--okay");
+  } else if (hoursPerDevlog >= 10) {
+    devlogsPerHrSpan.textContent = "(Bad)"
+    devlogsPerHrSpan.classList.add("project-extra-info__rating--bad");
+  } else {
     devlogsPerHrSpan.textContent = "(Awful)";
     devlogsPerHrSpan.classList.add("project-extra-info__rating--awful");
   }
