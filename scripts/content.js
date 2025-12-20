@@ -231,7 +231,8 @@ function addAchievementInfo() {
     "Michelin Star": "Have your project approved for shipping",
     "Cookbook Author": "Post 10 devlogs",
     "Scrapbook usage?!": "Use scrapbook in a devlog",
-    "Cooking": "Get 'fire' project status, given out by Flavortown devs"
+    "Cooking": "Get 'fire' project status, given out by Flavortown devs",
+    "Accept cookies": "Spam the cookie ? amount of times."
   };
   const secretMap = {
     "12": {name: "Cookbook Author", desc: "Post 10 devlogs", reward: "15"},
