@@ -103,10 +103,12 @@ function addAchievementInfo() {
     "Home Cookin'": "Make your first project",
     "Recipe Notes": "Post a devlog",
     "Yapper": "Comment on a devlog",
-    "Off the Menu": "Buy something from the shop (cannot be free stickers)",
+    "Off the Menu": "Buy something from the shop (NOT free stickers)",
     "Regular Customer": "Buy 5 items from the shop",
     "VIP Diner": "Buy 10 items from the shop",
     "Line Cook": "Have 5 or more projects",
+    "Order Up!": "Ship your first project",
+    "Michelin Star": "Have your project approved for shipping",
     "Cookbook Author": "Post 10 devlogs",
     "Scrapbook usage?!": "Use scrapbook in a devlog",
     "Cooking": "Get 'fire' project status, given out by Flavortown devs"
