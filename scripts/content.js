@@ -529,6 +529,10 @@ function addThemesPage() {
 function applyTheme(themeId) {
   if (themeId === "bg-color-ruby") {
     document.body.style.backgroundColor = "#6e0c16ff";
+    document.body.style.color = "#d4d4d4ff";
+    if (document.querySelector(".dev-footer")) {
+      document.querySelector(".dev-footer").style.color = "#d4d4d4ff";
+    }
     if (document.querySelector(".ui-heading__surface")) {
       document.querySelector(".ui-heading__surface").style.backgroundColor = "#81101bff";
       document.querySelector(".ui-heading__backdrop").style.backgroundColor = "#9c1422ff";
@@ -542,6 +546,21 @@ function applyTheme(themeId) {
       document.querySelector(".sidebar__blob").style.backgroundColor = "#91101dff";
       document.querySelector(".sidebar__nav-link--active").classList.add("ruby-modified");
       document.querySelector(".sidebar__nav-link--active > .sidebar__nav-icon-wrapper").style.background = "#7c0b16ff";
+    }
+    if (document.querySelector(".kitchen-setup")) {
+      document.querySelector(".kitchen-setup").classList.add("ruby-modified");
+      document.querySelector(".kitchen-help").classList.add("ruby-modified");
+      document.querySelector(".tutorial-steps__title").style.color = "#d4d4d4ff";
+      document.querySelector(".tutorial-steps__progress-text").style.color = "#d4d4d4ff";
+      document.querySelector(".tutorial-steps__progress-bar").style.border = "3px solid #850f1bff";
+      document.querySelector(".tutorial-steps__progress-bar").style.backgroundColor = "#db8b8bff";
+      document.querySelector(".tutorial-steps__progress-fill").style.background = "linear-gradient(90deg, #8d0816ff 0%, #be0a1cff 100%)";
+      document.querySelectorAll(".state-card.tutorial-step-card").forEach(tutorialStepCard => {
+        tutorialStepCard.classList.add("ruby-modified");
+      });
+      document.querySelectorAll(".state-card.state-card--neutral.kitchen-help-card").forEach(kitchenHelpCard => {
+        kitchenHelpCard.classList.add("ruby-modified");
+      });
     }
     document.body.style.backgroundImage = 'url("'+ chrome.runtime.getURL("/themes/bg-color/ruby/bg.png") + '")'
     if (document.querySelector(".projects-board__title")) {

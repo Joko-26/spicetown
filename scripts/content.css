@@ -71,6 +71,7 @@
 }
 
 .themes {
+  color: var(--color-text-body);
   margin: var(--space-xxxl) auto;
 }
 
@@ -257,4 +258,59 @@
 
 .ruby-modified.sidebar__nav-link--active::before {
   background-color: #a71423ff !important;
+}
+
+.ruby-modified.kitchen-setup::before {
+  background-color: hsl(0deg 100% 23.3%) !important;
+}
+
+.ruby-modified.kitchen-help::before {
+  background-color: hsl(0deg 100% 23.3%) !important;
+}
+
+.ruby-modified.state-card--success {
+  --state-card-accent: #991313 !important;
+  background: hsl(0deg 84.73% 24.38%) !important;
+  border-color: hsl(0deg 82.42% 22.09%) !important;
+  filter: blur(1.5px);
+}
+
+.ruby-modified.state-card--success > .state-card__title {
+  color: hsl(0deg 88.47% 14.28%) !important;
+}
+
+.ruby-modified.state-card--success > .state-card__description {
+  color: hsl(0deg 100% 14.25%) !important;
+}
+
+.ruby-modified.state-card--success > .state-card__status-pill > .state-card__badge {
+  background: hsl(0deg 82.42% 22.09%) !important;
+  color: hsl(0deg 88.47% 14.28%) !important;
+}
+
+.ruby-modified.state-card--success > .state-card__status-pill > .state-card__icon-circle {
+  background: hsl(0deg 82.42% 22.09%) !important;
+}
+
+.ruby-modified.state-card--warning, .ruby-modified.state-card--neutral {
+  --state-card-accent: hsl(0deg 74.08% 42.6%) !important;
+  background: hsl(0deg 84% 32.6%) !important;
+  border-color: hsl(0deg 78.22% 27.48%) !important;
+}
+
+.ruby-modified.state-card--warning > .state-card__title, .ruby-modified.state-card--neutral > .state-card__title {
+  color: hsl(0deg 0% 100%) !important;
+}
+
+.ruby-modified.state-card--warning > .state-card__description, .ruby-modified.state-card--neutral > .state-card__description {
+  color: #d4d4d4ff !important;
+}
+
+.ruby-modified.state-card--warning > .state-card__status-pill > .state-card__badge {
+  background: hsl(0deg 78.57% 27.45%) !important;
+  color: white;
+}
+
+.ruby-modified.state-card--warning > .state-card__status-pill > .state-card__icon-circle {
+  background: hsl(0deg 78.57% 27.45%) !important;
 }
