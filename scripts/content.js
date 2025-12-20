@@ -237,7 +237,7 @@ function addAchievementInfo() {
     "12": {name: "Cookbook Author", desc: "Post 10 devlogs", reward: "15"},
     "13": {name: "Scrapbook usage?!", desc: "Use scrapbook in a devlog"},
     "14": {name: "Cooking", desc: "Get 'fire' project status, given out by Flavortown devs", reward: "5"},
-    "15": {name: "Unknown", desc: "Unknown(???)"} // isnt in fucking source code :(
+    "15": {name: "Accept cookies", desc: "Spam the cookie for a certain amount."} // isnt in fucking source code :(
   };
   const achievementCards = achievementGridDiv.querySelectorAll(".achievements__card");
   achievementCards.forEach((achievementCard, index) => {
@@ -557,7 +557,7 @@ function addBannerTemplateHint() {
   const bannerTemplateFileUrl = chrome.runtime.getURL("/download/banner-template.png")
 
   const bannerTemplateDownloadHint = document.createElement("a");
-  bannerTemplateDownloadHint.textContent = "View the banner template.";
+  bannerTemplateDownloadHint.textContent = "View the deprecated banner template.";
   bannerTemplateDownloadHint.href = bannerTemplateFileUrl;
   bannerTemplateDownloadHint.target = "_blank";
 
