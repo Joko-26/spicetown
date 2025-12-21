@@ -545,9 +545,18 @@
 [data-theme] .shop-item-card .shop-item-card__image {background-color: var(--border-color) !important;}
 [data-theme] .shop-item-card .shop-item-card__title,
 [data-theme] .shop-item-card .shop-item-card__price,
-[data-theme] .shop-item-card .shop-item-card__hours {color: var(--text-highlight) !important;}
+[data-theme] .shop-item-card .shop-item-card__hours,
+[data-theme] .shop-goals__container .shop-goals__title {color: var(--text-highlight) !important;}
 [data-theme] .shop-item-card .shop-item-card__description {color: var(--text-primary) !important;}
-[data-theme] .shop-item-card .shop-item-card__order-button > .btn.btn-primary.w-full {background: var(--accent) !important;}
+[data-theme] .shop-item-card .shop-item-card__order-button > .btn.btn-primary.w-full,
+[data-theme] .shop-item-card .shop-item-card__star {background: var(--accent) !important;}
+[data-theme] .shop-item-card .shop-item-card__star:not(.shop-item-card__star--active) > svg {color: var(--accent-muted);}
+[data-theme] .shop-item-card .shop-item-card__star--active > svg {color: var(--text-highlight);}
+[data-theme] .shop-item-card .shop-item-card__star:not(.shop-item-card__star--active) > svg:hover {color: var(--text-highlight);}
+[data-theme] .shop-goals__container {
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-darker) 100%) !important;
+  border-color: var(--border-color) !important;
+}
 
 [data-theme] .themes__div-container {color: var(--text-highlight);}
 [data-theme] .themes__div-option.themes__div-option--bg-color {
