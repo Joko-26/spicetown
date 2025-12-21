@@ -260,7 +260,7 @@
   background-color: #a71423ff !important;
 }
 
-.ruby-modified.kitchen-setup::before {
+.ruby-modified.kitchen-setup::before, .ruby-modified.projects-new__card::before {
   background-color: hsl(0deg 100% 23.3%) !important;
 }
 
@@ -306,6 +306,10 @@
   color: #d4d4d4ff !important;
 }
 
+.ruby-modified.state-card--warning .state-card__cta > a, .ruby-modified.state-card--neutral .state-card__cta > a {
+  background-color: hsl(0deg 78.22% 27.48%) !important;
+}
+
 .ruby-modified.state-card--warning .state-card__badge {
   background: hsl(0deg 78.57% 27.45%) !important;
   color: white;
@@ -325,7 +329,7 @@
   border-color: #591212 !important;
 }
 
-.ruby-modified.post .post__attachment {
+.ruby-modified.post .post__attachment, .ruby-modified.project-show-card .project-card__banner-image {
   background-color: #591212 !important;
 }
 
@@ -334,20 +338,23 @@
   color: #f5d0d0 !important;
 }
 
-.ruby-modified.post .btn {
-  border-color: hsl(0, 88%, 16%) !important; 
+.ruby-modified.post .btn, .ruby-modified.btn.btn--brown {
+  border-color: #591212 !important; 
+  --btn-bg: #650a0a !important;
+  --btn-bg-dark: #650a0a !important;
+  --btn-focus-ring: #650a0a !important;
+  background-color: #650a0a !important;
 }
 
-.ruby-modified.post .post__chevron {
+.ruby-modified.post .post__chevron, .ruby-modified.post .comments-section__list {
   background-color: #591212 !important;
 }
 
 .ruby-modified.post .comments-section__list {
-  background-color: #591212 !important;
   color: #f5d0d0 !important;
 }
 
-.ruby-modified.project-card {
+.ruby-modified.project-card, .ruby-modified.project-show-card {
   background-color: #650a0a !important;
   border-color: #591212 !important;
 }
@@ -359,5 +366,65 @@
 
 .ruby-modified.project-card .project-card__stats svg {
   filter: drop-shadow(5px 0 0 #591212) drop-shadow(-5px 0 0 #591212) drop-shadow(0 5px 0 #591212) drop-shadow(0 -5px 0 #591212) !important;
+  color: #f5d0d0 !important;
+}
+
+.ruby-modified.projects-board__create-card {
+  background-color: hsl(7deg 32.29% 18.56% / 10%) !important;
+}
+
+.ruby-modified.projects-board__create-card::before {
+  background: url(https://i.ibb.co/0RB40Sgg/aaa-1x.webp) center / 100% 100% no-repeat !important;
+}
+
+.ruby-modified.projects-board__create-card > svg, .ruby-modified.projects-board__create-card > span, .ruby-modified.post .comment__delete {
+  color: #f5d0d0 !important;
+}
+
+.ruby-modified.projects-new__card .projects-new__field > .input {
+  --input-bg: hsl(0deg 100% 27.24%) !important;
+  --input-focus-ring: hsl(0deg 76.46% 36.23%) !important;
+  --input-placeholder-color: hsl(0deg 28.84% 44.12%) !important;
+  --input-subtitle-bg: hsl(0deg 92.89% 23.75%) !important;
+  --input-subtitle-color: hsl(0deg 49.1% 83.27%) !important;
+  /* --input-icon-bg: var(--color-yellow-500) !important;
+  --input-icon-color: var(--color-bg) !important; */
+}
+
+.ruby-modified.projects-new__card .projects-new__field > .input-group::before, .ruby-modified.projects-new__card .hackatime-project-selector::before, .ruby-modified.projects-new__card .hackatime-project-selector__label {
+  background-color: hsl(0deg 100% 27.24%) !important;
+}
+
+.ruby-modified.projects-new__card .input-group__subtitle, .ruby-modified.projects-new__card .hackatime-project-selector__subtitle {
+  background-color: hsl(0deg 92.89% 23.75%) !important;
+  color: hsl(0deg 49.1% 83.27%) !important;
+}
+
+.ruby-modified.projects-new__card .input-group__label {
+  background-color: hsl(0deg 100% 27.24%) !important;
+}
+
+.ruby-modified.projects-new__card .input__icon {
+  background-color: hsl(0deg 92.89% 23.75%) !important;
+}
+
+.ruby-modified.projects-new__card .file-upload__dropzone {
+  --file-upload-border-color: hsl(0deg 73.96% 40.37%) !important;
+  --file-upload-background: rgb(89, 18, 18) !important;
+}
+
+.ruby-modified.projects-new__card .file-upload__headline, .ruby-modified.projects-new__card .file-upload__hint {
+  color: #f5d0d0 !important;
+}
+
+.ruby-modified.project-show-card .btn {
+  background-color: #591212 !important;
+}
+
+.ruby-modified.project-show-card .project-extra-info__div {
+  background-color: #591212 !important;
+}
+
+.ruby-modified.project-show-card .projects-show__admin-actions svg {
   color: #f5d0d0 !important;
 }

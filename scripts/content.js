@@ -530,6 +530,7 @@ function applyTheme(themeId) {
   if (themeId === "bg-color-ruby") {
     document.body.style.backgroundColor = "#6e0c16ff";
     document.body.style.color = "#d4d4d4ff";
+    document.body.style.backgroundImage = 'url("'+ chrome.runtime.getURL("/themes/bg-color/ruby/bg.png") + '")' // how and why tf did i spend 10 minutes of my life on this
     if (document.querySelector(".dev-footer")) {
       document.querySelector(".dev-footer").style.color = "#d4d4d4ff";
     }
@@ -575,18 +576,27 @@ function applyTheme(themeId) {
         projectEl.classList.add("ruby-modified");
       });
     }
-    document.body.style.backgroundImage = 'url("'+ chrome.runtime.getURL("/themes/bg-color/ruby/bg.png") + '")'
+    if (document.querySelector(".projects-board__grid")) {
+      document.querySelector(".projects-board__create-card").classList.add("ruby-modified");
+      document.querySelectorAll(".projects-board__grid-item > .project-card").forEach(projectItem => {
+        projectItem.classList.add("ruby-modified");
+      });
+    }
+    if (document.querySelector(".projects-new__card")) {
+      document.querySelector(".projects-new__card").classList.add("ruby-modified");
+    }
     if (document.querySelector(".projects-board__title")) {
       document.querySelector(".projects-board__title").style.color = "white";
       document.querySelector(".projects-board__subtitle").style.color = "#d4d4d4ff";
-
-      // TODO | Fix this garbage
-      // const projectsBoardCreateCard = document.querySelector(".projects-board__create-card")
-      // projectsBoardCreateCard.style.color = "#d4d4d4ff";
-      // projectsBoardCreateCard.classList.remove("projects-board__create-card");
-      // projectsBoardCreateCard.classList.add("ruby-modified__proj-create-card");
-      // const imageUrl = chrome.runtime.getURL("/themes/bg-color/ruby/create-project.png");
-      // projectsBoardCreateCard.style.setProperty('--mask-url', `url("${imageUrl}")`);
+    }
+    if (document.querySelector(".project-show-card")) {
+      document.querySelector(".project-show-card").classList.add("ruby-modified");
+    }
+    if (document.querySelector(".projects-show__timeline")) {
+      document.querySelector(".projects-show__timeline").parentElement.querySelector(".mt-4 > .btn.btn--brown").classList.add("ruby-modified");
+      document.querySelectorAll(".post").forEach(postEl => {
+        postEl.classList.add("ruby-modified");
+      });
     }
   } else {
     document.body.style.backgroundColor = '';
