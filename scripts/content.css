@@ -271,6 +271,8 @@
   --accent: #be0a1cff;
   --accent-darker: #7c0b16ff;
   --border-color: #591212;
+  --accent-muted: rgb(214, 144, 151);
+  --accent-semi-transparent: hsla(354, 90%, 39%, 0.3);
 
   --kitchen-bar-border: #850f1bff;
   --kitchen-bar-bg: #db8b8bff;
@@ -279,6 +281,37 @@
   --input-main-bg: hsl(0deg 100% 27.24%);
   --input-sub-bg: hsl(0deg 92.89% 23.75%);
   --input-sub-text: hsl(0deg 49.1% 83.27%);
+
+  --create-project-url: url("https://i.ibb.co/0RB40Sgg/aaa-1x.webp");
+}
+
+/** CATPUCCIN MOCHA THEME **/
+
+[data-theme="bg-color-catpuccin-mocha"] {
+  --bg-primary: #1e1e2e;
+  --text-primary: #bac2de;
+  --text-highlight: #cdd6f4;
+
+  --surface-header: #585b70;
+  --surface-header-backdrop: #45475a;
+  --surface-card: #6c7086;
+  --surface-dark: #313244;
+
+  --accent: #7ca6e9;
+  --accent-darker: #6490d6;
+  --border-color: #537fc5;
+  --accent-muted: #9cadc7;
+  --accent-semi-transparent: hsla(217, 71%, 70%, 0.3);
+
+  --kitchen-bar-border: #6692da;
+  --kitchen-bar-bg: #9fc4ff;
+  --kitchen-gradient: linear-gradient(90deg, #537fc5 0%, #6892d4 100%);
+
+  --input-main-bg: #6a93d4;
+  --input-sub-bg: #4e79be;
+  --input-sub-text: #bac2de;
+
+  --create-project-url: url("https://i.ibb.co/V04Z5R31/Mask-group-10.png");
 }
 
 [data-theme] {
@@ -343,9 +376,14 @@
 [data-theme] .projects-board__title {color: var(--text-highlight) !important};
 [data-theme] .projects-board__subtitle {color: var(--text-primary) !important};
 
-[data-theme] .projects-board__create-card {background-color: hsl(7deg 32.29% 18.56% / 10%) !important;}
+[data-theme] .projects-board__create-card {
+  background-color: ''; /* fucks your default rendering shit */
+}
+[data-theme] .projects-board__create-card {
+  background-color: var(--accent-semi-transparent) !important;
+}
 [data-theme] .projects-board__create-card::before {
-  background: url(https://i.ibb.co/0RB40Sgg/aaa-1x.webp) center / 100% 100% no-repeat !important;
+  background: var(--create-project-url) center / 100% 100% no-repeat !important;
 }
 
 [data-theme] .project-card__stats svg,
@@ -358,8 +396,8 @@
 
 [data-theme] .projects-new__card .projects-new__field > .input {
   --input-bg: var(--input-main-bg) !important;
-  --input-focus-ring: hsl(0deg 76.46% 36.23%) !important;
-  --input-placeholder-color: hsl(0deg 28.84% 44.12%) !important;
+  --input-focus-ring: var(--accent) !important;
+  --input-placeholder-color: var(--accent-muted) !important;
   --input-subtitle-bg: var(--input-sub-bg) !important;
   --input-subtitle-color: var(--input-sub-text) !important;
 }
@@ -416,7 +454,7 @@
 }
 
 [data-theme] .state-card--success .state-card__description {
-  color: hsl(0deg 100% 14.25%) !important;
+  color: var(--border-color) !important;
 }
 
 [data-theme] .state-card--warning .state-card__title,

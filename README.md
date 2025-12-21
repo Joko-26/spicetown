@@ -28,7 +28,13 @@
       <li><a href="#settings+">Settings+</a></li>
       <li><a href="#themes">Themes <i>(⚠️ WIP)</i></a>
         <ul>
+          <li><a href="#implementing-themes">Implementing Themes <i>(in V2; ⚠️ WIP)</i></a></li>
           <li><a href="#themes-ruby">Ruby <i>(⚠️ WIP)</i></a></li>
+          <li><a href="#themes-catpuccin">Catpuccin <i>(⚠️ WIP)</i></a>
+            <ul>
+              <li><a href="#themes-catpuccin-mocha">Catpuccin Mocha <i>(⚠️ WIP)</i></a></li>
+            </ul>
+          </li>
         </ul>
       </li>
     </ul>
@@ -147,21 +153,30 @@
   <tr>
     <td>Ruby</td>
     <td>Red</td>
-    <td>TBD <small>(In development)</small></td>
+    <td>TBD <small>(In-dev 19/12/25)</small></td>
     <td>Yes</td>
     <td>None</td>
   </tr>
   <tr>
-    <td>Catppuccin Mocha</td>
-    <td>Mixed</td>
-    <td>TBD <small>(In planning)</small></td>
-    <td>TBD <small>(In planning)</small></td>
+    <td>Catppuccin <small>Mocha</small></td>
+    <td>Lavender</td>
+    <td>TBD <small>(In-dev 21/12/25)</small></td>
+    <td>Yes</td>
     <td>None</td>
   </tr>
 </table>
 
-<h4 id="themes-ruby">Ruby</h3>
+<h3 id="implementing-themes">Implementing Themes</h3>
+<p>To implement themes, access the content.css file in /scripts. There, you will find <code>[data-theme="bg-color-ruby"]</code> along with other themes. You can add a new theme by adding a new data theme, for example: <code>[data-theme="bg-color-log"]</code>. Use the other themes as a rough template on the CSS variables you need to add to your theme. You will also need to add a new <code>themes__div-option</code> to the themes page located in <code>addThemesPage()</code> in <code>content.js</code>.</p>
+
+<h3 id="themes-ruby">Ruby</h3>
 <p>Ruby is the first custom theme of Spicetown <i>(and probably Flavortown as a whole!)</i> which is in heavy development. You can enable the Ruby theme via the Themes page <i>(which is inaccessible to non-Spicetown users)</i>. It consists of mostly darkish red.</p>
+
+<h3 id="themes-catpuccin">Catpuccin</h3>
+<p><b>Catpuccin</b> is the most requested theme family for <b>Spicetown</b>. The first Catpuccin theme was released <i>(in-dev)</i> on <b>21/12/25</b>. This is also the first theme family for <b>Spicetown</b>.</p>
+
+<h4 id="themes-catpuccin-mocha">Catpuccin <small>Mocha</small></h3>
+<p><b>Catpuccin Mocha</b> is the first Catpuccin theme to be added. It is the second theme added to <b>Spicetown</b> after Ruby. It uses a Lavender-based design and is a work in progress.</p>
 
 <h2 id="improvements">Improvements</h2>
 <p>Spicetown regularly makes improvements to existing Flavortown features. These improvements mostly either improves the UI or adds hidden, scrapped Flavortown functionalities back into Flavortown.</p>

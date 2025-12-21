@@ -493,6 +493,9 @@ function addThemesPage() {
             <div class="themes__div-option themes__div-option--bg-color" name="bg-color-option" id="bg-color-ruby">
               <p class="themes__div-option-name">Ruby [⚠️ WIP]</p>
             </div>
+            <div class="themes__div-option themes__div-option--bg-color" name="bg-color-option" id="bg-color-catpuccin-mocha">
+              <p class="themes__div-option-name">Catpuccin Mocha [⚠️ WIP]</p>
+            </div>
           <div>
         </div>
       </div>
