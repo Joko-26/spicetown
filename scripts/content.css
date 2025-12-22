@@ -292,13 +292,19 @@
   align-items: center;
   width: 100%;
 }
+.shop-goals__all-progress-wrapper {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  width: 100%;
+}
 .shop-goals__heading-progress-bar {
   flex-grow: 1;
   height: 1rem !important;
   clear: both;
   border-radius: 6px !important;
   background: rgba(0, 0, 0, 0.2) !important;
-  overflow: hidden
+  overflow: hidden;
 }
 .shop-goals__heading-progress-bar-fill {
   position: relative;

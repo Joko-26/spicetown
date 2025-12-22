@@ -215,7 +215,24 @@ function addImprovedShop() {
   const userBalance = sidebarBalance ? parseFloat(sidebarBalance.textContent.replace(/[^\d.]/g, '')) : 0;
 
   const shopGoalsContainer = document.querySelector(".shop-goals__container");
-  if (!shopGoalsContainer) return;
+  const shopGoalsTitle = document.querySelector(".shop-goals__title");
+  if (!shopGoalsContainer || !shopGoalsTitle) return;
+
+  const allProgressWrapper = document.createElement("div");
+  allProgressWrapper.classList.add("shop-goals__all-progress-wrapper");
+
+  allProgressWrapper.innerHTML = `
+    <div class="shop-goals__heading-progress-bar">
+      <div class="shop-goals__heading-progress-bar-fill"></div>
+    </div>
+    <div class="shop-goals__all-stats">
+      <span id="all-current">0</span> / <span id="all-total">0</span> 
+    </div>
+  `;
+
+  const allFill = allProgressWrapper.querySelector(".shop-goals__heading-progress-bar-fill");
+  const allCurrentText = allProgressWrapper.querySelector("#all-current");
+  const allTotalText = allProgressWrapper.querySelector("#all-total");
 
   const shopGoalEditorDiv = document.createElement("div");
   shopGoalEditorDiv.classList.add("shop-goals-editor__div");
@@ -239,6 +256,33 @@ function addImprovedShop() {
   const editorRemoveBtn = shopGoalEditorDiv.querySelector(".shop-goal-editor__remove-btn");
 
   let activeEditingItem = null; // track which item is being edited and then sell your user data (joke)
+
+  const calculateAllProgress = async () => {
+    let totalRequiredCost = 0;
+    const allFill = document.querySelector(".shop-goals__heading-progress-bar-fill");
+    const allCurrentText = document.querySelector("#all-current");
+    const allTotalText = document.querySelector("#all-total");
+
+    for (const item of shopGoalsItems) {
+      const id = item.getAttribute("data-item-id");
+      const progressTxt = item.querySelector(".shop-goals__progress-text");
+      const fill = item.querySelector(".shop-goals__progress-fill");
+      
+      const remaining = parseFloat(progressTxt.textContent.replace(/[^\d.]/g, '')) || 0;
+      const isComplete = fill.style.width === "100%";
+      const pricePerUnit = isComplete ? userBalance : (remaining + userBalance);
+
+      const storage = await chrome.storage.local.get([`shop_goal_qty_${id}`]);
+      const qty = storage[`shop_goal_qty_${id}`] || 1;
+
+      totalRequiredCost += (pricePerUnit * qty);
+    }
+    
+    const percent = Math.min(100, (userBalance / totalRequiredCost) * 100);
+    if (allFill) allFill.style.width = `${percent}%`;
+    if (allCurrentText) allCurrentText.textContent = Math.floor(userBalance).toLocaleString();
+    if (allTotalText) allTotalText.textContent = Math.floor(totalRequiredCost).toLocaleString();
+  }
 
   shopGoalsItems.forEach(shopGoalItemDiv => {
     const shopGoalItemID = shopGoalItemDiv.getAttribute("data-item-id");
@@ -302,6 +346,7 @@ function addImprovedShop() {
 
     chrome.storage.local.set({[`shop_goal_qty_${activeEditingItem.id}`]: newQuantity}, () => {
       activeEditingItem.updateShopItemPrice(newQuantity);
+      calculateAllProgress();
     });
   });
 
@@ -320,10 +365,13 @@ function addImprovedShop() {
   
   const itemsContainer = document.querySelector(".shop-goals__items");
   if (itemsContainer) {
-    shopGoalsContainer.appendChild(shopGoalsDiv);
+    shopGoalsTitle.after(allProgressWrapper); // i love this function!!!!!!! this makes life way easier then
+    allProgressWrapper.after(shopGoalsDiv);
     shopGoalsDiv.appendChild(itemsContainer);
     shopGoalsDiv.appendChild(shopGoalEditorDiv);
   }
+
+  calculateAllProgress();
 }
 
 function addAchievementInfo() {
