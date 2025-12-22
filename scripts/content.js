@@ -97,6 +97,12 @@ function addExtraProjectInfo() {
   const projectExtraInfoDiv = document.createElement("div");
   projectExtraInfoDiv.classList.add("project-extra-info__div");
   projectFullPageInfoCard.insertBefore(projectExtraInfoDiv, projectFullPageCard.querySelector(".project-show-card__description"));
+  if (devlogs == "0") {
+    const projectExtraInfoInfoDiv = document.createElement("p");
+    projectExtraInfoInfoDiv.textContent = "Create a devlog to view more stats.";
+    projectExtraInfoDiv.appendChild(projectExtraInfoInfoDiv);
+    return;
+  }
   const projectDevlogsPerHrDiv = document.createElement("div");
   projectDevlogsPerHrDiv.classList.add("project-extra-info__container");
   projectDevlogsPerHrDiv.innerHTML = `

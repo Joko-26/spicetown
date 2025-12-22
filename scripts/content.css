@@ -522,7 +522,7 @@
   --state-card-accent: var(--accent-darker) !important;
   background-color: var(--accent-darker) !important;
   border-color: var(--border-color) !important;
-  filter: blur(1.5px) !important;
+  /* filter: blur(1.5px) !important; people don't like blur :( */
 }
 [data-theme] .state-card--neutral,
 [data-theme] .state-card--warning {

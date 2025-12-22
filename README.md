@@ -10,7 +10,7 @@
     <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/SabioOfficial/spicetown?style=for-the-badge">⠀
   </a>
   <a href="#">
-    <img alt="Chrome Web Store Users" src="https://img.shields.io/chrome-web-store/users/REPLACE_SPICETOWN_STOREID_HERE_WHEN_IT_COMES_OUT?style=for-the-badge&label=Downloads">
+    <img alt="Chrome Web Store Users" src="https://img.shields.io/chrome-web-store/users/kbcbgiihiopcbgimdopcfcemikagemgl?style=for-the-badge&label=Downloads">
   </a>
 </div>
 <br>
