@@ -493,10 +493,12 @@
   border-color: var(--accent-darker) !important;
 }
 [data-theme] .state-card--success .state-card__title,
-[data-theme] .state-card--success .state-card__icon-circle,
+[data-theme] .state-card--success .state-card__icon-circle {
+  color: var(--text-highlight) !important;
+}
 [data-theme] .state-card--warning .state-card__cta > a,
 [data-theme] .state-card--neutral .state-card__cta > a {
-  color: var(--border-color) !important;
+  color: var(--accent) !important;
 }
 [data-theme] .state-card--success .state-card__badge,
 [data-theme] .state-card--success .state-card__icon-circle {
@@ -506,7 +508,7 @@
   color: var(--accent-darker) !important;
 }
 [data-theme] .state-card--success .state-card__description {
-  color: var(--border-color) !important;
+  color: var(--text-primary) !important;
 }
 [data-theme] .state-card--warning .state-card__title,
 [data-theme] .state-card--neutral .state-card__title {
