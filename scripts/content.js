@@ -403,7 +403,7 @@ function addImprovedShop() {
       const progressBarContainer = shopGoalItemDiv.querySelector(".shop-goals__progress-bar");
       if (progressBarContainer) progressBarContainer.style.display = "none";
 
-      const fillColor = newPercent >= 100 ? "hsl(142, 71%, 59%)" : "var(--color-yellow-400)";
+      const fillColor = newPercent >= 100 ? "var(--completed-color)" : "var(--progress-color)";
       const emptyColor = "rgba(255, 255, 255, 0.5)";
 
       shopGoalItemDiv.style.background = `linear-gradient(to right, ${fillColor} ${newPercent}%, ${emptyColor} ${newPercent}%)`;

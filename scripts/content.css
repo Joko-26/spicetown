@@ -338,6 +338,8 @@
   -webkit-user-select: none;
   -moz-user-select: none;
   -webkit-user-drag: element;
+  --progress-color: var(--color-yellow-400);
+  --completed-color: hsl(142, 71%, 59%);
 }
 .shop-goals__item:hover:not(.selected) {
   transform: scale(1.05);
@@ -837,6 +839,8 @@
 [data-theme] .shop-item-card .shop-item-card__price,
 [data-theme] .shop-item-card .shop-item-card__hours,
 [data-theme] .shop-goals__container .shop-goals__title {color: var(--text-highlight) !important;}
+[data-theme] .shop-goals__container .shop-goals__title svg {color: var(--accent) !important;}
+[data-theme] .shop-goals__container .shop-goals__image {background-color: var(--accent-darker) !important;}
 [data-theme] .shop-item-card .shop-item-card__description {color: var(--text-primary) !important;}
 [data-theme] .shop-item-card .shop-item-card__order-button > .btn.btn-primary.w-full,
 [data-theme] .shop-item-card .shop-item-card__star {background: var(--accent) !important;}
@@ -844,10 +848,17 @@
 [data-theme] .shop-item-card .shop-item-card__star--active > svg {color: var(--text-highlight);}
 [data-theme] .shop-item-card .shop-item-card__star:not(.shop-item-card__star--active) > svg:hover {color: var(--text-highlight);}
 [data-theme] .shop-goals__container {
-  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-darker) 100%) !important;
+  background: linear-gradient(135deg, var(--surface-card) 0%, var(--surface-dark) 100%) !important;
   border-color: var(--border-color) !important;
 }
-[data-theme] .shop-goals__item {background: linear-gradient(135deg, var(--accent-muted, --color-yellow-300) 100%) !important;}
+[data-theme] .shop-goal-editor__name,
+[data-theme] .shop-goal-editor__editor-name,
+[data-theme] .shop-goal-editor__quantity-label {color: var(--surface-header-backdrop);}
+[data-theme] .shop-goals__item {
+  --progress-color: var(--accent) !important;
+  --completed-color: var(--accent-darker) !important;
+}
+[data-theme] .shop-goals__progress-text {color: var(--surface-header-backdrop) !important;}
 [data-theme] .user-profile .user-profile__card {
   background-color: var(--surface-dark) !important;
 }
