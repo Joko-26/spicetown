@@ -268,6 +268,7 @@ function addImprovedShop() {
   shopGoalEditorDiv.style.visibility = "hidden";
 
   shopGoalEditorDiv.innerHTML = `
+    <p class="shop-goal-editor__editor-name">Spicetown Shop Goal Editor</p>
     <div class="shop-goal-editor__heading">
       <h2 class="shop-goal-editor__name">Select an item</h2>
       <button class="shop-goal-editor__save-btn">Save</button>
@@ -275,12 +276,45 @@ function addImprovedShop() {
     </div>
     <div class="shop-goal-editor__input">
       <label class="shop-goal-editor__quantity-label">Quantity</label>
-      <input type="number" class="shop-goal-editor__quantity-input" placeholder="1? 2?? 4??? 67????" min="1">
+      <div class="shop-goal-editor__quantity-container">
+        <button id="decrease-quantity__btn">-</button>
+        <input type="number" class="shop-goal-editor__quantity-input" value="1" min="1" max="99">
+        <button id="increase-quantity__btn">+</button>
+      </div>
     </div>
   `;
 
-  const editorName = shopGoalEditorDiv.querySelector(".shop-goal-editor__name");
   const editorInput = shopGoalEditorDiv.querySelector(".shop-goal-editor__quantity-input");
+  const editorInputPlus = shopGoalEditorDiv.querySelector("#increase-quantity__btn");
+  const editorInputMinus = shopGoalEditorDiv.querySelector("#decrease-quantity__btn");
+
+  const updateQuantity = (newValue) => {
+    let value = parseInt(newValue);
+    if (isNaN(value) || value < 1) value = 1;
+    if (value > 99) value = 99;
+
+    editorInput.value = value;
+  };
+
+  editorInputPlus.addEventListener("click", () => {
+    updateQuantity(parseInt(editorInput.value) + 1);
+  });
+
+  editorInputMinus.addEventListener("click", () => {
+    updateQuantity(parseInt(editorInput.value) - 1);
+  });
+
+  editorInput.addEventListener("input", (event) => {
+    if (event.target.value > 99) {
+      event.target.value = 99;
+    }
+  });
+
+  editorInput.addEventListener("blur", (event) => {
+    updateQuantity(event.target.value);
+  });
+
+  const editorName = shopGoalEditorDiv.querySelector(".shop-goal-editor__name");
   const editorSaveBtn = shopGoalEditorDiv.querySelector(".shop-goal-editor__save-btn");
   const editorRemoveBtn = shopGoalEditorDiv.querySelector(".shop-goal-editor__remove-btn");
 
