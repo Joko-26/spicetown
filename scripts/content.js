@@ -373,7 +373,11 @@ function addImprovedShop() {
       const emptyColor = "rgba(255, 255, 255, 0.5)";
 
       shopGoalItemDiv.style.background = `linear-gradient(to right, ${fillColor} ${newPercent}%, ${emptyColor} ${newPercent}%)`;
-      if (newPercent >= 100) shopGoalItemDiv.querySelector(".shop-goals__image").classList.add("completed");
+      if (newPercent >= 100) {
+        shopGoalItemDiv.querySelector(".shop-goals__image").classList.add("completed");
+      } else {
+        shopGoalItemDiv.querySelector(".shop-goals__image").classList.remove("completed");
+      }
 
       if (newRemaining <= 0) {
         shopGoalsProgressTxt.textContent = `✅ Ready to buy!`;
