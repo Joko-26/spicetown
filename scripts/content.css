@@ -549,7 +549,8 @@
   --create-project-url: url("https://hc-cdn.hel1.your-objectstorage.com/s/v3/dd434c974c09b148_outline.png");
   --projects-show-timeline-url: ursl('data:image/svg+xml,<svg width="8" height="90" viewBox="0 0 4 20" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="0" y="0" width="4" height="30" rx="2" fill="%23b88bee"/></svg>');
 
-  --accent-image : url("https://hc-cdn.hel1.your-objectstorage.com/s/v3/cb0b4ddb0ba5d286_texture.png")
+  --accent-image : url("https://hc-cdn.hel1.your-objectstorage.com/s/v3/cb0b4ddb0ba5d286_texture.png");
+  --star-color : #aeaeae;
 }
 
 [data-theme] {
@@ -764,7 +765,7 @@
 }
 [data-theme] .shop-item-card::before {
   background-color: var(--accent-darker) !important;
-  background-image: var(--accent-image, linear-gradient(rgba(255, 255, 255, 0.05) 25%, transparent 25%, transparent 75%, rgba(255, 255, 255, 0.05) 75%, rgba(255, 255, 255, 0.05)), linear-gradient(90deg, rgba(255, 255, 255, 0.05) 25%, transparent 25%, transparent 75%, rgba(255, 255, 255, 0.05) 75%, rgba(255, 255, 255, 0.05)));
+  background-image: var(--accent-image, linear-gradient(rgba(255, 255, 255, 0.05) 25%, transparent 25%, transparent 75%, rgba(255, 255, 255, 0.05) 75%, rgba(255, 255, 255, 0.05)), linear-gradient(90deg, rgba(255, 255, 255, 0.05) 25%, transparent 25%, transparent 75%, rgba(255, 255, 255, 0.05) 75%, rgba(255, 255, 255, 0.05))) !important;
   background-size: 100px 100px;
 }
 [data-theme] .shop-item-card .shop-item-card__image {background-color: var(--border-color) !important;}
@@ -782,6 +783,7 @@
   background: linear-gradient(135deg, var(--accent) 0%, var(--accent-darker) 100%) !important;
   border-color: var(--border-color) !important;
 }
+[data-theme] .shop-goals__item {background: linear-gradient(135deg, var(--accent-muted, --color-yellow-300) 100%) !important;}
 [data-theme] .user-profile .user-profile__card {
   background-color: var(--surface-dark) !important;
 }
