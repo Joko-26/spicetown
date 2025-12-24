@@ -321,9 +321,11 @@
   width: 100%;
 }
 .shop-goals__items {
-  flex-wrap: wrap;
+  display: grid !important;
+  flex: 1;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 1rem;
-  flex: 1 1 50%;
+  width: 100%;
 }
 .shop-goals__items > .shop-goals__item {
   flex: 1 1 calc(50% - 0.5rem);

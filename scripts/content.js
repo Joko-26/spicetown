@@ -278,7 +278,7 @@ function addImprovedShop() {
 
   const shopGoalEditorDiv = document.createElement("div");
   shopGoalEditorDiv.classList.add("shop-goals-editor__div");
-  shopGoalEditorDiv.style.visibility = "hidden";
+  shopGoalEditorDiv.style.display = "none";
 
   shopGoalEditorDiv.innerHTML = `
     <p class="shop-goal-editor__editor-name">Spicetown Shop Goal Editor</p>
@@ -455,7 +455,7 @@ function addImprovedShop() {
       chrome.storage.local.get([`shop_goal_qty_${shopGoalItemID}`], result => {
         editorInput.value = result[`shop_goal_qty_${shopGoalItemID}`] || 1;
       });
-      shopGoalEditorDiv.style.visibility = "visible";
+      shopGoalEditorDiv.style.display = "block";
       document.querySelectorAll(".shop-goals__item").forEach(item => item.classList.remove("selected"));
       shopGoalItemDiv.classList.add("selected");
     });
@@ -467,7 +467,7 @@ function addImprovedShop() {
     chrome.storage.local.set({[`shop_goal_qty_${activeEditingItem.id}`]: newQuantity}, () => {
       activeEditingItem.updateShopItemPrice(newQuantity);
       calculateAllProgress();
-      shopGoalEditorDiv.style.visibility = "hidden";
+      shopGoalEditorDiv.style.display = "none";
     });
   });
 
@@ -476,7 +476,7 @@ function addImprovedShop() {
     const originalRemoveBtn = activeEditingItem.div.querySelector(".shop-goals__remove");
     if (originalRemoveBtn) {
       originalRemoveBtn.click();
-      shopGoalEditorDiv.style.visibility = "hidden";
+      shopGoalEditorDiv.style.display = "none";
       activeEditingItem = null;
       window.location.reload(); // reload needed or else the inject DOM gets overwriten!!!!!!!!!!!!!!!!!!!!!!!!!
     }
@@ -516,7 +516,7 @@ function addImprovedShop() {
       saveOrder();
     });
 
-    item.addEventListener("dragover", () => {
+    item.addEventListener("dragover", (e) => {
       e.preventDefault();
       e.dataTransfer.dropEffect = "move";
     });
