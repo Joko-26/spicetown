@@ -46,55 +46,57 @@ async function initialize() {
   refreshApiKey();
 }
 
+// optimize via DRY principle :yay:
 function addImprovedUI() {
-  const previousVotesBtn = document.querySelector(".btn.btn--brown.btn--borderless.votes-new__prev-btn");
-  if (previousVotesBtn) {
-    previousVotesBtn.textContent = "Previous votes";
-    const refreshVotesBtn = previousVotesBtn.cloneNode();
-    refreshVotesBtn.textContent = "Skip";
-    refreshVotesBtn.href = "javascript:window.location.href=window.location.href";
-    const voteActionsDiv = document.createElement("div");
-    voteActionsDiv.classList.add("vote-action__div");
-    previousVotesBtn.parentElement.insertBefore(voteActionsDiv, previousVotesBtn.parentElement.querySelector(".votes-new__main"));
-    voteActionsDiv.appendChild(previousVotesBtn);
-    voteActionsDiv.appendChild(refreshVotesBtn);
+  const prevVotesBtn = document.querySelector(".btn.btn--brown.btn--borderless.votes-new__prev-btn");
+  if (prevVotesBtn) {
+    prevVotesBtn.textContent = "Previous votes";
+
+    const skipBtn = prevVotesBtn.cloneNode(true);
+    skipBtn.textContent = "Skip";
+    skipBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      location.reload();
+    });
+    
+    const wrapper = document.createElement("div");
+    wrapper.className = "vote-action__div";
+
+    const mainSection = prevVotesBtn.parentElement.querySelector(".votes-new__main");
+    prevVotesBtn.parentElement.insertBefore(wrapper, mainSection);
+    wrapper.append(prevVotesBtn, skipBtn);
   }
 
-  const sidebarAside = document.querySelector("aside.sidebar")
-  if (sidebarAside) {
-    chrome.storage.local.get(["sidebarPinned"], (result) => {
-      const pinSidebarBtn = document.createElement("button");
-      pinSidebarBtn.classList.add("pin-sidebar__btn");
-      pinSidebarBtn.innerHTML = `
+  const sidebar = document.querySelector("aside.sidebar");
+  if (sidebar) {
+    chrome.storage.local.get(["sidebarPinned"], ({sidebarPinned = false}) => {
+      const pinBtn = document.createElement("button");
+      pinBtn.classList.add("pin-sidebar__btn");
+      pinBtn.innerHTML = `
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pin-icon lucide-pin">
           <path d="M12 17v5"/><path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z"/>
         </svg>
       `;
 
-      let pinned = result.sidebarPinned || false;
-      if (pinned) {
-        sidebarAside.classList.add("pinned");
-        sidebarAside.style.width = "var(--sidebar-expanded-width)";
-        pinSidebarBtn.querySelector("svg").style.opacity = 1;
-      } else pinSidebarBtn.querySelector("svg").style.opacity = 0.4;
+      const icon = pinBtn.querySelector("svg");
+      let isPinned = sidebarPinned;
 
-      pinSidebarBtn.addEventListener("click", () => {
-        pinned = !pinned;
-        if (pinned) {
-          sidebarAside.classList.add("pinned");
-          sidebarAside.style.width = "var(--sidebar-expanded-width)";
-          pinSidebarBtn.querySelector("svg").style.opacity = 1;
-        } else {
-          sidebarAside.classList.remove("pinned");
-          sidebarAside.style.width = "";
-          pinSidebarBtn.querySelector("svg").style.opacity = 0.4;
-        }
+      const updateSidebarUI = (pinned) => {
+        sidebar.classList.toggle("pinned", pinned);
+        sidebar.style.width = pinned ? "var(--sidebar-expanded-width)" : "";
+        icon.style.opacity = pinned ? "1" : "0.4";
+      };
 
-        chrome.storage.local.set({sidebarPinned: pinned});
+      updateSidebarUI(isPinned);
+      
+      pinBtn.addEventListener("click", () => {
+        isPinned = !isPinned;
+        updateSidebarUI(isPinned);
+        chrome.storage.local.set({sidebarPinned: isPinned});
       });
 
-      sidebarAside.appendChild(pinSidebarBtn);
-    })
+      sidebar.appendChild(pinBtn);
+    });
   }
 }
 
