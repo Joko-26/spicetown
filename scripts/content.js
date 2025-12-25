@@ -528,6 +528,13 @@ function addImprovedShop() {
 }
 
 async function addProjectSearcher() {
+  const getRandomIntegerInclusive = (min, max) => { // WHY IS THIS NOT A NORMAL FUCKING JAVASCRIPT FUNCTION ARGHHHH
+    min = Math.ceil(min)
+    max = Math.floor(max)
+
+    return Math.floor(Math.random() * (max - min + 1)) + min
+  }
+
   const explorePageContainer = document.querySelector(".explore");
   const projectList = document.querySelector("#project-list");
 
@@ -541,10 +548,15 @@ async function addProjectSearcher() {
   searchInput.classList.add("project-list__searcher", "input__field");
 
   const searchBtn = document.createElement("button");
-  searchBtn.classList.add("project-list__search-btn");
+  searchBtn.classList.add("project-list__action-btn");
   searchBtn.innerHTML = `<svg width="24" height="24" viewBox="0 0 40 40" fill="none"><path d="M39.0527 34.2126L29.8565 25.0156C31.419 22.5281 32.3258 19.5879 32.3258 16.4326C32.3258 7.50574 25.0891 0.27002 16.1626 0.27002C7.23605 0.27002 0 7.50574 0 16.4326C0 25.3598 7.23571 32.5948 16.1626 32.5948C19.5964 32.5948 22.777 31.5213 25.3942 29.6971L34.481 38.7846C35.1124 39.4154 35.9402 39.7295 36.7669 39.7295C37.5946 39.7295 38.4213 39.4154 39.0537 38.7846C40.3155 37.5215 40.3155 35.4754 39.0527 34.2126ZM16.1626 27.3584C10.1291 27.3584 5.23745 22.4671 5.23745 16.4333C5.23745 10.3994 10.1291 5.50781 16.1626 5.50781C22.1964 5.50781 27.0877 10.3994 27.0877 16.4333C27.0877 22.4671 22.1964 27.3584 16.1626 27.3584Z" fill="currentColor"></path></svg>`;
 
+  const randomBtn = document.createElement("button");
+  randomBtn.classList.add("project-list__action-btn");
+  randomBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-dice1-icon lucide-dice-1"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><path d="M12 12h.01"/></svg>`
+
   searchContainer.appendChild(searchInput);
+  searchContainer.appendChild(randomBtn);
   searchContainer.appendChild(searchBtn);
 
   const insertionPoint = explorePageContainer.querySelector(".explore__projects-list") || projectList;
@@ -560,13 +572,11 @@ async function addProjectSearcher() {
 
     try {
       refreshApiKey();
-      const API_KEY = apiKey;
-
       const query = encodeURIComponent(searchInput.value);
       const response = await fetch(`https://flavortown.hackclub.com/api/v1/projects?query=${query}&page=${currentPage}`, {
         method: 'GET',
         headers: {
-          'Authorization': `Bearer ${API_KEY}`,
+          'Authorization': `Bearer ${apiKey}`,
           'Accept': 'application/json'
         }
       });
@@ -586,6 +596,65 @@ async function addProjectSearcher() {
       console.error("i failed to fetch shit FAAHHHHH: ", err);
     }
   };
+
+  const getTotalProjects = async () => {
+    try {
+      refreshApiKey();
+      const response = await fetch('https://flavortown.hackclub.com/api/v1/projects', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${apiKey}`,
+          'Accept': 'application/json'
+        }
+      });
+
+      const data = await response.json();
+
+      if (data.error === "rate_limited" || data.error === "unauthorized") {
+        if (data.error === "rate_limited") projectList.innerHTML = `<p class="explore__end">Rate limited. Wait 1 min.</p>`
+        else if (data.error === "unauthorized") projectList.innerHTML = `<p class="explore__end">Generate an API key from settings.</p>`
+        return;
+      }
+
+      return data.pagination.total_count;
+    } catch (err) {
+      console.error("i couldnt get projects api grrrrrrrrrr", + err);
+    }
+  }
+
+  const getRandomProject = async (lastProjectID) => {
+    try {
+      refreshApiKey();
+      const randomProjectID = getRandomIntegerInclusive(1, lastProjectID);
+      const response = await fetch(`https://flavortown.hackclub.com/api/v1/projects/${randomProjectID}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${apiKey}`,
+          'Accept': 'application/json'
+        }
+      });
+
+      if (response.status === 404 && lastProjectID != undefined) {
+        getRandomProject(lastProjectID);
+        return "deleted_project";
+      } else if (lastProjectID === undefined) {
+        return "rate_limited";
+      }
+
+      const data = await response.json();
+
+      if (data.error === "rate_limited" || data.error === "unauthorized") {
+        if (data.error === "rate_limited") projectList.innerHTML = `<p class="explore__end">Rate limited. Wait 1 min.</p>`
+        else if (data.error === "unauthorized") projectList.innerHTML = `<p class="explore__end">Generate an API key from settings.</p>`
+        return;
+      }
+
+      return randomProjectID;
+    } catch (err) {
+      console.error("i couldnt get specific project api UGHHHHHHHHHHHHHHHHHHHHHHHHHHHHH", err);
+      getRandomProject(lastProjectID);
+    }
+  }
 
   function updatePaginationUI(paginationData) {
     let paginationContainer = document.querySelector(".explore__pagination");
@@ -653,6 +722,18 @@ async function addProjectSearcher() {
   searchInput.addEventListener("keydown", (e) => {
     if (e.key === "Enter") handleSearch(false);
   });
+
+randomBtn.addEventListener("click", async () => {
+  const randomProjectID = await getRandomProject(await getTotalProjects());
+
+  if (randomProjectID === "deleted_project") {
+    projectList.innerHTML = `<p class="explore__end">Deleted project. Try again.</p>`;
+  } else if (randomProjectID === "rate_limited") {
+    projectList.innerHTML = `<p class="explore__end">Rate limited. Wait 1 min.</p>`;
+  } else {
+    window.location.pathname = `/projects/${randomProjectID}`;
+  }
+});
 }
 
 addProjectSearcher();

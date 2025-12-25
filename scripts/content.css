@@ -506,7 +506,7 @@
   gap: 1rem;
   margin: 2rem 0;
 }
-.project-list__search-btn {
+.project-list__action-btn {
   padding: var(--space-m) var(--space-m);
   border-radius: calc(var(--border-radius) * .8);
   border: none;
