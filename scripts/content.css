@@ -755,6 +755,7 @@
 [data-theme] .explore__description,
 [data-theme] .explore__details > summary,
 [data-theme] .explore__empty {color: var(--text-primary) !important;}
+[data-theme] .explore__code {background-color: var(--surface-card) !important; color: var(--text-primary) !important;}
 
 [data-theme] .project-card__stats svg,
 [data-theme] .projects-board__create-card > svg,
@@ -932,6 +933,15 @@
 [data-theme] .user-profile .user-profile__card {
   background-color: var(--surface-dark) !important;
 }
+[data-theme] .my-orders__title {color: var(--text-highlight) !important;}
+[data-theme] .my-orders__item {background: linear-gradient(135deg, var(--surface-dark) 0%, var(--surface-card) 100%) !important;}
+[data-theme] .my-orders__header-label,
+[data-theme] .my-orders__status-hint,
+[data-theme] .my-orders__label {color: var(--text-primary) !important;}
+[data-theme] .my-orders__item-name,
+[data-theme] .my-orders__header-value,
+[data-theme] .my-orders__value {color: var(--text-highlight) !important;}
+
 [data-theme] .user-profile__identity h1,
 [data-theme] .user-profile__stats h4,
 [data-theme] .user-profile__stats h3,
@@ -970,6 +980,47 @@
   padding: 2rem 1rem;
   border-color: var(--border-color) !important;
 }
+
+[data-theme] .modal {
+  background: var(--surface-card) !important;
+  border-color: var(--border-color) !important;
+}
+[data-theme] .modal__title {
+  color: var(--text-highlight) !important;
+  background-color: var(--surface-header) !important;
+}
+[data-theme] .settings-form__label,
+[data-theme] .settings-form__checkbox > span,
+[data-theme] .balance-history__header > h1,
+[data-theme] .balance-history__table > thead > tr > th {color: var(--text-highlight) !important;}
+[data-theme] .settings-form__hint,
+[data-theme] .api-key-display,
+[data-theme] .api-key-info__div > .button_to svg,
+[data-theme] .api-key-container > button > svg,
+[data-theme] .api-docs-link,
+[data-theme] .balance-history__table > tbody > tr > td:not(.balance-history__amount--positive),
+[data-theme] .balance-history__table > tbody > tr > td > a {color: var(--text-primary) !important;}
+[data-theme] .settings-form__input,
+[data-theme] .api-key-display {
+  background-color: var(--surface-dark) !important;
+  border-color: var(--border-color) !important;
+}
+[data-theme] .settings-form__input::placeholder {color: var(--text-primary) !important; opacity: 0.5;}
+[data-theme] .modal__actions-close {
+  background-color: var(--surface-dark) !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-primary) !important;
+}
+[data-theme] .settings-form__checkbox > input {accent-color: var(--accent) !important;}
+[data-theme] .balance-history__amount--positive {color: var(--accent) !important;}
+[data-theme] .balance-history__table > thead > tr > th {border-bottom-color: var(--border-color) !important;}
+[data-theme] .balance-history__table > tbody > tr > td {border-bottom-color: var(--accent-darker) !important;}
+
+[data-theme] .project-followers-modal > div:nth-of-type(2) {background: var(--surface-dark) !important;}
+
+[data-theme] .users > .user {background: var(--surface-dark) !important;}
+[data-theme] .users .content {background: var(--surface-card) !important;}
+[data-theme] .pagy.series-nav > a {background: var(--surface-dark) !important; color: var(--text-primary) !important; text-decoration: none !important;}
 
 .warning__div {
   display: flex;

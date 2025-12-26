@@ -30,9 +30,9 @@
         <ul>
           <li><a href="#implementing-themes">Implementing Themes <i>(in V2; ⚠️ WIP)</i></a></li>
           <li><a href="#themes-ruby">Ruby <i>(⚠️ WIP)</i></a></li>
-          <li><a href="#themes-catppuccin">catppuccin <i>(⚠️ WIP)</i></a>
+          <li><a href="#themes-catppuccin">Catppuccin <i>(⚠️ WIP)</i></a>
             <ul>
-              <li><a href="#themes-catppuccin-mocha">catppuccin Mocha <i>(⚠️ WIP)</i></a></li>
+              <li><a href="#themes-catppuccin-mocha">Catppuccin Mocha <i>(⚠️ WIP)</i></a></li>
             </ul>
           </li>
         </ul>
@@ -213,7 +213,7 @@
     <td>Exposed Achievements</td>
     <td>Achievements</td>
     <td>TBD <small>(In-dev 19/12/25)</small></td>
-    <td>Yes</td>
+    <td>No <small>(Deprecated)</small></td>
     <td>None</td>
   </tr>
   <tr>
@@ -225,7 +225,7 @@
   </tr>
 </table>
 
-<h3 id="exposed-achievements">Exposed Achievements</h3>
+<h3 id="exposed-achievements">Exposed Achievements <small>(Deprecated)</small></h3>
 <p>Exposed Achievements exposes hidden and secret achievements by replacing the "???" title, mysterious description, and "?" cookie reward with the actual ones straight from the source code! Please not that this process is currently <b>not automatic</b>. New achievements will <b>not</b> be exposed immediately without manual input.</p>
 
 <h3 id="voting+">Voting+</h3>

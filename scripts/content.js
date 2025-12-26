@@ -24,11 +24,11 @@ async function initialize() {
 
   // UI Enhancements
   const uiEnhancements = [
+    addProjectSearcher,
     addImprovedUI,
     addExtraProjectInfo,
     addImprovedShop,
     addProjectSearcher,
-    addAchievementInfo,
     addThemesPage,
     addBannerTemplateHint
   ];
@@ -44,6 +44,10 @@ async function initialize() {
 
   // Grab The Api Key
   refreshApiKey();
+}
+
+function addKeybinds() { // :3
+  
 }
 
 // optimize via DRY principle :yay:
@@ -736,56 +740,54 @@ randomBtn.addEventListener("click", async () => {
 });
 }
 
-addProjectSearcher();
+// function addAchievementInfo() { // deprecate
+//   const achievementGridDiv = document.querySelector(".achievements__grid");
+//   if (!achievementGridDiv) return;
+//   const achievementMap = {
+//     "Anyone Can Cook!": "Sign up to Flavortown",
+//     "Very Fried": "Verify your identity",
+//     "Home Cookin'": "Make your first project",
+//     "Recipe Notes": "Post a devlog",
+//     "Yapper": "Comment on a devlog",
+//     "Off the Menu": "Buy something from the shop (NOT free stickers)",
+//     "Regular Customer": "Buy 5 items from the shop",
+//     "VIP Diner": "Buy 10 items from the shop",
+//     "Line Cook": "Have 5 or more projects",
+//     "Order Up!": "Ship your first project",
+//     "Michelin Star": "Have your project approved for shipping",
+//     "Cookbook Author": "Post 10 devlogs",
+//     "Scrapbook usage?!": "Use scrapbook in a devlog",
+//     "Cooking": "Get 'fire' project status, given out by Flavortown devs",
+//     "Accept cookies": "Spam the cookie ? amount of times."
+//   };
+//   const secretMap = {
+//     "15": {name: "Cookbook Author", desc: "Post 10 devlogs", reward: "15"},
+//     "16": {name: "Scrapbook usage?!", desc: "Use scrapbook in a devlog"},
+//     "17": {name: "Cooking", desc: "Get 'fire' project status, given out by Flavortown devs", reward: "5"},
+//     "18": {name: "Accept cookies", desc: "Spam the cookie for a certain amount."} // isnt in fucking source code :(
+//   };
+//   const achievementCards = achievementGridDiv.querySelectorAll(".achievements__card");
+//   achievementCards.forEach((achievementCard, index) => {
+//     const achievementCardNameEl = achievementCard.querySelector(".achievements__name");
+//     const achievementCardDescriptionEl = achievementCard.querySelector(".achievements__description");
+//     const achievementCardRewardEl = achievementCard.querySelector(".achievements__reward.achievements__reward--secret");
 
-function addAchievementInfo() {
-  const achievementGridDiv = document.querySelector(".achievements__grid");
-  if (!achievementGridDiv) return;
-  const achievementMap = {
-    "Anyone Can Cook!": "Sign up to Flavortown",
-    "Very Fried": "Verify your identity",
-    "Home Cookin'": "Make your first project",
-    "Recipe Notes": "Post a devlog",
-    "Yapper": "Comment on a devlog",
-    "Off the Menu": "Buy something from the shop (NOT free stickers)",
-    "Regular Customer": "Buy 5 items from the shop",
-    "VIP Diner": "Buy 10 items from the shop",
-    "Line Cook": "Have 5 or more projects",
-    "Order Up!": "Ship your first project",
-    "Michelin Star": "Have your project approved for shipping",
-    "Cookbook Author": "Post 10 devlogs",
-    "Scrapbook usage?!": "Use scrapbook in a devlog",
-    "Cooking": "Get 'fire' project status, given out by Flavortown devs",
-    "Accept cookies": "Spam the cookie ? amount of times."
-  };
-  const secretMap = {
-    "15": {name: "Cookbook Author", desc: "Post 10 devlogs", reward: "15"},
-    "16": {name: "Scrapbook usage?!", desc: "Use scrapbook in a devlog"},
-    "17": {name: "Cooking", desc: "Get 'fire' project status, given out by Flavortown devs", reward: "5"},
-    "18": {name: "Accept cookies", desc: "Spam the cookie for a certain amount."} // isnt in fucking source code :(
-  };
-  const achievementCards = achievementGridDiv.querySelectorAll(".achievements__card");
-  achievementCards.forEach((achievementCard, index) => {
-    const achievementCardNameEl = achievementCard.querySelector(".achievements__name");
-    const achievementCardDescriptionEl = achievementCard.querySelector(".achievements__description");
-    const achievementCardRewardEl = achievementCard.querySelector(".achievements__reward.achievements__reward--secret");
+//     if (!achievementCardNameEl || !achievementCardDescriptionEl) return;
 
-    if (!achievementCardNameEl || !achievementCardDescriptionEl) return;
+//     const achievementCardName = achievementCardNameEl.textContent.trim();
+//     const position = (index + 1).toString(); // fuck 0-index
 
-    const achievementCardName = achievementCardNameEl.textContent.trim();
-    const position = (index + 1).toString(); // fuck 0-index
-
-    if (achievementCardName === "???" && secretMap[position]) {
-      achievementCardNameEl.textContent = secretMap[position].name;
-      achievementCardDescriptionEl.textContent = secretMap[position].desc;
-      if (achievementCardRewardEl && secretMap[position].reward) {
-        achievementCardRewardEl.textContent = `+${secretMap[position].reward} 🍪`;
-      }
-    } else if (achievementMap[achievementCardName]) {
-      achievementCardDescriptionEl.textContent = achievementMap[achievementCardName];
-    }
-  })
-}
+//     if (achievementCardName === "???" && secretMap[position]) {
+//       achievementCardNameEl.textContent = secretMap[position].name;
+//       achievementCardDescriptionEl.textContent = secretMap[position].desc;
+//       if (achievementCardRewardEl && secretMap[position].reward) {
+//         achievementCardRewardEl.textContent = `+${secretMap[position].reward} 🍪`;
+//       }
+//     } else if (achievementMap[achievementCardName]) {
+//       achievementCardDescriptionEl.textContent = achievementMap[achievementCardName];
+//     }
+//   })
+// }
 
 async function addSpicetownSettings() {
   const settingsForm = await document.querySelector(".settings-form");
@@ -850,7 +852,6 @@ async function addSpicetownSettings() {
     rerollApiSvg.style.color = "var(--color-text-body)";
 
     const copyApiBtn = document.createElement("button");
-    copyApiBtn.style.height = "24px";
     copyApiBtn.style.background = "none";
     copyApiBtn.style.border = "none";
     copyApiBtn.style.cursor = "pointer";
