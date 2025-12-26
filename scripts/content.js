@@ -354,13 +354,13 @@ function addImprovedShop() {
       if (fill) fill.style.width = `${itemPercent}%`;
       if (progressTxt) {
         const neededForThis = Math.max(0, itemTotal - contribution);
-        progressTxt.textContent = neededForThis <= 0 ? "✅ Ready!" : `🍪${neededForThis.toLocaleString()} more`;
+        progressTxt.textContent = neededForThis <= 0 ? "✅ Ready!" : `🍪${neededForThis.toLocaleString()} more needed`;
       }
 
       const fillColor = itemPercent >= 100 ? "var(--completed-color)" : "var(--progress-color)";
       const emptyColor = "rgba(255, 255, 255, 0.5)";
       item.style.background = `linear-gradient(to right, ${fillColor} ${itemPercent}%, ${emptyColor} ${itemPercent}%)`;
-      
+
       runningBalance = Math.max(0, runningBalance - itemTotal);
     }
     
@@ -511,6 +511,7 @@ function addImprovedShop() {
       draggedItem = null;
       shopGoalsItems.forEach(i => i.style.transform = "");
       saveOrder();
+      calculateAllProgress();
     });
 
     item.addEventListener("dragover", (e) => {
