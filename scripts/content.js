@@ -868,12 +868,55 @@ async function addProjectSearcher() {
 async function addUserExplore() {
   const exploreNav = document.querySelector(".explore__nav");
   if (!exploreNav) return;
+
+  const template = document.querySelector(".explore__nav-component:not(.selected)") || document.querySelector(".explore__nav-component");
   const usersComponent = document.querySelectorAll(".explore__nav-component:not(.selected)")[0].cloneNode(true);
+
   usersComponent.href = "/explore/users";
   usersComponent.innerHTML = `
     <svg xmlns="http://www.w3.org/2000/svg" width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-icon lucide-user"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
     Users
   `;
+
+  usersComponent.addEventListener("click", (e) => {
+    e.preventDefault();
+
+    // fake switching urls lmao
+    // i just hate having to modify innerHTML and flashbanging users
+    window.history.pushState({}, "", "/explore/users");
+    
+    document.querySelectorAll(".explore__nav-component").forEach(element => element.classList.remove("selected"));
+    usersComponent.classList.add("selected");
+
+    // elements needed to hide so i can pretend there's a new page :3
+    const elementsToHide = [ // querySelector btw
+      ".explore__header",
+      ".project-list__search-container",
+      "#project-list",
+      ".explore__pagination",
+      ".explore__list"
+    ];
+
+    elementsToHide.forEach(selector => {
+      const element = document.querySelector(selector);
+      if (element) element.style.display = "none"; // maybe delete it outright? idk maybe in the future :P
+    });
+
+    const existingMessage = document.getElementById("users-message-container");
+    if (existingMessage) existingMessage.remove();
+
+    let container = document.querySelector(".explore");
+    if (!container) {
+      container = document.createElement("div");
+      document.querySelector(".explore").appendChild(container);
+    };
+    const messageDiv = document.createElement("div");
+    messageDiv.id = "users-message-container";
+    messageDiv.innerText = "join #spicetown for more updates!";
+
+    container.appendChild(messageDiv);
+  });
+
   exploreNav.insertBefore(usersComponent, exploreNav.querySelector(".explore__nav-component[href='/explore/following']"));
 }
 
