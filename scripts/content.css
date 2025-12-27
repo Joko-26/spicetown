@@ -542,6 +542,40 @@
   color: var(--color-bg-2);
 }
 
+.explore__list {
+  margin-top: 2em;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2em;
+  justify-content: space-evenly;
+}
+.user-card {
+  background-color: var(--color-brown-500);
+  border: 7px solid var(--color-brown-400);
+  border-radius: calc(var(--border-radius) * 1.8);
+  background-clip: padding-box;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-height: 100%;
+  overflow: hidden;
+  background-image: url(/assets/mask/project-card-bd9acd6b.webp);
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+  padding: 2rem;
+  color: var(--color-bg);
+}
+.user-card__id {
+  opacity: 0.5;
+  font-size: 0.8rem;
+}
+.user-avatar {
+  height: 7.5rem;
+  width: 7.5rem;
+}
+.user-card__title {font-size: 1.5rem;}
+
 /** ANIMATIONS **/
 
 .sidebar {
@@ -575,6 +609,7 @@
 .kitchen-help,
 .explore__list > .post,
 .project-card,
+.user-card,
 .explore__end,
 .shop__buttons,
 .shop__nav,

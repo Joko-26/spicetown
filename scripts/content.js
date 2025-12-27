@@ -869,7 +869,7 @@ async function addUserExplore() {
   const exploreNav = document.querySelector(".explore__nav");
   if (!exploreNav) return;
 
-  const template = document.querySelector(".explore__nav-component:not(.selected)") || document.querySelector(".explore__nav-component");
+  // Use the template logic you had
   const usersComponent = document.querySelectorAll(".explore__nav-component:not(.selected)")[0].cloneNode(true);
 
   usersComponent.href = "/explore/users";
@@ -884,7 +884,7 @@ async function addUserExplore() {
     // fake switching urls lmao
     // i just hate having to modify innerHTML and flashbanging users
     window.history.pushState({}, "", "/explore/users");
-    
+
     document.querySelectorAll(".explore__nav-component").forEach(element => element.classList.remove("selected"));
     usersComponent.classList.add("selected");
 
@@ -899,22 +899,76 @@ async function addUserExplore() {
 
     elementsToHide.forEach(selector => {
       const element = document.querySelector(selector);
-      if (element) element.style.display = "none"; // maybe delete it outright? idk maybe in the future :P
+      if (element) element.style.display = "none";
     });
 
-    const existingMessage = document.getElementById("users-message-container");
+    const existingMessage = document.getElementById("users");
     if (existingMessage) existingMessage.remove();
 
-    let container = document.querySelector(".explore");
-    if (!container) {
-      container = document.createElement("div");
-      document.querySelector(".explore").appendChild(container);
-    };
-    const messageDiv = document.createElement("div");
-    messageDiv.id = "users-message-container";
-    messageDiv.innerText = "join #spicetown for more updates!";
+    const mainContainer = document.querySelector(".explore");
 
-    container.appendChild(messageDiv);
+    const usersDiv = document.createElement("div");
+    usersDiv.id = "users";
+    usersDiv.className = "explore__list";
+    usersDiv.innerHTML = "<p>Loading users...</p>";
+
+    mainContainer.appendChild(usersDiv);
+
+    // start at 1?
+    let currentPage = 1;
+
+    const getUsers = async (page = 1) => {
+      try {
+        await refreshApiKey();
+        const response = await fetch(`https://flavortown.hackclub.com/api/v1/users`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${apiKey}`,
+            'Accept': 'application/json'
+          }
+        });
+
+        const data = await response.json();
+        console.log(data);
+
+        if (data.error === "rate_limited" || data.error === "unauthorized") {
+          const msg = data.error === "rate_limited" ? "Rate limited. Wait 1 min." : "Generate an API key from settings.";
+          usersDiv.innerHTML = `<p class="explore__end">${msg}</p>`;
+          return;
+        }
+
+        renderUsers(data.users, usersDiv); 
+      } catch (err) {
+        console.error("i couldnt get users api grrrrrrrrrr >:(", err);
+        usersDiv.innerHTML = `<p class="explore__end">Error fetching users.</p>`;
+      }
+    }
+
+    function renderUsers(users, targetElement) {
+      if (!users || users.length === 0) {
+        targetElement.innerHTML = `<p class="explore__end">No users found.</p>`;
+        return;
+      }
+
+      const html = users.map(user => `
+        <div class="user-card">
+          <p class="user-card__id">#${user.id}</p>
+          <img src="${user.avatar}" class="user-avatar"/>
+          <h3 class="user-card__title">${user.display_name}</h3>
+        </div>
+      `).join('');
+
+      targetElement.innerHTML = html;
+      mainContainer.innerHTML += `
+        <div class="explore__pagination">
+          <button type="button" class="btn btn--brown" style="position: relative;">
+            Load More Projects
+          </button>
+        </div>
+      `;
+    }
+
+    getUsers();
   });
 
   exploreNav.insertBefore(usersComponent, exploreNav.querySelector(".explore__nav-component[href='/explore/following']"));
