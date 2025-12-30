@@ -165,7 +165,7 @@ function addDevlogImprovement() {
         newSelectStart = selectStart + (selectedText ? 1 : 1);
         newSelectEnd = selectStart + insertText.length - 1;
         break;
-
+      
       case "code-block":
         insertText = selectedText ? `\`\`\`\n${selectedText}\n\`\`\`` : '```\nMD Editor by Spicetown\n```';
         newSelectStart = selectStart + (selectedText ? 1 : 1);
@@ -176,6 +176,7 @@ function addDevlogImprovement() {
     devlogTextContainer.setRangeText(insertText, selectStart, selectEnd, "end");
     devlogTextContainer.focus();
     devlogTextContainer.setSelectionRange(newSelectStart, newSelectEnd);
+    updatePreview();
   });
 
   const parentContainer = document.querySelector(".projects-new__form > .projects-new__card > .projects-new__field");
@@ -219,8 +220,8 @@ function addDevlogImprovement() {
     }).join("\n");
 
     html = html
-      .replace(/\*\*\*_(.*?)_\*\*\*/gim, "<emphasis>$1</emphasis>")
-      .replace(/\*\*_(.*?)_\*\*/gim, "<emphasis>$1</emphasis>")
+      .replace(/\*\*\*_(.*?)_\*\*\*/gim, "<strong><em>$1</em></strong>") // what drugs was i on when i typed
+      .replace(/\*\*_(.*?)_\*\*/gim, "<strong><em>$1</em></strong>") // <emphasis></emphasis> sob
       .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
       .replace(/\*(.*?)\*/g, "<em>$1</em>")
       .replace(/~~(.*?)~~/g, "<del>$1</del>")
