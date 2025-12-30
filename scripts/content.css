@@ -591,6 +591,7 @@
 .projects-new__field.projects-new__devlog-text {
   flex-direction: row;
   gap: 2.5rem;
+  align-items: flex-start;
 }
 .projects-new__field.projects-new__devlog-text > .post__body {
   flex: 1 0 50%;
