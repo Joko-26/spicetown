@@ -585,6 +585,15 @@
   font-size: 1.5rem;
   text-overflow: ellipsis;
 }
+.projects-new__container {
+  max-width: 80% !important;
+}
+.projects-new__field.projects-new__devlog-text {
+  flex-direction: row;
+}
+.projects-new__field.projects-new__devlog-text > .post__body {
+  flex: 1 0 50%;
+}
 
 /** ANIMATIONS **/
 

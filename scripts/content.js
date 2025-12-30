@@ -179,32 +179,61 @@ function addDevlogImprovement() {
   });
 
   const parentContainer = document.querySelector(".projects-new__form > .projects-new__card > .projects-new__field");
+  parentContainer.classList.add("projects-new__devlog-text")
   const previewContainer = document.createElement("div");
   previewContainer.classList.add("post__body");
 
-  const parser = (text) => {
-    let parsedHTML = text
-      .replace(/```(?:[a-z]+)?\n([\s\S]*?)\n```/gim, '<pre><code><span>$1</span></code></pre>')
-      .replace(/\*\*\*_(.*?)_\*\*\*/gim, "<strong><em>$1</em></strong>")
-      .replace(/\*\*_(.*?)_\*\*/gim, "<strong><em>$1</em></strong>")
-      .replace(/!\[(.*?)\]\((.*?)\)/gim, "<img alt='$1' src='$2'/>")
-      .replace(/\[(.*?)\]\((.*?)\)/gim, "<a href='$2' target='_blank'>$1</a>")
+  function parser(text) {
+    if (!text) return "";
+
+    let html = text
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
+
+    const codeBlocks = [];
+    html = html.replace(/```(\w*)\n([\s\S]*?)```/g, (_, lang, code) => {
+      const id = `__CODEBLOCK_${codeBlocks.length}__`;
+      codeBlocks.push(`<pre class="flavortown-md-pre"><code><span>${code.trim()}</span></code></pre>`);
+      return id;
+    });
+
+    html = html
+      .replace(/^### (.*$)/gim, "<h3>$1</h3>")
+      .replace(/^## (.*$)/gim, "<h2>$2</h2>")
       .replace(/^# (.*$)/gim, "<h1>$1</h1>")
-      .replace(/^## (.*$)/gim, "<h2>$1</h2>")
-      .replace(/^\s*-\s+(.*)/gim, "<ubli>$1</ubli>") // sob
-      .replace(/^\s*\d+\.\s+(.*)/gim, "<obli>$1</obli>") // sob
-      .replace(/(<ubli>.*<\/ubli>(\n?))+/g, (match) => `<ul>${match.replace(/ubli/g, 'li')}</ul>`) // what am i doing
-      .replace(/(<obli>.*<\/obli>(\n?))+/g, (match) => `<ol>${match.replace(/obli/g, 'li')}</ol>`) // what am i doing
       .replace(/^> (.*$)/gim, "<blockquote>$1</blockquote>")
       .replace(/^---$/gim, "<hr/>")
-      .replace(/\*\*(.*?)\*\*/gim, "<strong>$1</strong>")
-      .replace(/\*(.*?)\*/gim, "<em>$1</em>")
-      .replace(/_(.*?)_/gim, "<em>$1</em>")
-      .replace(/`([^`]+)`/gim, "<p><code>$1</code></p>")
+      .replace(/^\s*-\s+(.*)/gim, "<ubli>$1</ubli>")
+      .replace(/^\s*\d+\.\s+(.*)/gim, "<obli>$1</obli>");
 
-    return parsedHTML;
-  };
+    html = html
+      .replace(/(<ubli>.*<\/ubli>\n?)+/g, (m) => `<ul>${m.replace(/ubli/g, "li")}</ul>`)
+      .replace(/(<obli>.*<\/obli>\n?)+/g, (m) => `<ol>${m.replace(/obli/g, "li")}</ol>`);
 
+    html = html.split("\n").map(line => {
+      const trimmed = line.trim();
+      if (!trimmed) return ""; 
+      if (/^<(h[1-3]|ul|ol|li|blockquote|hr|pre)/i.test(trimmed)) return line;
+      return `<p>${line}</p>`;
+    }).join("\n");
+
+    html = html
+      .replace(/\*\*\*_(.*?)_\*\*\*/gim, "<emphasis>$1</emphasis>")
+      .replace(/\*\*_(.*?)_\*\*/gim, "<emphasis>$1</emphasis>")
+      .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+      .replace(/\*(.*?)\*/g, "<em>$1</em>")
+      .replace(/~~(.*?)~~/g, "<del>$1</del>")
+      .replace(/`([^`]+)`/g, "<code>$1</code>")
+      .replace(/!\[(.*?)\]\((.*?)\)/g, '<img src="$2" alt="$1" />')
+      .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank">$1</a>');
+
+    codeBlocks.forEach((block, i) => {
+      html = html.replace(`__CODEBLOCK_${i}__`, block);
+    });
+
+    return html.replace(/<p>(__CODEBLOCK_.*)<\/p>/g, "$1").trim();
+  }
   const updatePreview = () => {
     previewContainer.innerHTML = parser(devlogTextContainer.value); // wowie parser
   };
