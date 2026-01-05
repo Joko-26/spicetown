@@ -857,7 +857,7 @@
   --projects-show-timeline-url: url('data:image/svg+xml,<svg width="8" height="90" viewBox="0 0 4 20" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="0" y="0" width="4" height="30" rx="2" fill="%23096b00"/></svg>');
 }
 
-/** Dracula THEME **/
+/** Midnight THEME **/
 [data-theme="bg-color-midnight"] {
   --bg-primary: #282a36;
   --text-primary: #f8f8f2;
@@ -868,8 +868,8 @@
   --surface-card: #3b3e52;
   --surface-dark: #1e1f29;
 
-  --accent: #44475a;
-  --accent-darker: #6272a4;
+  --accent: #6272a4;
+  --accent-darker: #6273a460;
   --border-color: #44475a;
   --accent-muted: #6272a4;
   --accent-semi-transparent: #44475a4d;
