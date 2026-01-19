@@ -1269,10 +1269,7 @@ async function addSpicetownSettings() {
     const rerollApiHeading = document.createElement("div");
     rerollApiHeading.classList.add("api-key-info__div")
     apiKeyDiv.insertBefore(rerollApiHeading, apiKeyContainer);
-
-    const rerollApiLabel = apiKeyDiv.querySelector("label.settings-form__label");
-
-    rerollApiHeading.appendChild(rerollApiLabel);
+    
     rerollApiHeading.appendChild(rerollApiForm);
 
     const rerollApiBtn = rerollApiForm.querySelector("button");
