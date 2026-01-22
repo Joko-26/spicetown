@@ -478,8 +478,20 @@ function addExtraProjectInfo() {
 
   const timeline = document.querySelector(".projects-show__timeline .mt-4");
   if (timeline) {
-    const lastPost = timeline.lastElementChild?.querySelector(".post__time")?.textContent || "";
-    const daysActive = parseInt(lastPost.match(/\d+/) || "1", 10);
+    const lastPost = timeline.lastElementChild?.querySelector(".post__time")?.textContent.toLowerCase() || "";
+    const numMatch = lastPost.match(/(\d+)|\b(a|an)\b/);
+    const num = numMatch ? (numMatch[1] ? parseInt(numMatch[1], 10) : 1) : 1;
+    let daysActive = 1;
+    
+    if (lastPost.includes("month")) {
+      daysActive = num * 30;
+    } else if (lastPost.includes("day")) {
+      daysActive = num;
+    } else if (lastPost.includes("hour") || lastPost.includes("hours")) {
+      daysActive = 1;
+    } else {
+      daysActive = Math.min(1, parseInt(num, 10) || 1);
+    }
 
     const minsPerDay = totalMins / daysActive;
     extraInfoDiv.appendChild(createStatRow('calendar', `${convertMToFormat(minsPerDay)} a day`, getRating(minsPerDay, scales.timePerDay)));
