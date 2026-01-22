@@ -933,7 +933,9 @@
     )
   ) !important;
 }
-[data-theme] .sidebar__nav-link--active::before {
+[data-theme] .sidebar__nav-link--active::before,
+[data-theme] .shop-item-card__bow::before,
+[data-theme] .shop-item-card__bow::after {
   background-color: var(--accent) !important;
 }
 [data-theme] .sidebar__nav-link--active > .sidebar__nav-icon-wrapper {
@@ -942,6 +944,10 @@
 [data-theme] .sidebar > .pin-sidebar__btn > svg {
   color: var(--accent) !important;
 }
+[data-theme] .shop-item-card__stock-badge {
+  background-color: var(--accent) !important;
+  color: var(--text-highlight) !important;
+}
 
 [data-theme] .kitchen-setup::before,
 [data-theme] .themes__div-container::before,
@@ -949,17 +955,21 @@
 [data-theme] .kitchen-stats::before,
 [data-theme] .kitchen-announcement > .announcement,
 [data-theme] .projects-new__card::before,
-[data-theme] .kitchen-comic {
+[data-theme] .kitchen-comic,
+[data-theme] .kitchen-recently-added {
   background-color: var(--bg-primary) !important;
 }
 [data-theme] .announcement__content {
   border-color: var(--kitchen-bar-border) !important;
 }
-[data-theme] .kitchen-comic {border-color: var(--accent-darker) !important;}
+[data-theme] .kitchen-comic {border-color: var(--surface-dark) !important;}
+
+[data-theme] .kitchen-recently-added__title {color: var(--text-highlight) !important;}
 
 [data-theme] .tutorial-steps__title,
 [data-theme] .tutorial-steps__progress-text,
-[data-theme] .projects-board__subtitle {
+[data-theme] .projects-board__subtitle,
+[data-theme] .kitchen-recently-added__subtitle {
   color: var(--text-primary) !important;
 }
 
