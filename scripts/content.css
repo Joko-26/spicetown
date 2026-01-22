@@ -1330,7 +1330,8 @@
 [data-theme] .shop-goals__container .shop-goals__image {
   background-color: var(--accent-darker) !important;
 }
-[data-theme] .shop-item-card .shop-item-card__description {
+[data-theme] .shop-item-card .shop-item-card__description,
+[data-theme] .nibbles__sidequests-subtitle {
   color: var(--text-primary) !important;
 }
 [data-theme]
@@ -1355,13 +1356,17 @@
   > svg:hover {
   color: var(--star-color, var(--text-highlight));
 }
-[data-theme] .shop-goals__container {
+[data-theme] .shop-goals__container,
+[data-theme] .nibbles__sidequests {
   background: linear-gradient(
     135deg,
     var(--surface-card) 0%,
     var(--surface-dark) 100%
   ) !important;
   border-color: var(--border-color) !important;
+}
+[data-theme] .nibbles__sidequests {
+  outline-color: var(--surface-dark) !important;
 }
 [data-theme] .shop-goal-editor__name,
 [data-theme] .shop-goal-editor__editor-name,
@@ -1580,4 +1585,9 @@
 [data-theme] main > .btn {
   background-color: var(--surface-card) !important;
   box-shadow: 0px 4px 0px var(--surface-dark) !important;
+}
+[data-theme] .sidequest-card {
+  --color-card-bg: var(--surface-card) !important;
+  --color-content-bg: var(--surface-header) !important;
+  --color-content-darker: var(--surface-dark) !important;
 }
