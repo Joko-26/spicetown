@@ -671,7 +671,10 @@
 .shop-goals__container,
 .themes__div-container,
 .projects-show__container > .mt-4 > .btn,
-.projects-show__timeline {
+.projects-show__timeline,
+.nibbles__sidequests,
+.votes-new__prev-btn,
+.shop__recently-added {
   opacity: 0;
   animation: 0.5s fade-in 300ms ease forwards;
 }
@@ -686,13 +689,16 @@
 .themes__div-option,
 .projects-show__timeline .post,
 .kitchen-stats,
-.kitchen-announcement {
+.kitchen-announcement,
+.sidequest-card,
+.votes-new__main {
   opacity: 0;
   animation: 1.5s fade-in 300ms ease forwards;
 }
 
 .shop-item-card,
-.kitchen-help {
+.kitchen-help,
+.votes-new__form {
   opacity: 0;
   animation: 2.5s fade-in 300ms ease forwards;
 }
