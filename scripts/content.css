@@ -674,7 +674,8 @@
 .projects-show__timeline,
 .nibbles__sidequests,
 .votes-new__prev-btn,
-.shop__recently-added {
+.shop__recently-added,
+.projects-new__time-preview {
   opacity: 0;
   animation: 0.5s fade-in 300ms ease forwards;
 }
@@ -691,14 +692,16 @@
 .kitchen-stats,
 .kitchen-announcement,
 .sidequest-card,
-.votes-new__main {
+.votes-new__main,
+.projects-new__form {
   opacity: 0;
   animation: 1.5s fade-in 300ms ease forwards;
 }
 
 .shop-item-card,
 .kitchen-help,
-.votes-new__form {
+.votes-new__form,
+.projects-new__form > .projects-new__actions {
   opacity: 0;
   animation: 2.5s fade-in 300ms ease forwards;
 }
@@ -1628,4 +1631,13 @@
 }
 [data-theme] .modal > p {
   color: var(--text-primary) !important;
+}
+[data-theme] .projects-new__time-preview {
+  background: var(--surface-card) !important;
+}
+[data-theme] .projects-new__time-preview > p {
+  color: var(--text-primary) !important;
+}
+[data-theme] .projects-new__time-preview > p > strong {
+  color: var(--text-highlight) !important;
 }
