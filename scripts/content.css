@@ -640,6 +640,11 @@
 .projects-new__field.projects-new__devlog-text > .post__body {
   flex: 1 0 50%;
 }
+.kitchen-comic {
+  width: auto !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
 
 /** ANIMATIONS **/
 
@@ -889,6 +894,10 @@
   );
 }
 
+[data-theme] a {
+  color: var(--text-highlight) !important;
+}
+
 [data-theme] {
   background-color: var(--bg-primary) !important;
   color: var(--text-primary) !important;
@@ -970,7 +979,8 @@
 [data-theme] .tutorial-steps__progress-text,
 [data-theme] .projects-board__subtitle,
 [data-theme] .kitchen-recently-added__subtitle,
-[data-theme] .shop__recently-added-subtitle {
+[data-theme] .shop__recently-added-subtitle,
+[data-theme] .kitchen-help__paragraph {
   color: var(--text-primary) !important;
 }
 
@@ -1198,11 +1208,15 @@
   border-color: var(--surface-card) !important;
   filter: brightness(0.4);
 }
-[data-theme] .state-card--neutral,
 [data-theme] .state-card--warning {
   --state-card-accent: var(--accent-darker) !important;
   background-color: var(--accent-darker) !important;
   border-color: var(--border-color) !important;
+}
+[data-theme] .state-card--neutral {
+  --state-card-accent: var(--surface-card) !important;
+  background-color: var(--surface-card) !important;
+  border-color: var(--surface-dark) !important;
 }
 [data-theme] .state-card--success .state-card__title,
 [data-theme] .state-card--success .state-card__icon-circle {
@@ -1213,9 +1227,11 @@
   color: var(--accent) !important;
 }
 [data-theme] .state-card--success .state-card__badge,
-[data-theme] .state-card--success .state-card__icon-circle,
-[data-theme] .state-card__icon-circle {
+[data-theme] .state-card--success .state-card__icon-circle {
   background: var(--surface-card) !important;
+}
+[data-theme] .state-card--neutral .state-card__icon-circle {
+  background: var(--surface-dark) !important;
 }
 [data-theme] .state-card--success .state-card__badge {
   color: var(--text-highlight) !important;
@@ -1484,7 +1500,7 @@
 
 [data-theme] .modal {
   background: var(--surface-card) !important;
-  border-color: var(--border-color) !important;
+  border-color: var(--surface-dark) !important;
 }
 [data-theme] .modal__title {
   color: var(--text-highlight) !important;
@@ -1519,8 +1535,6 @@
   opacity: 0.5;
 }
 [data-theme] .modal__actions-close {
-  background-color: var(--surface-dark) !important;
-  border-color: var(--border-color) !important;
   color: var(--text-primary) !important;
 }
 [data-theme] .settings-form__checkbox > input {
@@ -1590,4 +1604,11 @@
   --color-card-bg: var(--surface-card) !important;
   --color-content-bg: var(--surface-header) !important;
   --color-content-darker: var(--surface-dark) !important;
+}
+[data-theme] .state-card__cta > .btn.btn--borderless.btn--bg_yellow {
+  background-color: var(--surface-dark) !important;
+  color: var(--text-primary) !important;
+}
+[data-theme] .modal > p {
+  color: var(--text-primary) !important;
 }
