@@ -1156,6 +1156,13 @@
 [data-theme] .project-show-card__stat.project-show-card__stat--clickable {
   text-decoration-color: var(--accent) !important;
 }
+[data-theme] .project-show-card__stat > button {
+  background-color: var(--accent-darker) !important;
+}
+[data-theme] .project-show-card__stat > button > svg,
+[data-theme] .project-show-card__stat > button {
+  color: var(--text-highlight) !important;
+}
 [data-theme]
   .project-show-card__banner.project-card__banner
   > .project-card__banner-frame {
@@ -1504,9 +1511,13 @@
   border-color: var(--border-color) !important;
 }
 
-[data-theme] .modal {
-  background: var(--surface-card) !important;
+[data-theme] .modal,
+[data-theme] .ship-feedback-modal > div:not([data-action]) {
+  background: var(--surface-dark) !important;
   border-color: var(--surface-dark) !important;
+}
+[data-theme] .ship-feedback-modal > div:not([data-action]) > div > span {
+  background-color: var(--accent-darker) !important;
 }
 [data-theme] .modal__title {
   color: var(--text-highlight) !important;

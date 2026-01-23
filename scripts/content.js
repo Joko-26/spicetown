@@ -1696,7 +1696,7 @@ function convertMToFormat(mins) {
   return `${String(h)} hours and ${String(m)} minutes`;
 }
 
-async function getFlavortownCSS() { // partially stolen from CoM, my other project :3
+async function getFlavortownCSS() { // partially stolen from CoM, my other OLD project :3
   try {
     const response = await fetch('https://flavortown.hackclub.com/');
     const html = await response.text();
