@@ -1641,3 +1641,31 @@
 [data-theme] .projects-new__time-preview > p > strong {
   color: var(--text-highlight) !important;
 }
+[data-theme] .votes-new__devlogs > .post {
+  border-color: var(--accent-darker) !important;
+}
+[data-theme] .votes-new__project-buttons > button[aria-label="Report"] {
+  background-color: var(--accent) !important;
+}
+[data-theme] .vote-category {
+  --vote-category-accent: var(--accent-darker);
+  --vote-category-footer-bg: var(--accent);
+  --vote-category-footer-text: var(--border-color);
+}
+[data-theme] .vote-category > .vote-category__footer {
+  color: var(--text-highlight) !important;
+}
+[data-theme] .vote-category__input:checked~.vote-category__star {
+  color: var(--accent) !important;
+}
+[data-theme] .vote-category__star:hover,
+[data-theme] .vote-category__star:hover~.vote-category__star {
+  color: var(--accent) !important;
+}
+[data-theme] .votes-new__form > div > form > button[type="submit"] {
+  background-color: var(--surface-card) !important;
+  color: var(--text-highlight) !important;
+}
+[data-theme] .votes-new__form > div > form > button[type="submit"]::before {
+  border-color: var(--surface-dark) !important;
+}
