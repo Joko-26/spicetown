@@ -857,7 +857,7 @@ async function addProjectSearcher() {
   const explorePageContainer = document.querySelector(".explore");
   const projectList = document.querySelector("#project-list");
 
-  if (!explorePageContainer || !projectList || document.querySelector(".project-list__searcher")) return;
+  if (!explorePageContainer || !projectList || document.querySelector(".project-list__searcher") || !(document.querySelector(".explore__nav-component.selected").textContent.trim() === "Gallery")) return;
 
   const searchContainer = document.createElement("div");
   searchContainer.classList.add("project-list__search-container");
