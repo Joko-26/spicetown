@@ -10,11 +10,11 @@
     <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/SabioOfficial/spicetown?style=for-the-badge">⠀
   </a>
   <a href="#">
-    <img alt="Chrome Web Store Users" src="https://img.shields.io/chrome-web-store/users/kbcbgiihiopcbgimdopcfcemikagemgl?style=for-the-badge&label=Downloads">
+    <img alt="Chrome Web Store Users" src="https://img.shields.io/amo/v/spicetown?style=for-the-badge&label=LATEST%20VER">
   </a>
 </div>
 <br>
-<p>Spicetown is a QoL-focused extension for Chrome <a href="#status-on-porting-to-firefox">and Firefox*</a></i> that tries to improve the flow of Flavortown such as Themes, more (important) project info, and much more in the works!</p>
+<p>Spicetown is a QoL-focused extension for Chrome and Firefox that tries to improve the flow of Flavortown such as Themes, more (important) project info, and much more in the works!</p>
 
 <h5>Table of Contents</h5>
 <ul>
@@ -52,9 +52,11 @@
     </ul>
   </li>
   <li>
-    <a href="#ports">Ports</a>
+    <a href="#providers">Providers</a>
     <ul>
-      <li><a href="#ports-firefox">Firefox</a></li>
+      <li><a href="#providers-chrome">Chrome Web Store</a></li>
+      <li><a href="#providers-firefox">Firefox Add-Ons</a></li>
+      <li><a href="#providers-github">GitHub <i>(Unstable)</i></a></li>
     </ul>
   </li>
 </ul>
@@ -256,12 +258,22 @@ This theme is designed to be a darkmode theme inspired by the darkk and cozy fee
   </tr>
 </table>
 
+<h2 id="providers">Providers</h2>
+<p>Providers are the websites that allow you to install the extension. This includes Chrome Web Store, Firefox Addons and GitHub <i>(Unstable)</i>.</p>
 
-<h3 id="voting+">Voting+</h3>
-<p>Voting+ adds the "Skip" button, which refreshes the page and shorterns the "See my previous votes" to "Previous votes".</p>
+<hr>
+<h4>❗ WARNING ❗</h4>
+<p>Chrome Web Store usually takes more time to review stable versions when they come out. Please use the <a href="#providers-firefox">Firefox version</a> instead if you have Firefox.</p>
+<hr>
 
-<h2 id="ports">Ports</h2>
-<p>I am working very hard to get ports to different browsers working- but I have decided to prioritize features instead. More information about ports soon.</p>
+<h3 id="providers-chrome">Chrome Web Store</h3>
+<img alt="Chrome Web Store Version" src="https://img.shields.io/chrome-web-store/v/kbcbgiihiopcbgimdopcfcemikagemgl?style=for-the-badge">
+<p>Usually a few hours behind Firefox Addons' Spicetown stable version.</p>
 
-<h3 id="ports-firefox">Firefox</h2>
-<p>This is the most requested port for Spicetown. I am yet to start working on porting this to Firefox. Please <a href="https://hackclub.enterprise.slack.com/archives/C09NYLMB4VC">join</a> the Slack channel for more details.</p>
+<h3 id="providers-firefox">Firefox Addons</h3>
+<img alt="Mozilla Add-on Version" src="https://img.shields.io/amo/v/spicetown?style=for-the-badge">
+<p>The official Firefox Addons page for Spicetown. Always up to date due to automated version reviewing by Firefox Addons.</p>
+
+<h3 id="providers-github">GitHub</h3>
+<img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/m/SabioOfficial/spicetown?style=for-the-badge">
+<p>Also known as Lunar edition. Latest update, always, even if it's not stable.</p>
