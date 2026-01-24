@@ -1699,66 +1699,48 @@ function applyUISync() {
 }
 
 async function addPayoutDisplay() {
-  const projectsShowTimeline = document.querySelector(".projects-show > .projects-show__container > .projects-show__timeline");
-  if (!projectsShowTimeline) return;
-  const shipPosts = projectsShowTimeline.querySelectorAll(".post.post--ship");
-  if (!shipPosts) return;
-  shipPosts.forEach(async shipPost => {
-    if (shipPost.querySelector(".post__content .post__author a:nth-of-type(2)")) {
-      if (!document.querySelector("#balance-modal")) return;
-      if (document.querySelector("#balance-modal turbo-frame")) {
-        document.querySelector("#balance-modal turbo-frame").setAttribute("loading", "please-load-this-thank-you");
-      }
+  const timeline = document.querySelector(".projects-show__timeline");
+  const turboFrame = document.querySelector("#balance-modal turbo-frame");
+  if (!timeline || !turboFrame) return;
+  turboFrame.setAttribute("loading", "please-load-this-thank-you");
 
-      const devlogsBeforeThisShip = [];
+  turboFrame.addEventListener("turbo:frame-load", () => {
+    const transactions = Array.from(document.querySelectorAll("#balance-modal .balance-history__table tbody tr"));
+    const shipPosts = timeline.querySelectorAll(".post.post--ship");
+    let transactionIndex = 0;
+    shipPosts.forEach(shipPost => {
+      const shipTitle = shipPost.querySelector(".post__author a:nth-of-type(2)")?.textContent;
+      if (!shipTitle) return;
+      let mins = 0;
       let next = shipPost.nextElementSibling;
-
-      while (next) {
-        if (next.classList.contains("post--ship")) break;
+      while (next && !next.classList.contains("post--ship")) {
         if (next.classList.contains("post--devlog")) {
-          devlogsBeforeThisShip.push(next);
+          const d = next.querySelector(".post__duration")?.textContent || "";
+          const h = d.match(/(\d+)h/)?.[1] || 0;
+          const m = d.match(/(\d+)m/)?.[1] || 0;
+          mins += (parseInt(h) * 60) + parseInt(m);
         }
         next = next.nextElementSibling;
       }
 
-      let currentShipIntervalMins = 0;
-      devlogsBeforeThisShip.forEach(devlog => {
-        const durationText = devlog.querySelector(".post__duration")?.textContent || "";
-        const match = durationText.match(/(\d+)h\s*(\d+)m/);
-        if (match) {
-          const hrs = parseInt(match[1]) || 0;
-          const mins = parseInt(match[2]) || 0;
-          currentShipIntervalMins += (hrs * 60) + mins;
-        } else {
-          const minsOnly = durationText.match(/(\d+)m/);
-          if (minsOnly) currentShipIntervalMins += parseInt(minsOnly[1]);
+      for (let i = transactionIndex; i < transactions.length; i++) {
+        const row = transactions[i];
+        if (row.textContent.includes(shipTitle)) {
+          const amount = row.querySelector(".balance-history__amount--positive")?.textContent.replace(/\D/g, '') || 0;
+          const multiplier = mins > 0 ? Math.round((amount / (mins / 60)) * 100) / 100 : 0;
+          const payout = shipPost.cloneNode(true);
+
+          payout.querySelector(".post__author > span").textContent = "received payout for";
+          payout.querySelector(".post__ship-title").textContent = "Received payout!";
+          payout.querySelector(".post__body").innerHTML = `<p>Payout: 🍪${amount}<br><small>(Approx.)</small> Multiplier: ${multiplier}x</p>`;
+
+          shipPost.before(payout);
+          transactionIndex = i + 1;
+          break;
         }
-      })
-
-      console.log(currentShipIntervalMins)
-
-      document.querySelector("#balance-modal turbo-frame").addEventListener("turbo:frame-load", () => {
-        const balanceHistoryItems = document.querySelector("#balance-modal").querySelectorAll(".balance-history__table tbody tr td a");
-        if (!balanceHistoryItems.length) return;
-        balanceHistoryItems.forEach(bhItem => {
-          if (bhItem.textContent.includes(shipPost.querySelector(".post__content .post__author a:nth-of-type(2)").textContent)) {
-            const payoutPost = shipPost.cloneNode(true);
-            shipPost.before(payoutPost);
-            
-            payoutPost.querySelector(".post__author > span").textContent = "received payout for";
-            payoutPost.querySelector(".post__ship-title").textContent = "Received payout!";
-            payoutPost.querySelector(".post__body").innerHTML = `
-            <p>
-              Payout received: 🍪${bhItem.parentElement.parentElement.querySelector("td.balance-history__amount--positive").textContent.replace(/\D/g, '')}
-              <br>
-              <small>(Approx.)</small> Multiplier: ${Math.round((bhItem.parentElement.parentElement.querySelector("td.balance-history__amount--positive").textContent.replace(/\D/g, '') / (currentShipIntervalMins / 60) + Number.EPSILON) * 100) / 100}x
-            </p>
-            `
-          }
-        })
-      }, {once: true});
-    }
-  })
+      }
+    });
+  }, {once: true});
 }
 
 function str_rand(length) {
