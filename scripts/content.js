@@ -1,5 +1,6 @@
 /** VARIABLES **/
 let apiKey = "";
+let slackEmojiMap = {};
 const savedBgColor = localStorage.getItem("bg-color-theme");
 
 function refreshApiKey() {
@@ -22,6 +23,8 @@ async function initialize() {
   applySettingsSync();
   applyUISync();
 
+  await fetchSlackEmojis();
+
   // UI Enhancements
   const uiEnhancements = [
     addDevlogImprovement,
@@ -35,7 +38,9 @@ async function initialize() {
     addBannerTemplateHint,
     addKeybinds,
     addPayoutDisplay,
-    addDevlogImageTools
+    addDevlogImageTools,
+    addEmojiRendering,
+    addPayoutDisplay
   ];
   uiEnhancements.forEach(func => func());
 
@@ -1746,6 +1751,41 @@ async function addPayoutDisplay() {
 
 function addDevlogImageTools() {
   // coming soon :D
+}
+
+async function fetchSlackEmojis() {
+  return new Promise((resolve) => {
+    chrome.runtime.sendMessage({type: "GET_SLACK_EMOJIS"}, (data) => {
+      if (data && data.ok) {
+        slackEmojiMap = data.emoji;
+        resolve(true);
+      } else {
+        resolve(false);
+      }
+    });
+  });
+}
+
+function addEmojiRendering() {
+  const targets = document.querySelectorAll(".post__body, .comment__body");
+  targets.forEach(target => {
+    if (target.dataset.emojisRendered) return;
+    const emojiRegex = /:([a-z0-9_\-+]+):/g;
+    target.innerHTML = target.innerHTML.replace(emojiRegex, (match, name) => {
+      const url = slackEmojiMap[name];
+      if (url && url.startsWith("alias:")) {
+        const actualName = url.split(":")[1];
+        return renderEmojiTag(slackEmojiMap[actualName], match);
+      }
+      return url ? renderEmojiTag(url, match) : match;
+    });
+
+    target.dataset.emojisRendered = "true";
+  });
+}
+
+function renderEmojiTag(url, alt) {
+  return `<img src="${url}" title="${alt}" style="height: 1.5em; vertical-align: middle; display: inline-block;">`;
 }
 
 function str_rand(length) {

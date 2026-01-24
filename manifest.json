@@ -15,7 +15,8 @@
     "declarativeNetRequestWithHostAccess"
   ],
   "host_permissions": [
-    "*://flavortown.hackclub.com/*"
+    "*://flavortown.hackclub.com/*",
+    "https://slack.com/*"
   ],
   "action": {
     "default_popup": "popup/popup.html"
@@ -28,6 +29,9 @@
       "run_at": "document_idle"
     }
   ],
+  "background": {
+    "service_worker": "scripts/background.js"
+  },
   "web_accessible_resources": [
     {
       "resources": ["images/*.png", "download/*.png", "themes/*"],
