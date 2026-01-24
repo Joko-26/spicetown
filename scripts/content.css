@@ -1714,3 +1714,17 @@
   background-color: var(--accent-darker) !important;
   color: var(--text-highlight) !important;
 }
+[data-theme] .my-votes > a[href="/votes/new"] {
+  background-color: var(--surface-dark) !important;
+}
+[data-theme] .my-votes > table {
+  border-color: var(--surface-dark) !important;
+}
+[data-theme] .my-votes > table > thead > tr > th,
+[data-theme] .my-votes > table > tbody > tr > td {
+  border-color: var(--surface-dark) !important;
+  color: var(--text-highlight) !important;
+}
+[data-theme] .my-votes > table > thead > tr > th {
+  background-color: var(--surface-dark) !important;
+}
