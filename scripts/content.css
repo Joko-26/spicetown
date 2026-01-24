@@ -1151,7 +1151,8 @@
   color: var(--text-highlight) !important;
 }
 
-[data-theme] .projects-new__card .projects-new__field > .input {
+[data-theme] .projects-new__card .projects-new__field > .input,
+[data-theme] .projects-ship__form-field > .input {
   --input-bg: var(--input-main-bg) !important;
   --input-focus-ring: var(--accent) !important;
   --input-placeholder-color: var(--accent-muted) !important;
@@ -1176,19 +1177,21 @@
   background-color: var(--input-sub-bg) !important;
 }
 
-[data-theme] .projects-new__card .file-upload__dropzone {
+[data-theme] .projects-new__card .file-upload__dropzone,
+[data-theme] .projects-ship__form-field .file-upload__dropzone {
   --file-upload-border-color: var(--accent) !important;
   --file-upload-background: var(--border-color) !important;
 }
-[data-theme] .projects-new__card .file-upload__headline,
-[data-theme] .projects-new__card .file-upload__hint,
+
 [data-theme] .project-card__content p:not(.project-card__description),
 [data-theme] .project-card__content .project-card__title-link,
 [data-theme] .project-show-card__byline,
 [data-theme] .project-show-card__stat > span,
 [data-theme] .projects-new__time-preview,
 [data-theme] .project-show-card__stat > svg,
-[data-theme] .file-upload__filename {
+[data-theme] .file-upload__filename,
+[data-theme] .file-upload__headline,
+[data-theme] .file-upload__hint {
   color: var(--text-highlight) !important;
 }
 [data-theme] .projects-board__header > .btn.btn--red,
@@ -1657,9 +1660,17 @@
 [data-theme] main > p {
   color: var(--text-primary) !important;
 }
-[data-theme] main > .btn {
+[data-theme] main > .btn,
+[data-theme] .project-show-card__ship-btn,
+[data-theme] .projects-ship__nav-btn,
+[data-theme] .projects-ship__edit-link,
+[data-theme] .projects-ship__form-actions button {
   background-color: var(--surface-card) !important;
   box-shadow: 0px 4px 0px var(--surface-dark) !important;
+}
+[data-theme] .projects-ship__nav-btn,
+[data-theme] .projects-ship__form-actions button {
+  border-color: var(--border-color) !important;
 }
 [data-theme] .sidequest-card {
   --color-card-bg: var(--surface-card) !important;
@@ -1731,4 +1742,46 @@
 }
 [data-theme] .file-upload__progress-bar {
   background: var(--kitchen-gradient) !important;
+}
+[data-theme] .projects-ship__preview-card {
+  background: var(--surface-dark) !important;
+  color: var(--text-primary) !important;
+}
+[data-theme] .projects-ship__project-name {
+  color: var(--accent) !important;
+}
+[data-theme] .projects-ship__step {
+  border-color: var(--accent) !important;
+}
+[data-theme] .projects-ship__section-desc {
+  color: var(--text-primary) !important;
+}
+[data-theme] .projects-ship__validation--passed .projects-ship__validation-icon {
+  background-color: var(--accent) !important;
+}
+[data-theme] .projects-ship__validation--failed .projects-ship__validation-icon {
+  background-color: var(--surface-dark) !important;
+}
+[data-theme] .projects-ship__hint {
+  color: var(--text-primary) !important;
+}
+[data-theme] .projects-ship__form-field textarea {
+  background-color: var(--surface-card) !important;
+  border-color: var(--surface-dark) !important;
+  color: var(--text-primary) !important;
+}
+[data-theme] .projects-ship__form-field textarea::placeholder {
+  color: var(--surface-header) !important;
+}
+[data-theme] .projects-ship__hackatime-item,
+[data-theme] .projects-ship__devlog {
+  background-color: var(--surface-dark) !important;
+  color: var(--text-highlight) !important;
+}
+[data-theme] .projects-ship__devlog-body {
+  color: var(--accent) !important;
+}
+[data-theme] .projects-ship__devlog-duration,
+[data-theme] .projects-ship__devlog-date {
+  color: var(--text-highlight) !important;
 }

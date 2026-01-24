@@ -34,7 +34,8 @@ async function initialize() {
     addThemesPage,
     addBannerTemplateHint,
     addKeybinds,
-    addPayoutDisplay
+    addPayoutDisplay,
+    addDevlogImageTools
   ];
   uiEnhancements.forEach(func => func());
 
@@ -1741,6 +1742,10 @@ async function addPayoutDisplay() {
       }
     });
   }, {once: true});
+}
+
+function addDevlogImageTools() {
+  // coming soon :D
 }
 
 function str_rand(length) {
