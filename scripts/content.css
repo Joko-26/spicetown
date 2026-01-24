@@ -210,12 +210,6 @@
   margin: 2rem auto;
 }
 
-.votes-new__prev-btn {
-  margin-bottom: 0 !important;
-  margin-left: 0 !important;
-  transform: translateX(0%) !important;
-}
-
 .project-card {
   transition: all 150ms ease;
 }
