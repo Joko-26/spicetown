@@ -39,7 +39,6 @@ async function initialize() {
     addProjectSearcher,
     addUserExplore,
     addThemesPage,
-    addBannerTemplateHint,
     addKeybinds,
     addPayoutDisplay,
     addDevlogImageTools,
@@ -1559,24 +1558,6 @@ function applyTheme(themeId) {
       }
     }
   }
-}
-
-function addBannerTemplateHint() {
-  const bannerInputDiv = document.querySelector(".input.file-upload.input--green");
-  if (!bannerInputDiv) return;
-
-  const bannerInputSubtitle = bannerInputDiv.querySelector(".input__subtitle");
-
-  bannerInputSubtitle.textContent += " ";
-
-  const bannerTemplateFileUrl = chrome.runtime.getURL("/download/banner-template.png")
-
-  const bannerTemplateDownloadHint = document.createElement("a");
-  bannerTemplateDownloadHint.textContent = "View the deprecated banner template.";
-  bannerTemplateDownloadHint.href = bannerTemplateFileUrl;
-  bannerTemplateDownloadHint.target = "_blank";
-
-  bannerInputSubtitle.appendChild(bannerTemplateDownloadHint);
 }
 
 function incompatiability() {
