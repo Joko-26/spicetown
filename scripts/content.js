@@ -43,6 +43,7 @@ async function initialize() {
     addDevlogImageTools,
     addEmojiRendering,
     watchForNewComments,
+    addEmojiAutocomplete,
     addPayoutDisplay
   ];
   uiEnhancements.forEach(func => func());
@@ -1809,6 +1810,66 @@ function addEmojiRendering() {
 
 function renderEmojiTag(url, alt) {
   return `<img src="${url}" title="${alt}" style="height: 1.5em; vertical-align: middle; display: inline-block;">`;
+}
+
+function addEmojiAutocomplete() {
+  let selectedIndex = 0;
+  let currentMatches = [];
+  const menu = document.createElement("div");
+  menu.className = "emoji-preview-menu";
+  menu.style.display = "none";
+  document.body.appendChild(menu);
+
+  document.addEventListener("input", (event) => {
+    if (!event.target.matches("textarea, input")) return;
+    const text = event.target.value;
+    const cursorPos = event.target.selectionStart;
+    const textBeforeCursor = text.slice(0, cursorPos);
+    const match = textBeforeCursor.match(/:([a-z0-9_\-+]*)$/i);
+
+    if (match) {
+      const query = match[1].toLowerCase();
+      currentMatches = Object.keys(slackEmojiMap)
+        .filter(name => name.includes(query))
+        .slice(0, 10);
+
+      if (currentMatches.length > 0) {
+        showMenu(event.target, currentMatches, query);
+      } else {
+        menu.style.display = "none";
+      }
+    } else {
+      menu.style.display = "none";
+    }
+  });
+
+  function showMenu(input, matches, query) {
+    menu.innerHTML = "";
+    const rect = input.getBoundingClientRect();
+    menu.style.display = "block";
+    menu.style.left = `${rect.left + window.scrollX}px`;
+    menu.style.top = `${rect.top + window.scrollY - menu.offsetHeight + 100}px`;
+
+    matches.forEach((name, index) => {
+      const item = document.createElement("div");
+      item.className = "emoji-option";
+      const url = slackEmojiMap[name].startsWith('alias:') ? slackEmojiMap[slackEmojiMap[name].split(":")[1]] : slackEmojiMap[name]
+      item.innerHTML = `<img src="${url}"> <span>:${name}:</span>`;
+      item.onclick = () => insertEmoji(input, name);
+      menu.appendChild(item);
+    });
+  }
+
+  function insertEmoji(input, name) {
+    const text = input.value;
+    const cursorPos = input.selectionStart;
+    const before = text.slice(0, cursorPos).replace(/:[a-z0-9_\-+]*$/, `:${name}: `);
+    const after = text.slice(cursorPos);
+
+    input.value = before + after;
+    menu.style.display = "none";
+    input.focus();
+  }
 }
 
 function str_rand(length) {
