@@ -1785,3 +1785,9 @@
 [data-theme] .projects-ship__devlog-date {
   color: var(--text-highlight) !important;
 }
+[data-theme] code {
+  background-color: var(--surface-card) !important;
+}
+[data-theme] pre {
+  background-color: var(--surface-card) !important;
+}
