@@ -33,7 +33,8 @@ async function initialize() {
     addUserExplore,
     addThemesPage,
     addBannerTemplateHint,
-    addKeybinds
+    addKeybinds,
+    addPayoutDisplay
   ];
   uiEnhancements.forEach(func => func());
 
@@ -1693,6 +1694,47 @@ function applyUISync() {
       if (!screenshareModeCheckbox) return;
 
       screenshareModeCheckbox.checked = value;
+    }
+  })
+}
+
+async function addPayoutDisplay() {
+  const projectsShowTimeline = document.querySelector(".projects-show > .projects-show__container > .projects-show__timeline");
+  if (!projectsShowTimeline) return;
+  const shipPosts = projectsShowTimeline.querySelectorAll(".post.post--ship");
+  if (!shipPosts) return;
+  shipPosts.forEach(async shipPost => {
+    if (shipPost.querySelector(".post__content .post__author a:nth-of-type(2)")) {
+      if (!document.querySelector("#balance-modal")) return;
+      if (document.querySelector("#balance-modal turbo-frame")) {
+        document.querySelector("#balance-modal turbo-frame").setAttribute("loading", "please-load-this-thank-you");
+      }
+      document.querySelector("#balance-modal turbo-frame").addEventListener("turbo:frame-load", () => {
+        const balanceHistoryItems = document.querySelector("#balance-modal").querySelectorAll(".balance-history__table tbody tr td a");
+        if (!balanceHistoryItems.length) return;
+        balanceHistoryItems.forEach(bhItem => {
+          if (bhItem.textContent.includes(shipPost.querySelector(".post__content .post__author a:nth-of-type(2)").textContent)) {
+            const payoutPost = shipPost.cloneNode(true);
+            shipPost.before(payoutPost);
+
+            const content = document.querySelector(".project-show-card__content.project-card__content");
+            if (!content) return;
+            const stats = content.querySelectorAll(".project-show-card__stat");
+            const timeRaw = stats[1]?.textContent.match(/\d+/g) || ["0", "0"];
+            const totalMins = (parseInt(timeRaw[0]) * 60) + parseInt(timeRaw[1] || 0);
+            
+            payoutPost.querySelector(".post__author > span").textContent = "received payout for";
+            payoutPost.querySelector(".post__ship-title").textContent = "Received payout!";
+            payoutPost.querySelector(".post__body").innerHTML = `
+            <p>
+              Payout received: 🍪${bhItem.parentElement.parentElement.querySelector("td.balance-history__amount--positive").textContent.replace(/\D/g, '')}
+              <br>
+              <small>(Approx.)</small> Multiplier: ${Math.round((bhItem.parentElement.parentElement.querySelector("td.balance-history__amount--positive").textContent.replace(/\D/g, '') / (totalMins / 63.68) + Number.EPSILON) * 100) / 100}x
+            </p>
+            `
+          }
+        })
+      });
     }
   })
 }
