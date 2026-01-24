@@ -1153,7 +1153,8 @@
 }
 
 [data-theme] .projects-new__card .projects-new__field > .input,
-[data-theme] .projects-ship__form-field > .input {
+[data-theme] .projects-ship__form-field > .input,
+[data-theme] .shop-order__quantity > .input {
   --input-bg: var(--input-main-bg) !important;
   --input-focus-ring: var(--accent) !important;
   --input-placeholder-color: var(--accent-muted) !important;
@@ -1665,7 +1666,9 @@
 [data-theme] .project-show-card__ship-btn,
 [data-theme] .projects-ship__nav-btn,
 [data-theme] .projects-ship__edit-link,
-[data-theme] .projects-ship__form-actions button {
+[data-theme] .projects-ship__form-actions button,
+[data-theme] .shop-order__edit-address > a.btn,
+[data-theme] .shop-order__details > .btn-order {
   background-color: var(--surface-card) !important;
   box-shadow: 0px 4px 0px var(--surface-dark) !important;
 }
@@ -1815,4 +1818,65 @@
 }
 [data-theme] .hackatime-project-selector__project-icon {
   background-color: var(--accent) !important;
+}
+[data-theme] .shop-goals__name {
+  color: var(--surface-dark) !important;
+}
+[data-theme] .shop-order__content {
+  background-color: var(--surface-dark) !important;
+  background-image: var(--accent-image) !important;
+}
+[data-theme] .shop-order__image {
+  background-color: var(--surface-card) !important;
+}
+[data-theme] .shop-order__view > h2,
+[data-theme] .shop-order__description,
+[data-theme] .shop-order__details > h2 {
+  color: var(--text-highlight) !important
+}
+[data-theme] .shop-order__customs-warning {
+  background-color: var(--surface-card) !important;
+  border-color: var(--surface-header) !important;
+  color: var(--surface-dark) !important;
+}
+[data-theme] .shop-order__edit-address > a.btn,
+[data-theme] .shop-order__details > .btn-order {
+  border-color: var(--surface-header) !important;
+}
+[data-theme] .shop-order__address-details .dropdown__label,
+[data-theme] .shop-order__address-details .dropdown__button,
+[data-theme] .shop-order__address-details .dropdown__menu,
+[data-theme] .shop-order__address-details .dropdown__menu .dropdown__item,
+[data-theme] .shop-order__summary .input-group .input-group__label,
+[data-theme] .shop-order__summary .input-group::before {
+  background-color: var(--input-main-bg) !important;
+  color: var(--text-primary) !important;
+}
+
+[data-theme] .shop-order__summary .input-group .input-group__subtitle,
+[data-theme] .shop-order__summary .input-group .shop-order__summary-content {
+  background-color: var(--input-sub-bg) !important;
+  color: var(--text-primary) !important
+}
+[data-theme] .shop-order__summary .shop-order__summary-content > div > * {
+  color: var(--text-primary) !important;
+}
+[data-theme] .shop-order__quantity .input__subtitle,
+[data-theme] .shop-order__accessories h5,
+[data-theme] #shop-order__accessories-list-items > li,
+[data-theme] #shop-order__accessories-list-items > li > span,
+[data-theme] .shop-order__accessory-option-name,
+[data-theme] .shop-order__accessory-option-price {
+  color: var(--text-primary) !important;
+}
+[data-theme] .shop-order__accessories {
+  background-color: var(--surface-card) !important;
+}
+[data-theme] .shop-order__accessory-option-block {
+  border-color: var(--surface-dark) !important;
+  background: var(--surface-dark) !important;
+  transition: all 300ms ease;
+}
+[data-theme] .shop-order__accessories .shop-order__accessory-option-input:checked~.shop-order__accessory-option-block {
+  border-color: var(--accent-darker) !important;
 }
