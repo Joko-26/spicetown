@@ -699,14 +699,14 @@
   scrollbar-width: none;
   -ms-overflow-style: none;
   padding: .5rem 0;
+  min-width: 20dvw;
 }
 .emoji-option {
-  padding: .25rem 1.25rem;
+  padding: .25rem 1.5rem;
   cursor: pointer;
   display: flex;
   align-items: center;
   gap: .75rem;
-  border-radius: 4px;
 }
 .emoji-option:hover {
   background: var(--color-brown-400);

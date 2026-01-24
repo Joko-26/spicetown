@@ -1813,17 +1813,16 @@ function renderEmojiTag(url, alt) {
 }
 
 function addEmojiAutocomplete() {
-  let selectedIndex = 0;
   let currentMatches = [];
   const menu = document.createElement("div");
   menu.className = "emoji-preview-menu";
   menu.style.display = "none";
   document.body.appendChild(menu);
 
-  document.addEventListener("input", (event) => {
-    if (!event.target.matches("textarea, input")) return;
-    const text = event.target.value;
-    const cursorPos = event.target.selectionStart;
+  const triggerCheck = (target) => {
+    if (!target.matches("textarea, input")) return;
+    const text = target.value;
+    const cursorPos = target.selectionStart;
     const textBeforeCursor = text.slice(0, cursorPos);
     const match = textBeforeCursor.match(/:([a-z0-9_\-+]*)$/i);
 
@@ -1831,16 +1830,25 @@ function addEmojiAutocomplete() {
       const query = match[1].toLowerCase();
       currentMatches = Object.keys(slackEmojiMap)
         .filter(name => name.includes(query))
+        .sort((a, b) => a.length - b.length)
         .slice(0, 10);
 
       if (currentMatches.length > 0) {
-        showMenu(event.target, currentMatches, query);
+        showMenu(target, currentMatches, query);
       } else {
         menu.style.display = "none";
       }
     } else {
       menu.style.display = "none";
     }
+  };
+
+  document.addEventListener("input", (event) => triggerCheck(event.target));
+  document.addEventListener("focusin", (event) => triggerCheck(event.target));
+  document.addEventListener("focusout", () => {
+    setTimeout(() => {
+      menu.style.display = "none";
+    }, 150);
   });
 
   function showMenu(input, matches, query) {
