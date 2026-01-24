@@ -1,3 +1,5 @@
+window.api = typeof browser !== "undefined" ? browser : chrome;
+
 /** VARIABLES **/
 let apiKey = "";
 let slackEmojiMap = {};
@@ -1755,7 +1757,7 @@ function addDevlogImageTools() {
 
 async function fetchSlackEmojis() {
   return new Promise((resolve) => {
-    chrome.runtime.sendMessage({type: "GET_SLACK_EMOJIS"}, (data) => {
+    api.runtime.sendMessage({type: "GET_SLACK_EMOJIS"}, (data) => {
       if (data && data.ok) {
         slackEmojiMap = data.emoji;
         resolve(true);
