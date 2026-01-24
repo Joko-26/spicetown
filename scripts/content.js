@@ -466,29 +466,29 @@ function addExtraProjectInfo() {
 
   const scales = {
     minsPerDevlog: [
-      {min: 150, label: "(Awful)", class: "awful"},
-      {min: 120, label: "(Bad)", class: "bad"},
+      {min: 150, label: "(Bad)", class: "awful"},
+      {min: 120, label: "(Poor)", class: "bad"},
       {min: 101, label: "(Okay)", class: "okay"},
       {min: 81, label: "(Good)", class: "good"},
       {min: 40, label: "(Great)", class: "great"},
       {min: 20, label: "(Good)", class: "good"},
       {min: 15, label: "(Okay)", class: "okay"},
-      {min: 10, label: "(Bad)", class: "bad"},
-      {min: 0, label: "(Awful)", class: "awful"}
+      {min: 10, label: "(Poor)", class: "bad"},
+      {min: 0, label: "(Bad)", class: "awful"}
     ],
     timePerDay: [
       {min: 180, label: "(Great)", class: "great"},
       {min: 120, label: "(Good)", class: "good"},
       {min: 60, label: "(Okay)", class: "okay"},
-      {min: 30, label: "(Bad)", class: "bad"},
-      {min: 0, label: "(Awful)", class: "awful"}
+      {min: 30, label: "(Poor)", class: "bad"},
+      {min: 0, label: "(Bad)", class: "awful"}
     ],
     followersPerDay: [
       {min: 0.5, label: "(Great)", class: "great"},
       {min: 0.3, label: "(Good)", class: "good"},
       {min: 0.2, label: "(Okay)", class: "okay"},
-      {min: 0.1, label: "(Bad)", class: "bad"},
-      {min: 0, label: "(Awful)", class: "awful"}
+      {min: 0.1, label: "(Poor)", class: "bad"},
+      {min: 0, label: "(Bad)", class: "awful"}
     ]
   };
 
