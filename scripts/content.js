@@ -285,6 +285,17 @@ function addKeybinds() { // :3
           }
         }
       })
+      const hotkeyDiv = document.createElement("div");
+      hotkeyDiv.className = "sidebar__nav-item-hotkey-div";
+      sItem.parentElement.appendChild(hotkeyDiv);
+      const hotCtrl = document.createElement("p");
+      hotCtrl.textContent = "Ctrl";
+      hotCtrl.className = "sidebar__nav-item-hotkey";
+      hotkeyDiv.appendChild(hotCtrl);
+      const hotNum = document.createElement("p");
+      hotNum.textContent = nKey;
+      hotNum.className = "sidebar__nav-item-hotkey";
+      hotkeyDiv.appendChild(hotNum);
     })
   }
   const projectsBoardGridItems = document.querySelectorAll(".projects-board__grid .projects-board__grid-item .project-card__banner-frame");
