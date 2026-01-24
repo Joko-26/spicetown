@@ -675,7 +675,8 @@
 .nibbles__sidequests,
 .votes-new__prev-btn,
 .shop__recently-added,
-.projects-new__time-preview {
+.projects-new__time-preview,
+.projects-show__container > .mt-4 > form > button {
   opacity: 0;
   animation: 0.5s fade-in 300ms ease forwards;
 }
