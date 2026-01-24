@@ -1709,6 +1709,34 @@ async function addPayoutDisplay() {
       if (document.querySelector("#balance-modal turbo-frame")) {
         document.querySelector("#balance-modal turbo-frame").setAttribute("loading", "please-load-this-thank-you");
       }
+
+      const devlogsBeforeThisShip = [];
+      let next = shipPost.nextElementSibling;
+
+      while (next) {
+        if (next.classList.contains("post--ship")) break;
+        if (next.classList.contains("post--devlog")) {
+          devlogsBeforeThisShip.push(next);
+        }
+        next = next.nextElementSibling;
+      }
+
+      let currentShipIntervalMins = 0;
+      devlogsBeforeThisShip.forEach(devlog => {
+        const durationText = devlog.querySelector(".post__duration")?.textContent || "";
+        const match = durationText.match(/(\d+)h\s*(\d+)m/);
+        if (match) {
+          const hrs = parseInt(match[1]) || 0;
+          const mins = parseInt(match[2]) || 0;
+          currentShipIntervalMins += (hrs * 60) + mins;
+        } else {
+          const minsOnly = durationText.match(/(\d+)m/);
+          if (minsOnly) currentShipIntervalMins += parseInt(minsOnly[1]);
+        }
+      })
+
+      console.log(currentShipIntervalMins)
+
       document.querySelector("#balance-modal turbo-frame").addEventListener("turbo:frame-load", () => {
         const balanceHistoryItems = document.querySelector("#balance-modal").querySelectorAll(".balance-history__table tbody tr td a");
         if (!balanceHistoryItems.length) return;
@@ -1716,12 +1744,6 @@ async function addPayoutDisplay() {
           if (bhItem.textContent.includes(shipPost.querySelector(".post__content .post__author a:nth-of-type(2)").textContent)) {
             const payoutPost = shipPost.cloneNode(true);
             shipPost.before(payoutPost);
-
-            const content = document.querySelector(".project-show-card__content.project-card__content");
-            if (!content) return;
-            const stats = content.querySelectorAll(".project-show-card__stat");
-            const timeRaw = stats[1]?.textContent.match(/\d+/g) || ["0", "0"];
-            const totalMins = (parseInt(timeRaw[0]) * 60) + parseInt(timeRaw[1] || 0);
             
             payoutPost.querySelector(".post__author > span").textContent = "received payout for";
             payoutPost.querySelector(".post__ship-title").textContent = "Received payout!";
@@ -1729,12 +1751,12 @@ async function addPayoutDisplay() {
             <p>
               Payout received: 🍪${bhItem.parentElement.parentElement.querySelector("td.balance-history__amount--positive").textContent.replace(/\D/g, '')}
               <br>
-              <small>(Approx.)</small> Multiplier: ${Math.round((bhItem.parentElement.parentElement.querySelector("td.balance-history__amount--positive").textContent.replace(/\D/g, '') / (totalMins / 63.68) + Number.EPSILON) * 100) / 100}x
+              <small>(Approx.)</small> Multiplier: ${Math.round((bhItem.parentElement.parentElement.querySelector("td.balance-history__amount--positive").textContent.replace(/\D/g, '') / (currentShipIntervalMins / 60) + Number.EPSILON) * 100) / 100}x
             </p>
             `
           }
         })
-      });
+      }, {once: true});
     }
   })
 }
