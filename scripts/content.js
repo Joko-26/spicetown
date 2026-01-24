@@ -1,4 +1,4 @@
-window.api = typeof browser !== "undefined" ? browser : chrome;
+const api = typeof browser !== "undefined" ? browser : chrome;
 
 /** VARIABLES **/
 let apiKey = "";
@@ -42,6 +42,7 @@ async function initialize() {
     addPayoutDisplay,
     addDevlogImageTools,
     addEmojiRendering,
+    watchForNewComments,
     addPayoutDisplay
   ];
   uiEnhancements.forEach(func => func());
@@ -1765,6 +1766,26 @@ async function fetchSlackEmojis() {
         resolve(false);
       }
     });
+  });
+}
+
+function watchForNewComments() {
+  const observer = new MutationObserver((changes) => {
+    for (const change of changes) {
+      change.addedNodes.forEach(node => {
+        if (node.nodeType === 1) {
+          const hasComments = node.classList?.contains("comment") || node.querySelector(".comment");
+          if (hasComments) {
+            setTimeout(addEmojiRendering, 50);
+          }
+        }
+      })
+    }
+  });
+
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true
   });
 }
 

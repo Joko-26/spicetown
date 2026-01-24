@@ -1,7 +1,7 @@
 // please firefox work w/ background scripts pwease
 // ok it didnt so im adding a certain something
 
-window.api = typeof browser !== "undefined" ? browser : chrome;
+const api = typeof browser !== "undefined" ? browser : chrome;
 
 api.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.type === "GET_SLACK_EMOJIS") {
