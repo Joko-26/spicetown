@@ -1978,3 +1978,8 @@
 [data-theme] .emoji-option:hover {
   background-color: var(--surface-card) !important;
 }
+[data-theme] .users > .user > .content > h2,
+[data-theme] .users > .user > .content > p,
+[data-theme] .users > .user > .content > p > small {
+  color: var(--text-primary) !important;
+}
