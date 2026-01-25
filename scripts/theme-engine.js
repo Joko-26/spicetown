@@ -31,14 +31,7 @@
       const bodyObserver = new MutationObserver(() => {
         const body = document.body;
         if (body) {
-          if (body.getAttribute("data-theme") !== activeTheme) {
-            body.setAttribute("data-theme", activeTheme);
-          }
-          updateBodyStyles(activeTheme, body);
-          const hat = body.querySelector(".sidebar__user-avatar-hat-bg");
-          if (hat) {
-            updateHatImage(activeTheme, hat);
-          }
+          applyTheme(body, activeTheme);
         }
       });
 
@@ -51,10 +44,23 @@
     }
 
     if (document.body) {
-      document.body.setAttribute("data-theme", themeId);
-      updateBodyStyles(themeId, document.body);
-      const hat = document.querySelector(".sidebar__user-avatar-hat-bg");
-      if (hat) updateHatImage(themeId, hat);
+      applyTheme(document.body, themeId);
+    }
+  }
+
+  function applyTheme(body, themeId) {
+    if (themeId === "bg-color-vanilla") {
+      body.removeAttribute("data-theme");
+      body.style.removeProperty("--theme-bg-image");
+    } else {
+      if (body.getAttribute("data-theme") !== themeId) {
+        body.setAttribute("data-theme", themeId);
+      }
+      updateBodyStyles(themeId, body);
+    }
+    const hat = body.querySelector(".sidebar__user-avatar-hat-bg");
+    if (hat) {
+      updateHatImage(themeId, hat);
     }
   }
 
@@ -92,11 +98,12 @@
     };
 
     if (hatMap[themeId]) {
+      hatEl.style.display = "block";
       if (hatEl.src !== hatMap[themeId]) {
         hatEl.src = hatMap[themeId];
       }
     } else {
-      hatEl.src = "";
+      hatEl.style.display = "none";
     }
   }
   init();
