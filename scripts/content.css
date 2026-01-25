@@ -770,6 +770,24 @@
   color: var(--color-blue-600);
   border-radius: 8px;
 }
+#devlog-gen-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+#devlog-gen-container input {
+  padding: var(--space-xxs) var(--space-m);
+  border-radius: calc(.6 * var(--border-radius));
+  border: solid 5px var(--color-brown-400);
+  background: var(--color-brown-700);
+  font-size: var(--font-size-xl);
+  color: var(--color-bg);
+  width: fit-content; 
+}
+#devlog-gen-container input::placeholder {
+  color: inherit;
+  opacity: 0.5;
+}
 
 /** ANIMATIONS **/
 
@@ -1994,4 +2012,9 @@
 [data-theme] .users > .user > .content > p,
 [data-theme] .users > .user > .content > p > small {
   color: var(--text-primary) !important;
+}
+[data-theme] #devlog-gen-container input {
+  border: solid 5px var(--border-color);
+  background: var(--surface-dark);
+  color: var(--text-primary);
 }

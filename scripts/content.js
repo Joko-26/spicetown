@@ -42,7 +42,8 @@ async function initialize() {
     addWeeklyGains,
     addEmojiAutocomplete,
     addPayoutDisplay,
-    addProjectVotes
+    addProjectVotes,
+    addDevlogGenerator
   ];
   uiEnhancements.forEach(func => func());
 
@@ -1505,6 +1506,85 @@ async function addThemesPage() {
       } else {
         chrome.runtime.sendMessage({ type: "THEME_UPDATED", themeId: selectedId });
       }
+    }
+  }
+}
+
+function addDevlogGenerator() {
+  if (window.location.pathname.includes('/projects/')) {
+    const actionsContainer = document.querySelector(".project-show-card__actions");
+    if (actionsContainer) {
+      const repoLink = Array.from(actionsContainer.querySelectorAll('a[href*="github.com")')).find(a => a.textContent.toLowerCase().includes("repository"));
+      if (repoLink) {
+        const repoUrl = repoLink.href;
+        sessionStorage.setItem("active_repo_url", repoUrl);
+      }
+    }
+  }
+  if (window.location.pathname.includes("/devlogs/new") || document.querySelector("#post_devlog_body")) {
+    injectDevlogTools();
+  }
+
+  function injectDevlogTools() {
+    const textArea = document.querySelector("#post_devlog_body");
+    const repoUrl = sessionStorage.getItem("active_repo_url");
+    if (!textArea || !repoUrl || document.getElementById("devlog-gen-container")) return;
+
+    const container = document.createElement("div");
+    container.id = "devlog-gen-container";
+    container.innerHTML = `
+      <div>
+        <input type="text" id="commit-from" placeholder="From Hash">
+        <input type="text" id="commit-to" placeholder="To Hash">
+        <button type="button" id="btn-gen-devlog" class="btn btn--brown">add changelog</button>
+      </div>
+      <small>Repository selected: ${repoUrl.split("/").slice(-1)}</small>
+    `;
+    textArea.parentElement.parentElement.parentElement.insertBefore(container, document.querySelector(".projects-new__field.projects-new__devlog-text"));
+
+    document.getElementById("btn-gen-devlog").addEventListener("click", async () => {
+      const from = document.getElementById("commit-from").value.trim();
+      const to = document.getElementById("commit-to").value.trim();
+      if (!from || !to) {
+        alert("please enter both 'from' and 'to' commit hashes to add a changelog.");
+        return;
+      }
+
+      const button = document.getElementById("btn-gen-devlog");
+      button.textContent = "adding...";
+      button.disabled = true;
+
+      const devlogContent = await generateDevlog(repoUrl, from, to);
+      textArea.value += (textArea.value ? "\n\n" : "") + devlogContent;
+
+      button.textContent = "add changelog";
+      button.disabled = false;
+    });
+  }
+
+  async function generateDevlog(repoUrl, from, to) {
+    let repoPath = repoUrl.replace("https://github.com/", "").replace("http://github.com/", "").split("/").slice(0, 2).join("/");
+    const apiUrl = `https://api.github.com/repos/${repoPath}/compare/${from}...${to}`;
+    
+    try {
+      const response = await fetch(apiUrl);
+      if (response.status === 404) {
+        throw new Error("repo or commits not found, check if hashes and repo names are correct!!!!!!!!!!! pweeaseee");
+      }
+      const data = await response.json();
+      if (!data.commits || data.commits.length === 0) {
+        alert("no commits found in that range (p.s. 'from' should be an older commit than 'to')");
+        return "";
+      }
+
+      return data.commits.map(commit => {
+        const shortSha = commit.sha.substring(0, 7);
+        const message = commit.commit.message.split("\n")[0].trim();
+        return `- ${message} ([${shortSha}](${commit.html_url}))`;
+      }).join("\n");
+    } catch (error) {
+      alert(error.message);
+      return "";
     }
   }
 }
