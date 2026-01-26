@@ -127,13 +127,6 @@
   gap: 0.25rem;
 }
 
-.themes__div-options-container {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  flex-grow: 1;
-}
-
 .themes__div-option {
   padding: 1rem;
   border: 2px solid var(--color-tan-400);
@@ -163,9 +156,8 @@
   transition: all 150ms ease;
 }
 
-.themes__div-option[selected="true"] {
-  padding: 2rem 1rem;
-  border: 2px solid var(--color-brown-500);
+.themes__div-option:not([selected="true"]) {
+  filter: brightness(0.25)
 }
 
 /* .ruby-modified__proj-create-card {
@@ -354,6 +346,13 @@
   flex-direction: row;
   align-items: flex-start;
   gap: 2rem;
+  width: 100%;
+}
+.themes__div-options-container {
+  display: grid;
+  flex: 1;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
   width: 100%;
 }
 .shop-goals__items {
@@ -1660,10 +1659,6 @@
 [data-theme] .themes__div-option.themes__div-option--bg-color {
   background-color: var(--accent-darker) !important;
   border-color: var(--accent-darker) !important;
-}
-[data-theme] .themes__div-option[selected="true"] {
-  padding: 2rem 1rem;
-  border-color: var(--border-color) !important;
 }
 
 [data-theme] .modal,

@@ -1424,29 +1424,29 @@ async function addThemesPage() {
         <div class="themes__div-container">
           <div class="themes__div-label-container">
             <h2>Themes</h2>
-            <p>Choose your flavouring!</p>
+            <p>Choose your spice!</p>
           </div>
           <div class="themes__div-options-container" id="bg-color-container">
             <div class="themes__div-option themes__div-option--bg-color" name="bg-color-option" id="bg-color-vanilla">
               <p class="themes__div-option-name">Vanilla</p>
             </div>
-            <div class="themes__div-option themes__div-option--bg-color" name="bg-color-option" id="bg-color-ruby">
-              <p class="themes__div-option-name">Ruby</p>
-            </div>
             <div class="themes__div-option themes__div-option--bg-color" name="bg-color-option" id="bg-color-catppuccin-mocha">
               <p class="themes__div-option-name">Catppuccin Mocha</p>
             </div>
             <div class="themes__div-option themes__div-option--bg-color" name="bg-color-option" id="bg-color-catppuccin-macchiato">
-              <p class="themes__div-option-name">Catppuccin Macchiato [⚠️ WIP]</p>
+              <p class="themes__div-option-name">Catppuccin Macchiato</p>
             </div>
             <div class="themes__div-option themes__div-option--bg-color" name="bg-color-option" id="bg-color-charcoal">
               <p class="themes__div-option-name">Charcoal <small>(by Aperaine)</small></p>
             </div>
-            <div class="themes__div-option themes__div-option--bg-color" name="bg-color-option" id="bg-color-leafy">
-              <p class="themes__div-option-name">Leafy</p>
-            </div>
             <div class="themes__div-option themes__div-option--bg-color" name="bg-color-option" id="bg-color-midnight">
               <p class="themes__div-option-name">Midnight <small>(by Joko26)</small></p>
+            </div>
+            <div class="themes__div-option themes__div-option--bg-color" name="bg-color-option" id="bg-color-ruby">
+              <p class="themes__div-option-name">Ruby</p>
+            </div>
+            <div class="themes__div-option themes__div-option--bg-color" name="bg-color-option" id="bg-color-leafy">
+              <p class="themes__div-option-name">Leafy</p>
             </div>
           <div>
         </div>
