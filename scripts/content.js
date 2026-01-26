@@ -1786,42 +1786,33 @@ function addEmojiAutocomplete() {
     menu.style.left = `${rect.left + window.scrollX}px`;
     menu.style.top = `${rect.top + window.scrollY - menu.offsetHeight + 100}px`;
 
-    matches.forEach((name, index) => {
+    matches.forEach((name) => {
+      let url = slackEmojiMap[name];
+      if (!url) return;
+      if (url.startsWith('alias:')) {
+        const target = url.split(":")[1];
+        url = slackEmojiMap[target];
+      }
       const item = document.createElement("div");
       item.className = "emoji-option";
-      let url = slackEmojiMap[name];
-      if (url && url.startsWith('alias:')) {
-        const aliasTarget = url.split(":")[1];
-        url = slackEmojiMap[aliasTarget];
-      }
-      item.innerHTML = `<img src="${url}"> <span>:${name}:</span>`;
+      item.innerHTML = `<img src="${url}" style="width: 20px; height: 20px;"> <span>:${name}:</span>`;
       item.onclick = () => insertEmoji(input, name, url);
       menu.appendChild(item);
     });
   }
 
-  async function insertEmoji(input, name, origianlUrl) {
+  function insertEmoji(input, name, originalUrl) {
     const text = input.value;
     const cursorPos = input.selectionStart;
-    api.runtime.sendMessage({
-      type: "RESIZE_EMOJI",
-      url: origianlUrl
-    }, (response) => {
-      if (response && response.ok) {
-        const emojiMarkdown = `![${name}](${response.dataUri}) `;
-        const before = text.slice(0, cursorPos).replace(/:[a-z0-9_\-+]*$/, emojiMarkdown);
-        const after = text.slice(cursorPos);
-        input.value = before + after;
-        const menu = document.querySelector(".emoji-preview-menu");
-        if (menu) menu.style.display = "none";
-        input.focus();
-        input.dispatchEvent(new Event("input", {bubbles: true}));
-      } else {
-        console.error("failed to resize emoji wtf", response?.error);
-        const fallback = `![${name}(${origianlUrl}) `;
-        input.value = text.slice(0, cursorPos).replace(/:[a-z0-9_\-+]*$/, fallback) + text.slice(cursorPos);
-      }
-    });
+    const proxyUrl = `https://wsrv.nl/?url=${encodeURIComponent(originalUrl)}&w=24&h=24&fit=contain`;
+    const emojiMarkdown = `![${name}](${proxyUrl}) `;
+    const before = text.slice(0, cursorPos).replace(/:[a-z0-9_\-+]*$/, emojiMarkdown);
+    const after = text.slice(cursorPos);
+    input.value = before + after;
+    const menu = document.querySelector(".emoji-preview-menu");
+    if (menu) menu.style.display = "none";
+    input.focus();
+    input.dispatchEvent(new Event('input', { bubbles: true }));
   }
 }
 
