@@ -1490,7 +1490,8 @@ function addDevlogGenerator() {
   if (window.location.pathname.includes('/projects/')) {
     const actionsContainer = document.querySelector(".project-show-card__actions");
     if (actionsContainer) {
-      const repoLink = Array.from(actionsContainer.querySelectorAll('a[href*="github.com")')).find(a => a.textContent.toLowerCase().includes("repository"));
+      const repoLink = Array.from(actionsContainer.querySelectorAll('a[href*="github.com"]'))
+        .find(a => a.textContent.toLowerCase().includes("repository"));
       if (repoLink) {
         const repoUrl = repoLink.href;
         sessionStorage.setItem("active_repo_url", repoUrl);
