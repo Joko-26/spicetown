@@ -37,7 +37,6 @@ async function initialize() {
     addKeybinds,
     addPayoutDisplay,
     addDevlogImageTools,
-    addEmojiRendering,
     watchForNewComments,
     addWeeklyGains,
     addEmojiAutocomplete,
@@ -1741,28 +1740,6 @@ function watchForNewComments() {
   });
 }
 
-function addEmojiRendering() {
-  const targets = document.querySelectorAll(".post__body, .comment__body");
-  targets.forEach(target => {
-    if (target.dataset.emojisRendered) return;
-    const emojiRegex = /:([a-z0-9_\-+]+):/g;
-    target.innerHTML = target.innerHTML.replace(emojiRegex, (match, name) => {
-      const url = slackEmojiMap[name];
-      if (url && url.startsWith("alias:")) {
-        const actualName = url.split(":")[1];
-        return renderEmojiTag(slackEmojiMap[actualName], match);
-      }
-      return url ? renderEmojiTag(url, match) : match;
-    });
-
-    target.dataset.emojisRendered = "true";
-  });
-}
-
-function renderEmojiTag(url, alt) {
-  return `<img src="${url}" title="${alt}" style="height: 1.5em; vertical-align: middle; display: inline-block;">`;
-}
-
 function addEmojiAutocomplete() {
   let currentMatches = [];
   const menu = document.createElement("div");
@@ -1812,22 +1789,39 @@ function addEmojiAutocomplete() {
     matches.forEach((name, index) => {
       const item = document.createElement("div");
       item.className = "emoji-option";
-      const url = slackEmojiMap[name].startsWith('alias:') ? slackEmojiMap[slackEmojiMap[name].split(":")[1]] : slackEmojiMap[name]
+      let url = slackEmojiMap[name];
+      if (url && url.startsWith('alias:')) {
+        const aliasTarget = url.split(":")[1];
+        url = slackEmojiMap[aliasTarget];
+      }
       item.innerHTML = `<img src="${url}"> <span>:${name}:</span>`;
-      item.onclick = () => insertEmoji(input, name);
+      item.onclick = () => insertEmoji(input, name, url);
       menu.appendChild(item);
     });
   }
 
-  function insertEmoji(input, name) {
+  async function insertEmoji(input, name, origianlUrl) {
     const text = input.value;
     const cursorPos = input.selectionStart;
-    const before = text.slice(0, cursorPos).replace(/:[a-z0-9_\-+]*$/, `:${name}: `);
-    const after = text.slice(cursorPos);
-
-    input.value = before + after;
-    menu.style.display = "none";
-    input.focus();
+    api.runtime.sendMessage({
+      type: "RESIZE_EMOJI",
+      url: origianlUrl
+    }, (response) => {
+      if (response && response.ok) {
+        const emojiMarkdown = `![${name}](${response.dataUri}) `;
+        const before = text.slice(0, cursorPos).replace(/:[a-z0-9_\-+]*$/, emojiMarkdown);
+        const after = text.slice(cursorPos);
+        input.value = before + after;
+        const menu = document.querySelector(".emoji-preview-menu");
+        if (menu) menu.style.display = "none";
+        input.focus();
+        input.dispatchEvent(new Event("input", {bubbles: true}));
+      } else {
+        console.error("failed to resize emoji wtf", response?.error);
+        const fallback = `![${name}(${origianlUrl}) `;
+        input.value = text.slice(0, cursorPos).replace(/:[a-z0-9_\-+]*$/, fallback) + text.slice(cursorPos);
+      }
+    });
   }
 }
 

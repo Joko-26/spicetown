@@ -16,13 +16,21 @@ api.runtime.onUpdateAvailable.addListener((details) => {
 
 api.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.type === "GET_SLACK_EMOJIS") {
-    fetch("https://slack.com/api/emoji.list", {
-      headers: {"Authorization": "Bearer xoxb-2210535565-10363082154950-Q7Y1CHTqIKUSzgrpAKbLDvBk"} // this is safe to expose because the only perm is to view emojis :D
-                                                                                                   // hopefully? :3
-    })
-      .then(response => response.json())
-      .then(data => sendResponse(data))
+    fetch("https://cachet.dunkirk.sh/emojis")
+      .then(res => res.json())
+      .then(data => {
+        const emojiMap = {};
+        data.forEach(e => {if (e.imageUrl) emojiMap[e.name] = e.imageUrl;});
+        sendResponse({ok: true, emoji: emojiMap});
+      })
       .catch(error => sendResponse({ok: false, error: error.message}));
+    return true;
+  } else if (request.type === "RESIZE_EMOJI") {
+    resizeImage(request.url, 24, 24).then(base64 => {
+      sendResponse({ok: true, dataUri: base64});
+    }).catch(error => {
+      sendResponse({ok: false, error: error.message});
+    });
     return true;
   } else if (request.type === "OPEN_EXTENSIONS_PAGE") {
     const url = isFirefox ? "about:addons" : "chrome://extensions";
@@ -165,4 +173,28 @@ async function getSlackDisplayName(userId) {
   }
 
   return userId;
+}
+
+async function resizeImage(url, width, height) {
+  try {
+    const response = await fetch(url, { mode: 'cors' });
+    if (!response.ok) throw new Error(`http error!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ${response.status}`);
+    const blob = await response.blob();
+    const bitmap = await createImageBitmap(blob);
+    const canvas = new OffscreenCanvas(width, height);
+    const ctx = canvas.getContext("2d");
+
+    ctx.drawImage(bitmap, 0, 0, width, height);
+    
+    const resizedBlob = await canvas.convertToBlob({ type: "image/png" });
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(resizedBlob);
+    });
+  } catch (error) {
+    console.error("resizing image failed i crave for help at scripts/background.js ", error);
+    throw error;
+  }
 }

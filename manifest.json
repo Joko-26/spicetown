@@ -18,7 +18,8 @@
   "host_permissions": [
     "*://flavortown.hackclub.com/*",
     "https://slack.com/*",
-    "https://cachet.dunkirk.sh/emojis"
+    "https://cachet.dunkirk.sh/emojis",
+    "https://*.slack-edge.com/*"
   ],
   "action": {
     "default_popup": "popup/popup.html"
