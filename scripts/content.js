@@ -1947,8 +1947,7 @@ async function improveKitchenLayout() {
     if (subtitleEl) {
       const totalUsers = parseInt(subtitleEl.textContent.replace(/\D/g, ""), 10);
       if (totalUsers && !isNaN(totalUsers)) {
-        const percentile = (lbRank / totalUsers) * 100;
-        const displayedPercent = parseFloat((lbRank / totalUsers).toPrecision(2));
+        const displayedPercent = parseFloat((lbRank / totalUsers).toPrecision(2)) * 100;
         kitchenIndex.querySelector(".kitchen-stats-card__rank").innerHTML += ` <small>(Top ${displayedPercent}%)</small>`;
       }
     }
