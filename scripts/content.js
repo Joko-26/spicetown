@@ -3,6 +3,7 @@ const api = typeof browser !== "undefined" ? browser : chrome;
 /** VARIABLES **/
 let apiKey = "";
 let slackEmojiMap = {};
+let totalTime;
 const savedBgColor = localStorage.getItem("bg-color-theme");
 
 function refreshApiKey() {
@@ -41,7 +42,6 @@ async function initialize() {
     watchForNewComments,
     addWeeklyGains,
     addEmojiAutocomplete,
-    addPayoutDisplay,
     addProjectVotes,
     addDevlogGenerator,
     addDevlogStreak
@@ -423,6 +423,7 @@ function addExtraProjectInfo() {
 
   const timeRaw = stats[1]?.textContent.match(/\d+/g) || ["0", "0"];
   const totalMins = (parseInt(timeRaw[0]) * 60) + parseInt(timeRaw[1] || 0);
+  totalTime = totalMins;
 
   const extraInfoDiv = document.createElement("div");
   extraInfoDiv.className = "project-extra-info__div";
@@ -1693,7 +1694,7 @@ async function addPayoutDisplay() {
 
           payout.querySelector(".post__author > span").textContent = "received payout for";
           payout.querySelector(".post__ship-title").textContent = "Received payout!";
-          payout.querySelector(".post__body").innerHTML = `<p>Payout: 🍪${amount}<br><small>(Approx.)</small> Multiplier: ${multiplier}x<br>Time shipped: ${convertMToFormat(mins)}</p>`;
+          payout.querySelector(".post__body").innerHTML = `<p>Payout: 🍪${amount}<br><small>(Approx.)</small> Multiplier: ${multiplier}x<br>Time shipped: ${convertMToFormat(mins)} <small>(${convertMToFormat(totalTime - mins)} more since)</small></p>`;
 
           shipPost.before(payout);
           shipPost.setAttribute("data-payout-type", "processed");
