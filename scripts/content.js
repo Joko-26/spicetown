@@ -1931,24 +1931,29 @@ async function improveKitchenLayout() {
   const lbRank = kitchenIndex.querySelector(".kitchen-stats-card__rank").textContent.replace(/\D/g, "");
   try {
     await refreshApiKey();
-    const response = await fetch(`https://flavortown.hackclub.com/api/v1/users`, {
+    const response = await fetch(`https://flavortown.hackclub.com/leaderboard`, {
       method: 'GET',
       headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Accept': 'application/json'
+        "Accept": "text/html"
       }
     });
 
-    const data = await response.json();
+    const html = await response.text();
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, "text/html");
 
-    if (data.error === "rate_limited" || data.error === "unauthorized") {
-      console.error("rate limited or no api key????")
-      return;
+    const subtitleEl = doc.querySelector("main > .subtitle");
+
+    if (subtitleEl) {
+      const totalUsers = parseInt(subtitleEl.textContent.replace(/\D/g, ""), 10);
+      if (totalUsers && !isNaN(totalUsers)) {
+        const percentile = (lbRank / totalUsers) * 100;
+        const displayedPercent = parseFloat((lbRank / totalUsers).toPrecision(2));
+        kitchenIndex.querySelector(".kitchen-stats-card__rank").innerHTML += ` <small>(Top ${displayedPercent}%)</small>`;
+      }
     }
-
-    kitchenIndex.querySelector(".kitchen-stats-card__rank").innerHTML += ` <small>(Top ${parseFloat((lbRank / data.pagination.total_count).toPrecision(2))}%)</small>`;
   } catch (err) {
-    console.error("i couldnt get users api grrrrrrrrrr >:(", err);
+    console.error("i couldnt get leaderboard page grrrrrrrrrr >:(", err);
   }
 }
 
