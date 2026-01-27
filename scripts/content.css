@@ -798,6 +798,9 @@
 .settings-section div {
   margin-top: .5rem;
 }
+.state-card__streak {
+  font-size: 3rem;
+}
 
 /** ANIMATIONS **/
 
@@ -1126,6 +1129,7 @@
 [data-theme] .themes__div-container::before,
 [data-theme] .kitchen-help::before,
 [data-theme] .kitchen-stats::before,
+[data-theme] .kitchen-stats,
 [data-theme] .kitchen-announcement > .announcement,
 [data-theme] .projects-new__card::before,
 [data-theme] .kitchen-comic,

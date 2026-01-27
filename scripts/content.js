@@ -43,7 +43,8 @@ async function initialize() {
     addEmojiAutocomplete,
     addPayoutDisplay,
     addProjectVotes,
-    addDevlogGenerator
+    addDevlogGenerator,
+    addDevlogStreak
   ];
   uiEnhancements.forEach(func => func());
 
@@ -1928,6 +1929,17 @@ async function improveKitchenLayout() {
   kitchenIndex.querySelector(".kitchen-setup").remove();
   kitchenIndex.querySelector(".kitchen-comic").remove();
   kitchenIndex.querySelector(".kitchen-help").remove();
+
+  const kitchenStreak = document.createElement("div");
+  kitchenStreak.className = "state-card state-card--neutral kitchen-stats-card";
+  kitchenStreak.innerHTML = `
+    <div class="kitchen-stats-card__content">
+      <div class="state-card__title">Streak</div>
+      <div class="state-card__streak">Loading...</div>
+    </div>
+  `;
+  kitchenIndex.querySelector(".kitchen-stats__grid").appendChild(kitchenStreak);
+
   const lbRank = kitchenIndex.querySelector(".kitchen-stats-card__rank").textContent.replace(/\D/g, "");
   try {
     await refreshApiKey();
@@ -1953,6 +1965,97 @@ async function improveKitchenLayout() {
     }
   } catch (err) {
     console.error("i couldnt get leaderboard page grrrrrrrrrr >:(", err);
+  }
+}
+
+async function addDevlogStreak() {
+  const kitchenIndex = document.querySelector(".kitchen-index");
+  if (!kitchenIndex) return;
+
+  const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+  const userLink = document.querySelector(".sidebar__user-details").querySelector("a");
+  if (!userLink) return;
+  const userLinkHref = userLink.pathname;
+  try {
+    await refreshApiKey();
+    const userResponse = await fetch(`https://flavortown.hackclub.com/api/v1${userLinkHref}`, {
+      method: "GET",
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Accept': 'application/json'
+      }
+    });
+    const userData = await userResponse.json();
+
+    const projectIds = userData.project_ids || [];
+    const projectPromises = projectIds.map(id =>
+      fetch(`https://flavortown.hackclub.com/api/v1/projects/${id}`,{
+        headers: {
+          "Authorization": `Bearer ${apiKey}`,
+          "Accept": "application/json"
+        }
+      }).then(resolve => resolve.json())
+    );
+    const projects = await Promise.all(projectPromises);
+
+    const allDevlogIds = projects.flatMap(project => project.devlog_ids || []).sort((a, b) => b - a);
+    const uniqueDates = new Set();
+    const todayString = new Date().toISOString().split("T")[0];
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const yesterdayString = yesterday.toISOString().split("T")[0];
+
+    for (const id of allDevlogIds) {
+      await wait(250);
+      const devlogResponse = await fetch(`https://flavortown.hackclub.com/api/v1/devlogs/${id}`, {
+        headers: {
+          "Authorization": `Bearer ${apiKey}`,
+          "Accept": "application/json"
+        }
+      });
+      const devlog = await devlogResponse.json();
+      if (!devlog || !devlog.created_at) continue;
+      const logDate = devlog.created_at.split("T")[0];
+
+      if (uniqueDates.size === 0 && logDate !== todayString && logDate !== yesterdayString) break;
+      if (!uniqueDates.has(logDate)) {
+        if (uniqueDates.size > 0) {
+          const lastDate = new Date([...uniqueDates].pop());
+          lastDate.setDate(lastDate.getDate() - 1);
+          if (logDate !== lastDate.toISOString().split("T")[0]) break;
+        }
+        uniqueDates.add(logDate);
+      }
+    }
+
+    const activeDates = [...uniqueDates].sort((a, b) => new Date(b) - new Date(a));
+    if (activeDates.length === 0) {
+      console.log("devlog streak is 0 days");
+      return;
+    }
+
+    if (activeDates[0] !== todayString && activeDates[0] !== yesterdayString) {
+      console.log("streak: 0");
+      return;
+    }
+
+    let streak = 0;
+    let checkDate = new Date(activeDates[0]);
+
+    for (let i = 0; i < activeDates.length; i++) {
+      const currentDateString = activeDates[i];
+      const expectedDateString = checkDate.toISOString().split("T")[0];
+      if (currentDateString === expectedDateString) {
+        streak++;
+        checkDate.setDate(checkDate.getDate() - 1);
+      } else {
+        break;
+      }
+    }
+    kitchenIndex.querySelector(".state-card__streak").textContent = `${streak} days`;
+  } catch (error) {
+    console.error("adding devlog streak did not work because ", error);
   }
 }
 
