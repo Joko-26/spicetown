@@ -765,8 +765,7 @@
 .post__votes-container > div {
   margin-top: 1rem;
   padding: 1rem 1.25rem;
-  background: var(--color-teal-400);
-  color: var(--color-blue-600);
+  background: rgba(0, 0, 0, 0.1);
   border-radius: 8px;
 }
 #devlog-gen-container {
@@ -800,6 +799,16 @@
 }
 .state-card__streak {
   font-size: 3rem;
+}
+.btn-view-more-votes {
+  display: block;
+  background: none;
+  font-size: 1.1rem;
+  margin: auto;
+  border: none;
+  cursor: pointer;
+  color: var(--color-bg);
+  margin-top: 1.5rem;
 }
 
 /** ANIMATIONS **/
@@ -1061,7 +1070,8 @@
 }
 
 [data-theme] a,
-[data-theme] .comments-count {
+[data-theme] .comments-count,
+[data-theme] .btn-view-more-votes {
   color: var(--text-highlight) !important;
 }
 

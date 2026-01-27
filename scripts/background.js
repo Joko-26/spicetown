@@ -99,7 +99,7 @@ async function fetchVotes(projectName) {
         console.error("slack api error:", data.error);
         break;
       }
-
+      
       allMessages = allMessages.concat(data.messages);
       cursor = data.response_metadata?.next_cursor;
       hasMore = !!(data.has_more && cursor);

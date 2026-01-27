@@ -1892,7 +1892,8 @@ async function addProjectVotes() {
   posts.forEach(post => {
     // Get the project name via the project link on the ship post!
     // hey if ur looking through the code should i keep up with commenting stuff?
-    const projectLink = post.querySelector("a[href^='/projects/']");
+    const projectLink = Array.from(post.querySelectorAll("a[href^='/projects/']"))
+      .find(a => !a.textContent.toLowerCase().includes("repository"));
     if (!projectLink || post.dataset.votesLoaded) return;
 
     const projectName = projectLink.textContent.trim();
@@ -1902,6 +1903,7 @@ async function addProjectVotes() {
       type: "FETCH_COMMUNITY_VOTES",
       projectName: projectName
     }, (votes) => {
+      console.log(`[Votes] Response for ${projectName}:`, votes);
       if (votes && votes.length > 0) {
         const votesContainer = document.createElement("div");
         votesContainer.className = "post__votes-container";
@@ -1910,11 +1912,31 @@ async function addProjectVotes() {
         title.textContent = "Public Votes";
         votesContainer.appendChild(title);
 
-        votes.forEach(vote => {
+        votes.forEach((vote, index) => {
           const voteEl = document.createElement("div");
+          voteEl.className = "public-vote-item";
+          if (index >= 5) {
+            voteEl.style.display = "none";
+            voteEl.classList.add("is-collapsed");
+          }
           voteEl.innerHTML = `<strong>@${vote.voter}:</strong> ${vote.text}`;
           votesContainer.appendChild(voteEl);
         });
+
+        if (votes.length > 5) {
+          const viewMoreBtn = document.createElement("button");
+          viewMoreBtn.textContent = `View ${votes.length - 5} more votes`;
+          viewMoreBtn.className = "btn-view-more-votes";
+          viewMoreBtn.addEventListener("click", () => {
+            const hiddenVotes = votesContainer.querySelectorAll(".is-collapsed");
+            hiddenVotes.forEach(element => {
+              element.style.display = "block";
+            });
+            viewMoreBtn.remove();
+          });
+
+          votesContainer.appendChild(viewMoreBtn);
+        }
 
         post.querySelector(".post__content").appendChild(votesContainer);
       }
