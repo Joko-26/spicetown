@@ -1509,31 +1509,48 @@ function addDevlogGenerator() {
     injectDevlogTools();
   }
 
-  function injectDevlogTools() {
+  async function injectDevlogTools() {
     const textArea = document.querySelector("#post_devlog_body");
     const repoUrl = sessionStorage.getItem("active_repo_url");
     if (!textArea || !repoUrl || document.getElementById("devlog-gen-container")) return;
+
+    const repoPath = repoUrl.replace(/https?:\/\/github\.com\//, "").split("/").slice(0, 2).join("/");
 
     const container = document.createElement("div");
     container.id = "devlog-gen-container";
     container.innerHTML = `
       <div>
-        <input type="text" id="commit-from" placeholder="From Hash">
-        <input type="text" id="commit-to" placeholder="To Hash">
+        <select id="commit-from"><option>loading commits...</option></select>
+        <span>to</span>
+        <select id="commit-to"><option>select your from commit first</option></select>
         <button type="button" id="btn-gen-devlog" class="btn btn--brown">add changelog</button>
       </div>
-      <small>Repository selected: ${repoUrl.split("/").slice(-1)}</small>
+      <small>repository: ${repoPath}</small>
     `;
     textArea.parentElement.parentElement.parentElement.insertBefore(container, document.querySelector(".projects-new__field.projects-new__devlog-text"));
 
-    document.getElementById("btn-gen-devlog").addEventListener("click", async () => {
-      const from = document.getElementById("commit-from").value.trim();
-      const to = document.getElementById("commit-to").value.trim();
-      if (!from || !to) {
-        alert("please enter both 'from' and 'to' commit hashes to add a changelog.");
-        return;
-      }
+    try {
+      const response = await fetch(`https://api.github.com/repos/${repoPath}/commits?per_page=50`);
+      const allCommits = await response.json();
 
+      const fromSelect = document.getElementById("commit-from");
+      const toSelect = document.getElementById("commit-to");
+      fromSelect.innerHTML = allCommits.map(commit => `<option value="${commit.sha}">${commit.commit.message.split("\n")[0].substring(0, 30)}... (${commit.sha.substring(0, 7)})</option>`).join("");
+      const updateToDropdown =() => {
+        const selectedIndex = fromSelect.selectedIndex;
+        const validToCommits = allCommits.slice(0, selectedIndex + 1);
+        toSelect.innerHTML = validToCommits.map(commit => `<option value="${commit.sha}">${commit.commit.message.split("\n")[0].substring(0, 30)}... (${commit.sha.substring(0, 7)})</option>`).join("");
+      };
+      fromSelect.addEventListener("change", updateToDropdown);
+      updateToDropdown();
+    } catch (error) {
+      document.getElementById("commit-from").innerHTML = "<option>Failed to load commits</option>";
+    }
+
+    document.getElementById("btn-gen-devlog").addEventListener("click", async () => {
+      const from = document.getElementById("commit-from").value;
+      const to = document.getElementById("commit-to").value;
+      
       const button = document.getElementById("btn-gen-devlog");
       button.textContent = "adding...";
       button.disabled = true;

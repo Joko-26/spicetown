@@ -797,7 +797,7 @@
   flex-direction: column;
   gap: 0.5rem;
 }
-#devlog-gen-container input {
+#devlog-gen-container select {
   padding: var(--space-xxs) var(--space-m);
   border-radius: calc(.6 * var(--border-radius));
   border: solid 5px var(--color-brown-400);
@@ -805,10 +805,11 @@
   font-size: var(--font-size-xl);
   color: var(--color-bg);
   width: fit-content; 
+  cursor: pointer;
 }
-#devlog-gen-container input::placeholder {
-  color: inherit;
-  opacity: 0.5;
+#devlog-gen-container select:focus {
+  outline: none;
+  box-shadow: none;
 }
 #file-import-settings {
   display: none;
@@ -2066,7 +2067,7 @@
 [data-theme] .users > .user > .content > p > small {
   color: var(--text-primary) !important;
 }
-[data-theme] #devlog-gen-container input {
+[data-theme] #devlog-gen-container select {
   border: solid 5px var(--border-color);
   background: var(--surface-dark);
   color: var(--text-primary);
