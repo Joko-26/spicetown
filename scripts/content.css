@@ -658,6 +658,9 @@
   gap: .5rem;
   pointer-events: none;
 }
+@media (max-width: 1500px) {
+  .sidebar__nav-item-hotkey-div {right: -85%;}
+}
 
 .explore__nav-component-hotkey-div {
   position: absolute;
