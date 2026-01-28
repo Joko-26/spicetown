@@ -44,7 +44,8 @@ async function initialize() {
     addEmojiAutocomplete,
     addProjectVotes,
     addDevlogGenerator,
-    addDevlogStreak
+    addDevlogStreak,
+    addNextShipEstimation
   ];
   uiEnhancements.forEach(func => func());
 
@@ -2149,6 +2150,49 @@ async function addDevlogStreak() {
   } catch (error) {
     console.error("adding devlog streak did not work because ", error);
   }
+}
+
+function addNextShipEstimation() {
+  const payoutFooters = document.querySelectorAll(".post__payout-footer");
+  if (payoutFooters.length === 0) return;
+
+  const latestFooter = payoutFooters[payoutFooters.length - 1];
+
+  const calculate = () => {
+    const items = Array.from(latestFooter.querySelectorAll(".post__payout-item"));
+
+    const multiplierItem = items.find(i => i.querySelector(".post__payout-label")?.textContent.includes("Multiplier"));
+    const timeSinceItem = items.find(i => i.querySelector(".post__payout-label")?.textContent.includes("Time since"));
+
+    if (!multiplierItem || !timeSinceItem) return false; // Not loaded yet
+
+    const multiplier = parseFloat(multiplierItem.querySelector(".post__payout-value").textContent.replace(/[^\d.]/g, '')) || 0;
+    const timeText = timeSinceItem.querySelector(".post__payout-value").textContent;
+
+    const h = parseInt(timeText.match(/(\d+)h/)?.[1] || 0);
+    const m = parseInt(timeText.match(/(\d+)m/)?.[1] || 0);
+    const totalHours = h + (m / 60);
+
+    const estimatedPayout = Math.round(totalHours * multiplier);
+    
+    document.querySelector(".popover-wrapper.project-show-card__ship-wrapper > a").textContent += ` ~🍪 ${estimatedPayout}`;
+
+    return true;
+  };
+
+  const observer = new MutationObserver((mutations, obs) => {
+    if (calculate()) {
+      obs.disconnect();
+    }
+  });
+
+  observer.observe(latestFooter, {
+    childList: true,
+    subtree: true,
+    characterData: true
+  });
+
+  calculate();
 }
 
 function str_rand(length) {
