@@ -771,9 +771,25 @@
   background: rgba(0, 0, 0, .1);
   border-radius: 8px;
 }
-.public-vote-item > strong {
+.public-vote-item > div {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: .4rem;
+  font-size: 1.25rem;
+  margin-bottom: .5rem;
+}
+.public-vote-item > div > strong {
   font-weight: 600;
   opacity: .8;
+}
+.public-vote-item > div > img {
+  height: 1.2em;
+  width: 1.2em;
+}
+.public-vote-item > div > small {
+  opacity: .8;
+  align-self: self-end;
 }
 #devlog-gen-container {
   display: flex;

@@ -4,7 +4,6 @@
 const api = typeof browser !== "undefined" ? browser : chrome;
 const isFirefox = typeof browser !== "undefined";
 const userCache = {};
-const slackNameCache = {};
 
 api.runtime.onUpdateAvailable.addListener((details) => {
   api.tabs.query({active: true, currentWindow: true}, (tabs) => {
@@ -95,11 +94,7 @@ async function fetchVotes(projectName) {
       });
       const data = await response.json();
 
-      if (!data.ok) {
-        console.error("slack api error:", data.error);
-        break;
-      }
-      
+      if (!data.ok) break;
       allMessages = allMessages.concat(data.messages);
       cursor = data.response_metadata?.next_cursor;
       hasMore = !!(data.has_more && cursor);
@@ -118,8 +113,11 @@ async function fetchVotes(projectName) {
       const voterId = voterMatch ? voterMatch[1] : null;
       
       let displayName = "Unknown";
+      let profilePic = "";
       if (voterId) {
-        displayName = await getSlackDisplayName(voterId);
+        const userInfo = await getSlackUserInfo(voterId);
+        displayName = userInfo.display_name || userInfo.real_name || userInfo.name || "Unknown";
+        profilePic = userInfo.profile?.image_48 || "";
       }
 
       let voteComment = "voted for this project!";
@@ -129,14 +127,15 @@ async function fetchVotes(projectName) {
 
       return {
         voter: displayName,
+        image: profilePic,
         text: voteComment,
-        ts: msg.ts
+        ts: msg.ts,
+        timeAgo: formatTimeAgo(msg.ts * 1000)
       };
     });
 
     return await Promise.all(votePromises);
   } catch (error) {
-    console.error("Vote fetch failed", error);
     return [];
   }
 }
@@ -156,23 +155,24 @@ async function getSlackId(userId, apiKey) {
   return null;
 }
 
-async function getSlackDisplayName(userId) {
-  if (slackNameCache[userId]) return slackNameCache[userId];
+async function getSlackUserInfo(userId) {
+  if (userCache[userId]) return userCache[userId];
   try {
     const response = await fetch(`https://slack.com/api/users.info?user=${userId}`, {
-      headers: {"Authorization": "Bearer xoxb-2210535565-10363082154950-Q7Y1CHTqIKUSzgrpAKbLDvBk"}
+      headers: { 
+        "Authorization": "Bearer xoxb-2210535565-10363082154950-Q7Y1CHTqIKUSzgrpAKbLDvBk" 
+      }
     });
     const data = await response.json();
-    if (data.ok && data.user) {
-      const name = data.user.profile.display_name || data.user.real_name || data.user.name;
-      slackNameCache[userId] = name;
-      return name;
-    }
-  } catch (error) {
-    console.error("failed  to fetch user info", error);
-  }
 
-  return userId;
+    if (data.ok && data.user) {
+      userCache[userId] = data.user;
+      return data.user;
+    }
+    return {};
+  } catch (err) {
+    return {};
+  }
 }
 
 async function resizeImage(url, width, height) {
@@ -197,4 +197,19 @@ async function resizeImage(url, width, height) {
     console.error("resizing image failed i crave for help at scripts/background.js ", error);
     throw error;
   }
+}
+
+function formatTimeAgo(timestamp) {
+  const diff = Date.now() - timestamp;
+  const seconds = Math.floor(diff / 1000);
+  const minutes = Math.floor(seconds / 60);
+  const hours = Math.floor(minutes / 60);
+  const days = Math.floor(hours / 24);
+  if (seconds < 60) return "Just now"
+  else if (minutes === 1) return "1 minute ago"
+  else if (minutes < 60) return `${minutes} minutes ago`
+  else if (hours === 1) return "1 hour ago"
+  else if (hours < 24) return `${hours} hours ago`
+  else if (days === 1) return "1 day ago";
+  return `${days} days ago`;
 }

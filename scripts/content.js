@@ -27,9 +27,9 @@ async function initialize() {
 
   // UI Enhancements
   const uiEnhancements = [
+    improveKitchenLayout,
     addDevlogImprovement,
     addThemesPage,
-    improveKitchenLayout,
     addProjectSearcher,
     addImprovedUI,
     addExtraProjectInfo,
@@ -1929,7 +1929,14 @@ async function addProjectVotes() {
             voteEl.style.display = "none";
             voteEl.classList.add("is-collapsed");
           }
-          voteEl.innerHTML = `<strong>@${vote.voter}</strong> ${vote.text}`;
+          voteEl.innerHTML = `
+            <div>
+              <img src="${vote.image}"/>
+              <strong>@${vote.voter}</strong>
+              <small>${vote.timeAgo}</small>
+            </div>
+            ${vote.text}
+          `;
           votesContainer.appendChild(voteEl);
         });
 
