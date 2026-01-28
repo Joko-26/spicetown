@@ -421,8 +421,12 @@ function addExtraProjectInfo() {
   const stats = content.querySelectorAll(".project-show-card__stat");
   const devlogCount = parseNum(stats[0]);
 
-  const timeRaw = stats[1]?.textContent.match(/\d+/g) || ["0", "0"];
-  const totalMins = (parseInt(timeRaw[0]) * 60) + parseInt(timeRaw[1] || 0);
+  const timeString = stats[1]?.textContent || "";
+  const hours = parseInt(timeString.match(/(\d+)h/)?.[1] || "0", 10);
+  const minutes = parseInt(timeString.match(/(\d+)m/)?.[1] || "0", 10);
+  const seconds = parseInt(timeString.match(/(\d+)s/)?.[1] || "0", 10);
+
+  const totalMins = (hours * 60) + minutes + (seconds > 30 ? 1 : 0);
   totalTime = totalMins;
 
   const extraInfoDiv = document.createElement("div");
