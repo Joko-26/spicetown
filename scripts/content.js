@@ -1686,18 +1686,15 @@ async function addPayoutDisplay() {
       for (let i = transactionIndex; i < transactions.length; i++) {
         const row = transactions[i];
         if (row.textContent.includes(shipTitle)) {
-          const amount = row.querySelector(".balance-history__amount--positive")?.textContent.replace(/\D/g, '') || 0;
-          const multiplier = mins > 0 ? Math.round((amount / (mins / 60)) * 100) / 100 : 0;
-          const payout = shipPost.cloneNode(true);
-
-          payout.setAttribute("data-payout-type", "display");
-
-          payout.querySelector(".post__author > span").textContent = "received payout for";
-          payout.querySelector(".post__ship-title").textContent = "Received payout!";
-          payout.querySelector(".post__body").innerHTML = `<p>Payout: 🍪${amount}<br><small>(Approx.)</small> Multiplier: ${multiplier}x<br>Time shipped: ${convertMToFormat(mins)} <small>(${convertMToFormat(totalTime - mins)} more since)</small></p>`;
-
-          shipPost.before(payout);
+          const timeSinceItem = document.createElement("div");
+          timeSinceItem.classList.add("post__payout-item");
+          timeSinceItem.innerHTML = `
+            <span class="post__payout-label">Time since:</span>
+            <span class="post__payout-value">${convertMToFormat(totalTime - mins)}</span>
+          `;
+          shipPost.querySelector(".post__payout-footer").appendChild(timeSinceItem);
           shipPost.setAttribute("data-payout-type", "processed");
+          
           transactionIndex = i + 1;
           break;
         }
