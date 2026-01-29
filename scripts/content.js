@@ -37,7 +37,7 @@ async function initialize() {
     addProjectSearcher,
     addUserExplore,
     addKeybinds,
-    addPayoutDisplay,
+    addExtraShipInfo,
     addDevlogImageTools,
     watchForNewComments,
     addWeeklyGains,
@@ -1694,49 +1694,36 @@ function applyUISync() {
   })
 }
 
-async function addPayoutDisplay() {
-  const timeline = document.querySelector(".projects-show__timeline");
-  const turboFrame = document.querySelector("#balance-modal turbo-frame");
-  if (!timeline || !turboFrame) return;
-  turboFrame.setAttribute("loading", "please-load-this-thank-you");
+async function addExtraShipInfo() {
+  const shipPosts = document.querySelectorAll(".post.post--ship:not([data-payout-type])");
+  if (shipPosts.length === 0) return;
 
-  turboFrame.addEventListener("turbo:frame-load", () => {
-    const transactions = Array.from(document.querySelectorAll("#balance-modal .balance-history__table tbody tr"));
-    const shipPosts = timeline.querySelectorAll(".post.post--ship:not([data-payout-type])");
-    let transactionIndex = 0;
-    shipPosts.forEach(shipPost => {
-      const shipTitle = shipPost.querySelector(".post__author a:nth-of-type(2)")?.textContent;
-      if (!shipTitle) return;
-      let mins = 0;
-      let next = shipPost.nextElementSibling;
-      while (next && !next.classList.contains("post--ship")) {
-        if (next.classList.contains("post--devlog")) {
-          const d = next.querySelector(".post__duration")?.textContent || "";
-          const h = d.match(/(\d+)h/)?.[1] || 0;
-          const m = d.match(/(\d+)m/)?.[1] || 0;
-          mins += (parseInt(h) * 60) + parseInt(m);
-        }
-        next = next.nextElementSibling;
+  shipPosts.forEach(shipPost => {
+    let mins = 0;
+    let next = shipPost.nextElementSibling;
+    while (next && !next.classList.contains("post--ship")) {
+      if (next.classList.contains("post--devlog")) {
+        const d = next.querySelector(".post__duration")?.textContent || "";
+        const h = d.match(/(\d+)h/)?.[1] || 0;
+        const m = d.match(/(\d+)m/)?.[1] || 0;
+        mins += (parseInt(h) * 60) + parseInt(m);
       }
+      next = next.nextElementSibling;
+    }
 
-      for (let i = transactionIndex; i < transactions.length; i++) {
-        const row = transactions[i];
-        if (row.textContent.includes(shipTitle)) {
-          const timeSinceItem = document.createElement("div");
-          timeSinceItem.classList.add("post__payout-item");
-          timeSinceItem.innerHTML = `
-            <span class="post__payout-label">Time since:</span>
-            <span class="post__payout-value">${convertMToFormat(totalTime - mins)}</span>
-          `;
-          shipPost.querySelector(".post__payout-footer").appendChild(timeSinceItem);
-          shipPost.setAttribute("data-payout-type", "processed");
+    const timeSinceItem = document.createElement("div");
+    timeSinceItem.className = "post__payout-item";
+    timeSinceItem.innerHTML = `
+      <span class="post__payout-label">Time since:</span>
+      <span class="post__payout-value">${convertMToFormat(totalTime - mins)}</span>
+    `;
 
-          transactionIndex = i + 1;
-          break;
-        }
-      }
-    });
-  }, {once: true});
+    const footer = shipPost.querySelector(".post__payout-footer");
+    if (footer) {
+      footer.appendChild(timeSinceItem);
+      shipPost.setAttribute("data-payout-type", "processed");
+    }
+  });
 }
 
 function addDevlogImageTools() {
