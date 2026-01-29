@@ -34,7 +34,6 @@ async function initialize() {
     addImprovedUI,
     addExtraProjectInfo,
     addImprovedShop,
-    addProjectSearcher,
     addUserExplore,
     addKeybinds,
     addExtraShipInfo,
