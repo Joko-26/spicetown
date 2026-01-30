@@ -386,7 +386,7 @@ function addImprovedUI() {
   }
 }
 
-function addExtraProjectInfo() {
+async function addExtraProjectInfo() {
   const ICONS = {
     clock: `
       <g clip-path="url(#clip0_21_12)">
@@ -479,37 +479,37 @@ function addExtraProjectInfo() {
   const minsPerDevlog = totalMins / devlogCount;
   extraInfoDiv.appendChild(createStatRow('clock', `1 devlog for every ${convertMToFormat(Math.round(minsPerDevlog))}`, getRating(minsPerDevlog, scales.minsPerDevlog)));
 
-  const timeline = document.querySelector(".projects-show__timeline .mt-4");
-  if (timeline) {
-    const lastPost = timeline.lastElementChild?.querySelector(".post__time")?.textContent.toLowerCase() || "";
-    const numMatch = lastPost.match(/(\d+)|\b(a|an)\b/);
-    const num = numMatch ? (numMatch[1] ? parseInt(numMatch[1], 10) : 1) : 1;
-    let daysActive = 1;
-    
-    if (lastPost.includes("month")) {
-      daysActive = num * 30;
-    } else if (lastPost.includes("day")) {
-      daysActive = num;
-    } else if (lastPost.includes("hour") || lastPost.includes("hours")) {
-      daysActive = 1;
-    } else {
-      daysActive = Math.min(1, parseInt(num, 10) || 1);
-    }
-
-    const minsPerDay = totalMins / daysActive;
-    extraInfoDiv.appendChild(createStatRow('calendar', `${convertMToFormat(minsPerDay)} a day`, getRating(minsPerDay, scales.timePerDay)));
-
-    const followerCount = parseNum(content.querySelector(".project-show-card__stat--clickable"));
-    const followersPerDay = (followerCount / daysActive).toFixed(2);
-    extraInfoDiv.appendChild(createStatRow('users', `${followersPerDay} follower(s) a day`, getRating(followersPerDay, scales.followersPerDay)));
-  }
-
   function getSvg(type) {
     const fillMode = type === 'clock' ? 'currentColor' : 'none';
     return `
       <svg width="32" height="32" viewBox="0 0 512 512" fill="${fillMode}" xmlns="http://www.w3.org/2000/svg" style="color: var(--color-tan-400)">
         ${ICONS[type]}
       </svg>`;
+  }
+
+  try {
+    const slug = window.location.pathname.split("/").filter(Boolean).pop();
+    refreshApiKey();
+    const response = await fetch(`https://flavortown.hackclub.com/api/v1/projects/${slug}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Accept': 'application/json'
+      }
+    });
+    if (!response.ok) throw new Error("api failed :(");
+    const data = await response.json();
+    const startTime = new Date(data.created_at).getTime();
+    const daysActive = Math.max(1, Math.ceil((Date.now() - startTime) / (1000 * 60 * 60 *24)));
+    
+    const minsPerDay = totalMins / daysActive;
+    extraInfoDiv.appendChild(createStatRow('calendar', `${convertMToFormat(minsPerDay)} a day`, getRating(minsPerDay, scales.timePerDay)));
+
+    const followerCount = parseNum(content.querySelector(".project-show-card__stat--clickable"));
+    const followersPerDay = (followerCount / daysActive).toFixed(2);
+    extraInfoDiv.appendChild(createStatRow('users', `${followersPerDay} follower(s) a day`, getRating(followersPerDay, scales.followersPerDay)));
+  } catch (error) {
+    console.error("api error : ", error)
   }
 }
 
