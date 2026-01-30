@@ -477,7 +477,7 @@ function addExtraProjectInfo() {
   };
 
   const minsPerDevlog = totalMins / devlogCount;
-  extraInfoDiv.appendChild(createStatRow('clock', `1 devlog for every ${Math.round(minsPerDevlog)} min(s)`, getRating(minsPerDevlog, scales.minsPerDevlog)));
+  extraInfoDiv.appendChild(createStatRow('clock', `1 devlog for every ${convertMToFormat(Math.round(minsPerDevlog))}`, getRating(minsPerDevlog, scales.minsPerDevlog)));
 
   const timeline = document.querySelector(".projects-show__timeline .mt-4");
   if (timeline) {
@@ -2236,6 +2236,69 @@ function addNextShipEstimation() {
 
   calculate();
 }
+
+// coming soon (wip)
+// function addShopItemEstimation() {
+//   document.querySelectorAll(".shop-item-card").forEach(card => {
+//     let isFlipped = false;
+//     let isFlipping = false;
+//     let originalContent = null;
+
+//     card.addEventListener("mouseenter", () => {
+//       if (!isFlipped && !isFlipping) {
+//         isFlipping = true;
+
+//         originalContent = Array.from(card.childNodes).map(node => node.cloneNode(true));
+
+//         card.style.setProperty("transform", "scaleX(-1)", "important");
+//         isFlipped = true;
+
+//         setTimeout(() => {
+//           isFlipping = false;
+//         }, 200);
+
+//         card.innerHTML = ""; 
+//       }
+//     });
+
+//     const resetCard = () => {
+//       isFlipping = true;
+//       card.style.transform = "";
+//       isFlipped = false;
+
+//       if (originalContent) {
+//         card.innerHTML = '';
+//         originalContent.forEach(node => card.appendChild(node));
+//       }
+
+//       setTimeout(() => {
+//         isFlipping = false;
+//       }, 200);
+//     };
+
+//     card.addEventListener("mousemove", (event) => {
+//       if (isFlipping) return;
+
+//       const rect = card.getBoundingClientRect();
+//       const buffer = 5;
+//       const isOutside = 
+//         event.clientX < rect.left - buffer || 
+//         event.clientX > rect.right + buffer || 
+//         event.clientY < rect.top - buffer || 
+//         event.clientY > rect.bottom + buffer;
+
+//       if (isOutside && isFlipped) {
+//         resetCard();
+//       }
+//     });
+
+//     card.addEventListener("mouseleave", () => {
+//       if (!isFlipping && isFlipped) {
+//         resetCard();
+//       }
+//     });
+//   });
+// }
 
 function str_rand(length) {
     let result = '';
