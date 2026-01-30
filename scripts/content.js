@@ -2202,7 +2202,6 @@ function addNextShipEstimation() {
 
   const calculate = () => {
     const items = Array.from(latestFooter.querySelectorAll(".post__payout-item"));
-
     const multiplierItem = items.find(i => i.querySelector(".post__payout-label")?.textContent.includes("Multiplier"));
     const timeSinceItem = items.find(i => i.querySelector(".post__payout-label")?.textContent.includes("Time since"));
 
@@ -2216,8 +2215,11 @@ function addNextShipEstimation() {
     const totalHours = h + (m / 60);
 
     const estimatedPayout = Math.round(totalHours * multiplier);
-    
-    document.querySelector(".popover-wrapper.project-show-card__ship-wrapper > a").textContent += ` ~🍪 ${estimatedPayout}`;
+
+    const targetLink = document.querySelector("#ship-btn-wrapper > *");
+    if (!targetLink) return false;
+    if (targetLink.textContent.includes("~🍪")) return true;
+    targetLink.textContent += ` ~🍪 ${estimatedPayout}`;
 
     return true;
   };
