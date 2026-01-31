@@ -1565,10 +1565,10 @@ async function addDevlogGenerator() {
 
   checkForTextArea();
 
-  async function injectDevlogTools(repoUrl) {
-    const textArea = document.querySelector("#post_devlog_body");
-    if (!textArea || document.getElementById("devlog-gen-container")) return;
+  async function injectDevlogTools(repoUrl, textArea) {
+    if (document.getElementById("devlog-gen-container")) return;
 
+    const projectId = window.location.pathname.match(/\/projects\/(\d+)/)?.[1];
     const repoPath = repoUrl.replace(/https?:\/\/github\.com\//, "").split("/").slice(0, 2).join("/");
 
     const container = document.createElement("div");
@@ -1576,7 +1576,7 @@ async function addDevlogGenerator() {
     container.innerHTML = `
       <div>
         <select id="commit-from"><option>loading commits...</option></select>
-        <span>to</span>
+        <span> to </span>
         <select id="commit-to"><option>select your from commit first</option></select>
         <button type="button" id="btn-gen-devlog" class="btn btn--brown">add changelog</button>
       </div>
@@ -1588,21 +1588,59 @@ async function addDevlogGenerator() {
     targetField.parentNode.insertBefore(container, targetField);
 
     try {
-      const response = await fetch(`https://api.github.com/repos/${repoPath}/commits?per_page=50`);
-      const allCommits = await response.json();
+      refreshApiKey();
+      const [commitsResult, projectResult] = await Promise.all([
+        fetch(`https://api.github.com/repos/${repoPath}/commits?per_page=50`),
+        fetch(`https://flavortown.hackclub.com/api/v1/projects/${projectId}`, {
+          method: "GET",
+          headers: {
+            'Authorization': `Bearer ${apiKey}`,
+            'Accept': 'application/json'
+          }
+        })
+      ]);
+
+      const allCommits = await commitsResult.json();
+      const projectData = await projectResult.json();
+
+      let lastDevlogDate = null;
+
+      if (projectData.devlog_ids?.length > 0) {
+        const lastId = projectData.devlog_ids[projectData.devlog_ids.length - 1];
+        const devlogResult = await fetch(`https://flavortown.hackclub.com/api/v1/devlogs/${lastId}`, {
+          method: "GET",
+          headers: {
+            "Authorization": `Bearer ${apiKey}`,
+            "Accept": "application/json"
+          }
+        });
+        const devlogData = await devlogResult.json();
+        lastDevlogDate = new Date(devlogData.created_at);
+      }
 
       const fromSelect = document.getElementById("commit-from");
       const toSelect = document.getElementById("commit-to");
-      fromSelect.innerHTML = allCommits.map(commit => `<option value="${commit.sha}">${commit.commit.message.split("\n")[0].substring(0, 16)}... (${commit.sha.substring(0, 7)})</option>`).join("");
-      const updateToDropdown =() => {
+
+      const renderOptions = (commits) => commits.map(commit => `<option value="${commit.sha}">${commit.commit.message.split("\n")[0].substring(0, 20)} (${commit.sha.substring(0, 7)})</option>`).join("");
+      fromSelect.innerHTML = renderOptions(allCommits);
+
+      const updateToDropdown = () => {
         const selectedIndex = fromSelect.selectedIndex;
-        const validToCommits = allCommits.slice(0, selectedIndex + 1);
-        toSelect.innerHTML = validToCommits.map(commit => `<option value="${commit.sha}">${commit.commit.message.split("\n")[0].substring(0, 16)}... (${commit.sha.substring(0, 7)})</option>`).join("");
+        toSelect.innerHTML = renderOptions(allCommits.slice(0, selectedIndex + 1));
       };
+
       fromSelect.addEventListener("change", updateToDropdown);
+      if (lastDevlogDate) {
+        const firstNewCommitIndex = allCommits.findIndex(commit => new Date(commit.commit.author.date) <= lastDevlogDate);
+        fromSelect.selectedIndex = firstNewCommitIndex > 0 ? firstNewCommitIndex - 1 : 0;
+      } else {
+        fromSelect.selectedIndex = Math.min(allCommits.length - 1, 5);
+      }
+
       updateToDropdown();
     } catch (error) {
-      document.getElementById("commit-from").innerHTML = "<option>Failed to load commits</option>";
+      console.error("smarter devlog generator failed::::::", error);
+      document.getElementById("commit-from").innerHTML = `<option>Failed to load</option>`;
     }
 
     document.getElementById("btn-gen-devlog").addEventListener("click", async () => {
@@ -2510,7 +2548,6 @@ function addInlineDevlogCreator() {
           if (postResponse.ok) {
             window.location.reload();
           } else {
-            alert("error shipping devlog!");
             submitBtn.disabled = false;
             submitBtn.textContent = "Create Devlog";
           }
