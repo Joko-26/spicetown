@@ -882,8 +882,10 @@
   bottom: 1%;
   opacity: .5;
 }
-.projects-new__card {
+.projects-show__container .projects-new__card {
   padding: 0 !important;
+  border-radius: 0 !important;
+  border: none;
 }
 
 /** ANIMATIONS **/

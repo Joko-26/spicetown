@@ -520,6 +520,12 @@ function addImprovedShop() {
   let shopGoalsItems = Array.from(shopGoalsItemsNodeList);
   if (!shopGoalsItems || shopGoalsItems.length === 0) return;
 
+  let progressMode = "cumulative";
+
+  const modeToggleButton = document.createElement("button");
+  modeToggleButton.classList.add("btn", "btn--brown");
+  modeToggleButton.textContent = "Cumulative";
+
   document // thanks gizzy for this amazing code (now it's mine :3)
     .querySelectorAll('a.shop-item-card__link[data-turbo-frame="_top"]')
     .forEach((a) => {
@@ -535,7 +541,6 @@ function addImprovedShop() {
   });
 
   const userBalance = getBalance();
-
   const shopGoalsContainer = document.querySelector(".shop-goals__container");
   const shopGoalsTitle = document.querySelector(".shop-goals__title");
   const itemsContainer = document.querySelector(".shop-goals__items");
@@ -554,6 +559,8 @@ function addImprovedShop() {
       <span id="all-current">0</span> / <span id="all-total">0</span> 
     </div>
   `;
+
+  shopGoalsTitle.after(modeToggleButton);
 
   const shopGoalEditorDiv = document.createElement("div");
   shopGoalEditorDiv.classList.add("shop-goals-editor__div");
