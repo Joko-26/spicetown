@@ -2437,7 +2437,17 @@ function addInlineDevlogCreator() {
   const addDevlogBtn = document.querySelector("a[href*='/devlogs/new']");
   if (!addDevlogBtn) return;
 
+  const toggleContainer = document.createElement("label");
+  toggleContainer.innerHTML = `
+    <input type="checkbox" id="use-inline-toggle" checked style="cursor: pointer;">
+    <span>Use inline devlogging</span>
+  `;
+  addDevlogBtn.parentNode.insertBefore(toggleContainer, addDevlogBtn.nextSibling);
+
   addDevlogBtn.addEventListener("click", async (event) =>  {
+    const isInlineEnabled = document.getElementById("use-inline-toggle").checked;
+    if (!isInlineEnabled) return;
+
     event.preventDefault();
 
     const originalText = addDevlogBtn.innerHTML;
