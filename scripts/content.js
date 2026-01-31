@@ -1599,19 +1599,17 @@ async function addDevlogGenerator() {
 
     try {
       refreshApiKey();
-      const [branchesResult, projectResult] = await Promise.all([
+      const [branchesResult, projectData] = await Promise.all([
         fetch(`https://api.github.com/repos/${repoPath}/branches`),
-        fetch(`https://flavortown.hackclub.com/api/v1/projects/${projectId}`, {
-          method: "GET",
+        fetch(`https://flavortown.hackclub.com/api/v1/projects/${projectId}`,{
           headers: {
-            'Authorization': `Bearer ${apiKey}`,
-            'Accept': 'application/json'
+            "Authorization": `Bearer ${apiKey}`,
+            "Accept": "application/json"
           }
-        })
+        }).then(resolve => resolve.json())
       ]);
 
       const branches = await branchesResult.json();
-      const projectData = await projectResult.json();
 
       const branchSelect = document.createElement("select");
       branchSelect.id = "commit-branch-selector";
@@ -1622,7 +1620,7 @@ async function addDevlogGenerator() {
 
       let lastDevlogDate = null;
       if (projectData.devlog_ids?.length > 0) {
-        const lastId = projectData.devlog_ids[projectData.devlog_ids.length - 1];
+        const lastId = projectData.devlog_ids[0];
         const devlogResult = await fetch(`https://flavortown.hackclub.com/api/v1/devlogs/${lastId}`, {
           method: "GET",
           headers: {
@@ -1636,30 +1634,25 @@ async function addDevlogGenerator() {
 
       const loadCommitsForBranch = async (branchName) => {
         fromSelect.innerHTML = "<option>loading commits...</option>";
-        const result = await fetch(`https://api.github.com/repos/${repoPath}/commits?per_page=50&sha=${branchName}`);
-        const commits = await result.json();
 
-        const renderOptions = (commits) => commits.map(commit => 
+        let apiUrl = `https://api.github.com/repos/${repoPath}/commits?per_page=100&sha=${branchName}`;
+        if (lastDevlogDate) {
+          apiUrl += `&since=${lastDevlogDate.toISOString()}`;
+        }
+
+        const response = await fetch(apiUrl);
+        const commits = await response.json();
+
+        const renderOptions = (commitsArray) => commitsArray.map(commit => 
           `<option value="${commit.sha}">${commit.commit.message.split("\n")[0].substring(0, 20)}... (${commit.sha.substring(0, 7)})</option>`
         ).join("");
         
         fromSelect.innerHTML = renderOptions(commits);
 
-        if (lastDevlogDate) {
-          const lastLoggedIndex = commits.findIndex(commit => {
-            const commitDate = new Date(commit.commit.author.date);
-            return commitDate <= lastDevlogDate;
-          });
-
-          if (lastLoggedIndex === 0) {
-            fromSelect.selectedIndex = 0;
-          } else if (lastLoggedIndex > 0) {
-            fromSelect.selectedIndex = lastLoggedIndex - 1;
-          } else {
-            fromSelect.selectedIndex = commits.length - 1;
-          }
+        if (commits.length > 0) {
+          fromSelect.selectedIndex = commits.length - 1;
         } else {
-          fromSelect.selectedIndex = Math.min(commits.length - 1, 5);
+          fromSelect.innerHTML = "<option value=''>No new commits found</option>";
         }
 
         fromSelect.onchange = () => updateToDropdown(commits);
@@ -1668,7 +1661,6 @@ async function addDevlogGenerator() {
 
       branchSelect.addEventListener("change", () => loadCommitsForBranch(branchSelect.value));
       await loadCommitsForBranch(branchSelect.value);
-
     } catch (error) {
       console.error("smarter devlog generator failed::::::", error);
       document.getElementById("commit-from").innerHTML = `<option>Failed to load</option>`;
