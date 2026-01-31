@@ -1646,8 +1646,18 @@ async function addDevlogGenerator() {
         fromSelect.innerHTML = renderOptions(commits);
 
         if (lastDevlogDate) {
-          const firstNewIdx = commits.findIndex(commit => new Date(commit.commit.author.date) <= lastDevlogDate);
-          fromSelect.selectedIndex = firstNewIdx > 0 ? firstNewIdx - 1 : 0;
+          const lastLoggedIndex = commits.findIndex(commit => {
+            const commitDate = new Date(commit.commit.author.date);
+            return commitDate <= lastDevlogDate;
+          });
+
+          if (lastLoggedIndex === 0) {
+            fromSelect.selectedIndex = 0;
+          } else if (lastLoggedIndex > 0) {
+            fromSelect.selectedIndex = lastLoggedIndex - 1;
+          } else {
+            fromSelect.selectedIndex = commits.length - 1;
+          }
         } else {
           fromSelect.selectedIndex = Math.min(commits.length - 1, 5);
         }
