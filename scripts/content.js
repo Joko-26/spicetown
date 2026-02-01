@@ -1707,6 +1707,9 @@ async function addThemesPage() {
             <div class="themes__div-option themes__div-option--bg-color" name="bg-color-option" id="bg-color-catppuccin-macchiato">
               <p class="themes__div-option-name">Catppuccin Macchiato</p>
             </div>
+            <div class="themes__div-option themes__div-option--bg-color" name="bg-color-option" id="bg-color-aurora">
+              <p class="themes__div-option-name">Aurora <small>(by Flux3tor)</small></p>
+            </div>
             <div class="themes__div-option themes__div-option--bg-color" name="bg-color-option" id="bg-color-charcoal">
               <p class="themes__div-option-name">Charcoal <small>(by Aperaine)</small></p>
             </div>
