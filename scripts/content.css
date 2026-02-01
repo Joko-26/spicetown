@@ -375,7 +375,7 @@
 
 .shop-goals__item {
   --goal-percent: 0%;
-  transition: --goal-percent 1s cubic-bezier(0.25, 1, 0.5, 1);
+  transition: --goal-percent 1s cubic-bezier(0.25, 1, 0.5, 1), all 70ms ease;
   background: linear-gradient(to right, var(--goal-fill) var(--goal-percent), var(--goal-empty) var(--goal-percent)) !important;
   max-width: 100% !important;
   user-select: none;
@@ -892,6 +892,40 @@
 .projects-show__container .projects-new__card {
   padding: 0 !important;
   border-radius: 0 !important;
+  border: none;
+}
+.shop-accessory-price {
+  float: right;
+}
+.btn.btn--accessory-select {
+  background: var(--color-brown-700) !important;
+  border-radius: 6px;
+}
+.shop-goal-editor__accessories-container {
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+}
+.shop-goal-editor__accessories-container > p {
+  font-size: 1.25rem;
+  margin-top: 0.5rem;
+}
+.shop-goal-editor__accessories-container > div {
+  display: flex;
+  flex-direction: column;
+  gap: .25rem;
+}
+.shop-goal-editor__accessories-container > div > .btn.btn--accessory-select {
+  filter: brightness(0.5);
+  transition: all 300ms ease;
+}
+.shop-goal-editor__accessories-container > div > .btn.btn--accessory-select.selected {
+  filter: brightness(1);
+}
+.shop-goals-editor__div > .shop-goal-editor__input {
+  margin-bottom: 1.25rem;
+}
+.shop-goals__container > .btn.btn--brown {
   border: none;
 }
 
@@ -1674,9 +1708,7 @@
 [data-theme] .nibbles__sidequests {
   outline-color: var(--surface-dark) !important;
 }
-[data-theme] .shop-goal-editor__name,
-[data-theme] .shop-goal-editor__editor-name,
-[data-theme] .shop-goal-editor__quantity-label {
+[data-theme] .shop-goals-editor__div {
   color: var(--surface-header-backdrop);
 }
 [data-theme] .shop-goals__item {

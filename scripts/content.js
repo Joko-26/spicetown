@@ -515,10 +515,46 @@ async function addExtraProjectInfo() {
   }
 }
 
-function addImprovedShop() {
+async function addImprovedShop() {
   const shopGoalsItemsNodeList = document.querySelectorAll(".shop-goals__item");
   let shopGoalsItems = Array.from(shopGoalsItemsNodeList);
   if (!shopGoalsItems || shopGoalsItems.length === 0) return;
+
+  const getRegion = () => {
+    const regionName = document.querySelector(".dropdown__selected")?.textContent.trim();
+    const map = {
+      "United States": "us",
+      "EU": "eu",
+      "United Kingdom": "uk",
+      "India": "in",
+      "Canada": "ca",
+      "Australia": "au",
+      "Rest of World": "xx"
+    };
+    return map[regionName] || "xx";
+  };
+
+  const getItemCost = (itemData, region) => {
+    if (!itemData) return 0;
+    return itemData.ticket_cost[region] || itemData.ticket_cost.base_cost;
+  }
+
+  const shopItemsMap = new Map();
+
+  try {
+    refreshApiKey();
+    const response = await fetch("https://flavortown.hackclub.com/api/v1/store", {
+      method: "GET",
+      headers: {
+        "Authorization": `Bearer ${apiKey}`,
+        "Accept": "application/json"
+      }
+    });
+    const data = await response.json();
+    data.forEach(item => shopItemsMap.set(item.id.toString(), item));
+  } catch (error) {
+    console.error("oh noooo i failed to fetch shop api because: ", error);
+  }
 
   let progressMode = "cumulative";
 
@@ -589,6 +625,10 @@ function addImprovedShop() {
         <button id="increase-quantity__btn">+</button>
       </div>
     </div>
+    <label><input type="checkbox" id="allow-incompatiable-checkbox"> Allow Incompatiable</label>
+    <div class="shop-goal-editor__accessories-container">
+
+    </div>
   `;
 
   const editorInput = shopGoalEditorDiv.querySelector(".shop-goal-editor__quantity-input");
@@ -628,8 +668,9 @@ function addImprovedShop() {
   let activeEditingItem = null; // track which item is being edited and then sell your user data (joke)
 
   const calculateAllProgress = async () => {
-    const modeData = await chrome.storage.local.get(["shop_progress_mode"]);
-    if (modeData.shop_progress_mode) progressMode = modeData.shop_progress_mode;
+    const currentRegion = getRegion();
+    const allStorage = await chrome.storage.local.get(null);
+    if (allStorage.shop_progress_mode) progressMode = allStorage.shop_progress_mode;
 
     let totalRequiredCost = 0;
     let runningBalance = userBalance;
@@ -646,22 +687,18 @@ function addImprovedShop() {
       const fill = item.querySelector(".shop-goals__progress-fill");
       const progressTxt = item.querySelector(".shop-goals__progress-text");
 
-      if (!progressTxt || !fill) continue;
-
-      let derivedPrice = 0;
-      const matchingShopItemCard = document.querySelector(`div.shop-item-card[data-shop-id="${id}"]`);
-      if (matchingShopItemCard) {
-        const priceTextRaw = matchingShopItemCard.querySelector(".shop-item-card__price").textContent || "🍪 0";
-        derivedPrice = parseFloat(priceTextRaw.replace(/[^\d.]/g, ''));
-      } else {
-        const remaining = parseFloat(progressTxt.textContent.replace(/[^\d.]/g, '')) || 0;
-        derivedPrice = (fill.style.width === "100%") ? 0 : remaining + userBalance;
-      }
-
-      const storage = await chrome.storage.local.get([`shop_goal_qty_${id}`]);
-      const qty = storage[`shop_goal_qty_${id}`] || 1;
-      const itemTotal = derivedPrice * qty;
+      const apiItem = shopItemsMap.get(id);
+      let unitPrice = getItemCost(apiItem, currentRegion);
+    
+      Object.keys(allStorage).forEach(key => {
+        if (key.startsWith(`shop_goal_accessory_${id}_`) && allStorage[key] === true) {
+          const accessoryId = key.split("_").pop();
+          unitPrice += getItemCost(shopItemsMap.get(accessoryId), currentRegion);
+        }
+      });
       
+      const qty = allStorage[`shop_goal_qty_${id}`] || 1;
+      const itemTotal = unitPrice * qty;
       totalRequiredCost += itemTotal;
       
       const availableFunds = (progressMode === "individual") ? userBalance : runningBalance;
@@ -702,11 +739,15 @@ function addImprovedShop() {
     const isComplete = shopGoalsProgressBarFill.style.width === "100%";
     
     let derivedPrice = 0;
-    const matchingShopItemCard = document.querySelector(`div.shop-item-card[data-shop-id="${shopGoalItemID}"]`);
-
-    if (matchingShopItemCard) {
-      const priceTextRaw = matchingShopItemCard.querySelector(".shop-item-card__price").textContent || "🍪 0";
-      derivedPrice = parseFloat(priceTextRaw.replace(/[^\d.]/g, ''));
+    const apiItem = shopItemsMap.get(shopGoalItemID);
+    
+    if (apiItem) {
+      derivedPrice = apiItem.ticket_cost.base_cost;
+    } else {
+      const matchingShopItemCard = document.querySelector(`div.shop-item-card[data-shop-id="${shopGoalItemID}"]`);
+      if (matchingShopItemCard) {
+        derivedPrice = parseFloat(matchingShopItemCard.querySelector(".shop-item-card__price").textContent.replace(/[^\d.]/g, '')) || 0;
+      }
     }
 
     if (!derivedPrice) {
@@ -759,14 +800,74 @@ function addImprovedShop() {
     });
 
     shopGoalsLink.href = "";
-    shopGoalsLink.addEventListener("click", (e) => {
+    shopGoalsLink.addEventListener("click", async (e) => {
       e.preventDefault();
+      const apiItem = shopItemsMap.get(shopGoalItemID);
+      const accessoryContainer = shopGoalEditorDiv.querySelector(".shop-goal-editor__accessories-container");
+      const incompatiableCheck = shopGoalEditorDiv.querySelector("#allow-incompatiable-checkbox");
+      accessoryContainer.innerHTML = "";
+
+      const currentRegion = getRegion();
+
+      const availableAccessories = Array.from(shopItemsMap.values())
+        .filter(item => item.type === "ShopItem::Accessory" && item.attached_shop_item_ids.includes(parseInt(shopGoalItemID)))
+        .sort((a, b) => getItemCost(a, currentRegion) - getItemCost(b, currentRegion));
+
+      if (availableAccessories.length > 0) {
+        const groups = {};
+        availableAccessories.forEach(accessory => {
+          const tag = accessory.accessory_tag || "Other";
+          if (!groups[tag]) groups[tag] = [];
+          groups[tag].push(accessory);
+        });
+
+        const accessoryTitle = document.createElement("p");
+        accessoryTitle.textContent = "Accessories";
+        accessoryContainer.appendChild(accessoryTitle);
+
+        for (const [tag, items] of Object.entries(groups)) {
+          const section = document.createElement("div");
+          section.innerHTML = `<p>${tag}</p>`;
+          items.forEach(async (accessory) => {
+            const btn = document.createElement("button");
+            btn.classList.add("btn", "btn--accessory-select");
+            btn.dataset.accessoryId = accessory.id;
+            btn.dataset.tag = tag;
+            
+            const cacheKey = `shop_goal_accessory_${shopGoalItemID}_${accessory.id}`;
+            const stored = await chrome.storage.local.get([cacheKey]);
+            if (stored[cacheKey]) btn.classList.add("selected");
+
+            const cost = getItemCost(accessory, currentRegion);
+            btn.innerHTML = `<span>${accessory.name}</span> <span class="shop-accessory-price">+🍪${cost.toLocaleString()}</span>`;
+
+            btn.addEventListener("click", () => {
+              const isSelected = btn.classList.contains("selected");
+              if (!isSelected && !incompatiableCheck.checked && tag !== "Other") {
+                section.querySelectorAll(".btn--accessory-select").forEach(button => button.classList.remove("selected"));
+              }
+
+              btn.classList.toggle("selected");
+            });
+
+            section.appendChild(btn);
+          });
+          accessoryContainer.appendChild(section);
+        }
+      }
+
+      let finalDisplayName = itemName;
+      if (apiItem?.type === "ShopItem::Accessory") {
+        finalDisplayName = `[A] ${itemName}`;
+      }
+      editorName.textContent = finalDisplayName;
+
       activeEditingItem = {
         id: shopGoalItemID,
         div: shopGoalItemDiv,
         updateShopItemPrice
       };
-      editorName.textContent = itemName;
+
       chrome.storage.local.get([`shop_goal_qty_${shopGoalItemID}`], result => {
         editorInput.value = result[`shop_goal_qty_${shopGoalItemID}`] || 1;
       });
@@ -776,14 +877,32 @@ function addImprovedShop() {
     });
   });
 
-  editorSaveBtn.addEventListener("click", () => {
+  editorSaveBtn.addEventListener("click", async () => {
     if (!activeEditingItem) return;
     const newQuantity = parseInt(editorInput.value) || 1;
-    chrome.storage.local.set({[`shop_goal_qty_${activeEditingItem.id}`]: newQuantity}, () => {
-      activeEditingItem.updateShopItemPrice(newQuantity);
-      calculateAllProgress();
-      shopGoalEditorDiv.style.display = "none";
+    const accessorySelections = {};
+    const allAccessoryButtons = shopGoalEditorDiv.querySelectorAll(".btn--accessory-select");
+
+    const currentKeys = await chrome.storage.local.get(null);
+    Object.keys(currentKeys).forEach(key => {
+      if (key.startsWith(`shop_goal_accessory_${activeEditingItem.id}_`)) {
+        accessorySelections[key] = false;
+      }
     });
+
+    allAccessoryButtons.forEach(button => {
+      const accessoryId = button.dataset.accessoryId;
+      accessorySelections[`shop_goal_accessory_${activeEditingItem.id}_${accessoryId}`] = button.classList.contains("selected");
+    });
+
+    await chrome.storage.local.set({
+      [`shop_goal_qty_${activeEditingItem.id}`]: newQuantity,
+      ...accessorySelections
+    });
+
+    shopGoalEditorDiv.style.display = "none";
+    await calculateAllProgress();
+    window.location.reload(); 
   });
 
   editorRemoveBtn.addEventListener("click", () => {
