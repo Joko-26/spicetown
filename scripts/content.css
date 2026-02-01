@@ -2193,3 +2193,15 @@
 [data-theme] .shop-item-card--on-sale {
   border-color: var(--border-color) !important;
 }
+[data-theme] .btn.btn--accessory-select {
+  background-color: var(--surface-card) !important;
+  color: var(--text-primary) !important;
+}
+[data-theme] .shop-goal-editor__save-btn,
+[data-theme] .shop-goal-editor__remove-btn,
+[data-theme] .shop-goal-editor__quantity-input,
+[data-theme] #decrease-quantity__btn,
+[data-theme] #increase-quantity__btn {
+  background-color: var(--surface-dark) !important;
+  color: var(--text-primary) !important;
+}
