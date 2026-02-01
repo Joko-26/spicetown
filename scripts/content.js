@@ -534,20 +534,6 @@ async function addImprovedShop() {
     return map[regionName] || "xx";
   };
 
-  async function toggleProject(projectName) {
-  const result = await chrome.storage.local.get(["shop_active_projects"]);
-  let list = result.shop_active_projects || [];
-  
-  if (list.includes(projectName)) {
-    list = list.filter(name => name !== projectName);
-  } else {
-    list.push(projectName);
-  }
-  
-  await chrome.storage.local.set({"shop_active_projects": list});
-    calculateAllProgress();
-  }
-
   const getItemCost = (itemData, region) => {
     if (!itemData) return 0;
     return itemData.ticket_cost[region] || itemData.ticket_cost.base_cost;
@@ -627,10 +613,6 @@ async function addImprovedShop() {
     </div>
   `;
 
-  const projectSelectorDiv = document.createElement("div");
-  projectSelectorDiv.classList.add("shop-goals__project-selector");
-  projectSelectorDiv.style.display = "none";
-
   const shopGoalEditorDiv = document.createElement("div");
   shopGoalEditorDiv.classList.add("shop-goals-editor__div");
   shopGoalEditorDiv.style.display = "none";
@@ -695,48 +677,13 @@ async function addImprovedShop() {
   const calculateAllProgress = async () => {
     const currentRegion = getRegion();
     const allStorage = await chrome.storage.local.get(null);
-
     if (allStorage.shop_progress_mode) progressMode = allStorage.shop_progress_mode;
-    const activeProjects = allStorage.shop_active_projects || [];
 
     let effectiveBalance = userBalance;
-    
     if (useProjected && allStorage.estimation_cache) {
       const cache = allStorage.estimation_cache;
       const multipliers = cache.multipliers || {};
       const projectData = cache.projectData || [];
-      projectSelectorDiv.style.display = "flex";
-
-      const existingButtons = Array.from(projectSelectorDiv.children);
-      const incomingNames = projectData.map(p => p.name);
-
-      existingButtons.forEach(btn => {
-        if (!incomingNames.includes(btn.dataset.name)) btn.remove();
-      });
-
-      projectData.forEach(project => {
-        const exists = existingButtons.some(btn => btn.dataset.name === project.name);
-        if (!exists) {
-          const chip = document.createElement("button");
-          chip.className = "btn btn--brown";
-          chip.textContent = project.name;
-          chip.dataset.name = project.name;
-          chip.onclick = (e) => {
-            e.preventDefault();
-            toggleProject(project.name);
-          };
-          projectSelectorDiv.appendChild(chip);
-        }
-      });
-
-      Array.from(projectSelectorDiv.children).forEach(chip => {
-        const isSelected = activeProjects.includes(chip.dataset.name);
-        chip.classList.toggle("btn--active", isSelected);
-
-        if (chip.offsetHeight > 0 && !projectSelectorDiv.style.minHeight) {
-          projectSelectorDiv.style.minHeight = `${chip.offsetHeight}px`;
-        }
-      });
 
       const validRates = Object.keys(multipliers)
         .filter(key => !key.endsWith("_shipped_hours"))
@@ -745,16 +692,12 @@ async function addImprovedShop() {
 
       let estimatedCookies = 0;
       projectData.forEach(project => {
-        if (activeProjects.includes(project.name)) {
-          const shipped = multipliers[project.name + "_shipped_hours"] || 0;
-          const pending = Math.max(0, project.hours - shipped);
-          const multiplier = multipliers[project.name] || averageMultiplier;
-          estimatedCookies += pending * multiplier;
-        }
+        const shipped = multipliers[project.name + "_shipped_hours"] || 0;
+        const pending = Math.max(0, project.hours - shipped);
+        const multiplier = multipliers[project.name] || averageMultiplier;
+        estimatedCookies += pending * multiplier;
       });
       effectiveBalance += estimatedCookies;
-    } else {
-      projectSelectorDiv.style.display = "none";
     }
 
     let totalRequiredCost = 0;
@@ -823,9 +766,6 @@ async function addImprovedShop() {
   projectedToggleButton.addEventListener("click", () => {
     useProjected = !useProjected;
     projectedToggleButton.textContent = useProjected ? "Projected" : "Actual";
-
-    projectSelectorDiv.style.display = useProjected ? "flex" : "none";
-    
     chrome.storage.local.set({"shop_use_projected": useProjected});
     calculateAllProgress();
   });
@@ -1032,13 +972,7 @@ async function addImprovedShop() {
 
   shopGoalsTitle.after(buttonGroup);
   buttonGroup.after(allProgressWrapper);
-
-  const projectSelectorContainer = document.createElement("div");
-  projectSelectorContainer.classList.add("project-selector-wrapper");
-  allProgressWrapper.after(projectSelectorContainer);
-
-  projectSelectorContainer.after(projectSelectorDiv);
-  projectSelectorContainer.after(shopGoalsDiv);
+  allProgressWrapper.after(shopGoalsDiv);
 
   modeToggleButton.addEventListener("click", () => {
     progressMode = (progressMode === "cumulative") ? "individual" : "cumulative";
