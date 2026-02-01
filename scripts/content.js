@@ -570,6 +570,15 @@ async function addImprovedShop() {
   modeToggleButton.classList.add("btn", "btn--brown");
   modeToggleButton.textContent = "Cumulative";
 
+  const projectedToggleButton = document.createElement("button");
+  projectedToggleButton.classList.add("btn", "btn--brown");
+  projectedToggleButton.textContent = "Actual";
+
+  const buttonGroup = document.createElement("div");
+  buttonGroup.classList.add("shop-goals__controls");
+  buttonGroup.appendChild(modeToggleButton);
+  buttonGroup.appendChild(projectedToggleButton);
+
   document // thanks gizzy for this amazing code (now it's mine :3)
     .querySelectorAll('a.shop-item-card__link[data-turbo-frame="_top"]')
     .forEach((a) => {
@@ -603,8 +612,6 @@ async function addImprovedShop() {
       <span id="all-current">0</span> / <span id="all-total">0</span> 
     </div>
   `;
-
-  shopGoalsTitle.after(modeToggleButton);
 
   const shopGoalEditorDiv = document.createElement("div");
   shopGoalEditorDiv.classList.add("shop-goals-editor__div");
@@ -672,8 +679,29 @@ async function addImprovedShop() {
     const allStorage = await chrome.storage.local.get(null);
     if (allStorage.shop_progress_mode) progressMode = allStorage.shop_progress_mode;
 
+    let effectiveBalance = userBalance;
+    if (useProjected && allStorage.estimation_cache) {
+      const cache = allStorage.estimation_cache;
+      const multipliers = cache.multipliers || {};
+      const projectData = cache.projectData || [];
+
+      const validRates = Object.keys(multipliers)
+        .filter(key => !key.endsWith("_shipped_hours"))
+        .map(key => multipliers[key]);
+      const averageMultiplier = Math.min(validRates.length > 0 ? validRates.reduce((a, b) => a + b, 0) / validRates.length : 10, 30);
+
+      let estimatedCookies = 0;
+      projectData.forEach(project => {
+        const shipped = multipliers[project.name + "_shipped_hours"] || 0;
+        const pending = Math.max(0, project.hours - shipped);
+        const multiplier = multipliers[project.name] || averageMultiplier;
+        estimatedCookies += pending * multiplier;
+      });
+      effectiveBalance += estimatedCookies;
+    }
+
     let totalRequiredCost = 0;
-    let runningBalance = userBalance;
+    let runningBalance = effectiveBalance;
 
     const allFill = document.querySelector(".shop-goals__heading-progress-bar-fill");
     const allCurrentText = document.querySelector("#all-current");
@@ -701,14 +729,15 @@ async function addImprovedShop() {
       const itemTotal = unitPrice * qty;
       totalRequiredCost += itemTotal;
       
-      const availableFunds = (progressMode === "individual") ? userBalance : runningBalance;
+      const availableFunds = (progressMode === "individual") ? effectiveBalance : runningBalance;
       const contribution = Math.min(availableFunds, itemTotal);
       const itemPercent = itemTotal === 0 ? 100 : (contribution / itemTotal) * 100;
 
       if (fill) fill.style.width = `${itemPercent}%`;
       if (progressTxt) {
         const neededForThis = Math.max(0, itemTotal - contribution);
-        progressTxt.textContent = neededForThis <= 0 ? "✅ Ready!" : `🍪${neededForThis.toLocaleString()} more needed`;
+        const prefix = useProjected ? "~" : "";
+        progressTxt.textContent = neededForThis <= 0 ? "✅ Ready!" : `🍪${prefix}${Math.round(neededForThis).toLocaleString()} more needed`;
       }
 
       const fillColor = itemPercent >= 100 ? "var(--completed-color)" : "var(--progress-color)";
@@ -719,12 +748,27 @@ async function addImprovedShop() {
       if (progressMode === "cumulative") runningBalance = Math.max(0, runningBalance - itemTotal);
     }
     
-    const percent = totalRequiredCost === 0 ? 100 : Math.min(100, (userBalance / totalRequiredCost) * 100);
+    const percent = totalRequiredCost === 0 ? 100 : Math.min(100, (effectiveBalance / totalRequiredCost) * 100);
     if (allFill) allFill.style.width = `${percent}%`;
-    if (allCurrentText) allCurrentText.textContent = Math.floor(userBalance).toLocaleString();
+    if (allCurrentText) allCurrentText.textContent = Math.floor(effectiveBalance).toLocaleString();
     if (allTotalText) allTotalText.textContent = Math.floor(totalRequiredCost).toLocaleString();
     if (allPercentText) allPercentText.textContent = (Math.round((percent + Number.EPSILON) * 100) / 100).toLocaleString() + "%";
   }
+
+  let useProjected = false;
+
+  chrome.storage.local.get(["shop_use_projected"], (result) => {
+    useProjected = result.shop_use_projected || false;
+    projectedToggleButton.textContent = useProjected ? "Projected" : "Actual";
+    calculateAllProgress();
+  });
+
+  projectedToggleButton.addEventListener("click", () => {
+    useProjected = !useProjected;
+    projectedToggleButton.textContent = useProjected ? "Projected" : "Actual";
+    chrome.storage.local.set({"shop_use_projected": useProjected});
+    calculateAllProgress();
+  });
 
   shopGoalsItems.forEach(shopGoalItemDiv => {
     const shopGoalItemID = shopGoalItemDiv.getAttribute("data-item-id");
@@ -926,8 +970,9 @@ async function addImprovedShop() {
   const shopGoalsDiv = document.createElement("div");
   shopGoalsDiv.classList.add("shop-goals__div");
 
-  shopGoalsTitle.after(modeToggleButton);
-  modeToggleButton.after(allProgressWrapper);
+  shopGoalsTitle.after(buttonGroup);
+  buttonGroup.after(allProgressWrapper);
+  allProgressWrapper.after(shopGoalsDiv);
 
   modeToggleButton.addEventListener("click", () => {
     progressMode = (progressMode === "cumulative") ? "individual" : "cumulative";
