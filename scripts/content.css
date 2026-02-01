@@ -961,6 +961,27 @@
   background: var(--brown-color, #5c4033);
   border-radius: 10px;
 }
+.shop__buttons,
+.shop__nav {
+  position: relative;
+  z-index: 6700 !important;
+  overflow: visible !important;
+}
+.dropdown__menu {
+  position: absolute;
+  z-index: 2100 !important;
+  display: block;
+}
+.shop, .shop-goals, .shop-goals__container, .shop__items, .shop-item-card {
+  overflow: visible !important;
+}
+.shop-item-card {
+  transform-origin: center !important;
+  pointer-events: auto !important;
+  transition: transform 300ms ease !important;
+  z-index: 1; 
+  position: relative; 
+}
 
 /** ANIMATIONS **/
 

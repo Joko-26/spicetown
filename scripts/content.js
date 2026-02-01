@@ -1508,34 +1508,34 @@ async function addSpicetownSettings() {
   const saveBtn = await modalActions.querySelector(".modal__actions-close");
 
   // screenshare mode
-  const screenshareModeDiv = document.createElement("div");
-  screenshareModeDiv.classList.add("settings-form__field");
+  // const screenshareModeDiv = document.createElement("div");
+  // screenshareModeDiv.classList.add("settings-form__field");
 
-  const screenshareModeCheckbox = document.createElement("label");
-  screenshareModeCheckbox.classList.add("settings-form__checkbox");
-  screenshareModeDiv.appendChild(screenshareModeCheckbox);
+  // const screenshareModeCheckbox = document.createElement("label");
+  // screenshareModeCheckbox.classList.add("settings-form__checkbox");
+  // screenshareModeDiv.appendChild(screenshareModeCheckbox);
 
-  const screenshareModeBoxInput = document.createElement("input");
-  screenshareModeBoxInput.type = "checkbox";
-  screenshareModeBoxInput.name = "screenshare_mode";
-  screenshareModeBoxInput.id = "screenshare_mode";
-  screenshareModeBoxInput.value = 1;
-  screenshareModeCheckbox.appendChild(screenshareModeBoxInput);
+  // const screenshareModeBoxInput = document.createElement("input");
+  // screenshareModeBoxInput.type = "checkbox";
+  // screenshareModeBoxInput.name = "screenshare_mode";
+  // screenshareModeBoxInput.id = "screenshare_mode";
+  // screenshareModeBoxInput.value = 1;
+  // screenshareModeCheckbox.appendChild(screenshareModeBoxInput);
 
-  const screenshareModeTitle = document.createElement("span");
-  screenshareModeTitle.textContent = "Screenshare Mode"
-  screenshareModeCheckbox.appendChild(screenshareModeTitle);
+  // const screenshareModeTitle = document.createElement("span");
+  // screenshareModeTitle.textContent = "Screenshare Mode"
+  // screenshareModeCheckbox.appendChild(screenshareModeTitle);
 
-  const screenshareModeHint = document.createElement("small");
-  screenshareModeHint.classList.add("settings-form__hint");
-  screenshareModeHint.textContent = "Replace sensitive information blurring with secure, black boxes"
-  screenshareModeDiv.appendChild(screenshareModeHint);
+  // const screenshareModeHint = document.createElement("small");
+  // screenshareModeHint.classList.add("settings-form__hint");
+  // screenshareModeHint.textContent = "Replace sensitive information blurring with secure, black boxes"
+  // screenshareModeDiv.appendChild(screenshareModeHint);
 
-  settingsForm.insertBefore(screenshareModeDiv, modalActions);
+  // settingsForm.insertBefore(screenshareModeDiv, modalActions);
 
-  saveBtn.addEventListener("click", function() {
-    saveSetting(screenshareModeBoxInput.checked);
-  });
+  // saveBtn.addEventListener("click", function() {
+  //   saveSetting(screenshareModeBoxInput.checked);
+  // });
 
   // settings v2
   const apiKeyDisplay = document.querySelector(".api-key-display");
@@ -2037,16 +2037,16 @@ function applySettingsSync() {
       }
 
       // shipping address black out
-      const shippingAddressText = document.querySelector(".dropdown__char-span");
+      // const shippingAddressText = document.querySelector(".dropdown__char-span");
 
-      if (shippingAddressText) {
-        const shippingAddress = shippingAddressText.textContent;
+      // if (shippingAddressText) {
+      //   const shippingAddress = shippingAddressText.textContent;
 
-        document.querySelector(".dropdown__menu").classList.add("dropdown__menu-secure")
+      //   document.querySelector(".dropdown__menu").classList.add("dropdown__menu-secure")
 
-        initializeCensor(shippingAddressText);
-        shippingAddressText.textContent = str_rand(shippingAddress.length);
-      }
+      //   initializeCensor(shippingAddressText);
+      //   shippingAddressText.textContent = str_rand(shippingAddress.length);
+      // }
     }
   })
 }
