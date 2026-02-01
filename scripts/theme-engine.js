@@ -154,7 +154,7 @@
       return;
     }
 
-    const localThemes = ["ruby", "dracula", "charcoal", "midnight"];
+    const localThemes = ["ruby", "dracula", "charcoal", "midnight", "aurora"];
     const remoteThemes = {
       "bg-color-catppuccin-mocha": "https://i.ibb.co/fYQVfZbb/Mask-group-12.png",
       "bg-color-catppuccin-macchiato": "https://i.ibb.co/C5mZtM9R/Mask-group-13.png",
