@@ -46,7 +46,8 @@ async function initialize() {
     addDevlogStreak,
     addNextShipEstimation,
     addShopItemEstimation,
-    addInlineDevlogCreator
+    addInlineDevlogCreator,
+    addSidebarEditor
   ];
   uiEnhancements.forEach(func => func());
 
@@ -2884,6 +2885,160 @@ function addInlineDevlogCreator() {
       addDevlogBtn.innerHTML = originalText;
     }
   });
+}
+
+async function addSidebarEditor() {
+  const sidebar = document.querySelector("aside.sidebar");
+  const navList = document.querySelector(".sidebar__nav-list");
+  const pinBtn = document.querySelector(".sidebar__pin-button");
+  if (!sidebar || !navList || !pinBtn) return;
+
+  let isEditing = false;
+  const storageKey = "spicetown_sidebar_config";
+
+  const sidebarActions = document.createElement("div");
+  sidebarActions.className = "sidebar__actions";
+  sidebarActions.appendChild(pinBtn);
+
+  const editBtn = document.createElement("button");
+  editBtn.className = "sidebar__edit-btn";
+  editBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pen-icon lucide-pen"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/></svg>`;
+  sidebarActions.appendChild(editBtn);
+
+  navList.parentElement.before(sidebarActions);
+
+  const editingBanner = document.createElement("div");
+  editingBanner.id = "editing-banner";
+  editingBanner.innerHTML = `
+    <div class="banner-content">
+      Editing the sidebar
+    </div>
+    <button id="sidebar-exit">Finish</button>
+  `;
+  document.body.appendChild(editingBanner);
+
+  const inventory = document.createElement("div");
+  inventory.id = "sidebar-inventory";
+  inventory.innerHTML = `<h3>Hidden Items</h3><div class="inventory-slots"></div>`;
+  document.body.appendChild(inventory);
+
+  const inventoryBtn = document.createElement("button");
+  inventoryBtn.className = "sidebar__inventory-btn";
+  inventoryBtn.innerHTML = `Hidden`;
+  document.getElementById("sidebar-exit").after(inventoryBtn);
+
+  const getItemId = (li) => li.querySelector("a")?.getAttribute("href") || li.innerHTML.trim();
+
+  const saveState = async () => {
+    const config = {
+      visible: Array.from(navList.children).map(li => li.outerHTML),
+      hidden: Array.from(inventory.querySelector(".inventory-slots").children).map(li => getItemId(li))
+    };
+    await chrome.storage.local.set({[storageKey]: config});
+  };
+
+  const loadState = async () => {
+    const result = await chrome.storage.local.get([storageKey]);
+    if (!result[storageKey]) return;
+
+    const { visible, hidden } = result[storageKey];
+    const slots = inventory.querySelector(".inventory-slots");
+
+    const allItems = [...navList.children, ...slots.children];
+    const itemMap = new Map(allItems.map(li => [getItemId(li), li]));
+
+    if (visible) visible.forEach(id => { if(itemMap.has(id)) navList.appendChild(itemMap.get(id)); });
+    if (hidden) hidden.forEach(id => { if(itemMap.has(id)) slots.appendChild(itemMap.get(id)); });
+  };
+
+  const toggleEditMode = (forceOff = false) => {
+    isEditing = forceOff ? false : !isEditing;
+    document.body.classList.toggle("sidebar-editing", isEditing);
+    const banner = document.getElementById("editing-banner");
+    if (banner) banner.style.display = isEditing ? "flex" : "none";
+    if (!isEditing) inventory.classList.remove("show");
+    document.body.classList.toggle("sidebar-editing", isEditing);
+    const items = [...navList.querySelectorAll(".sidebar__nav-item"), ...inventory.querySelectorAll(".sidebar__nav-item")];
+    items.forEach(item => {
+      item.setAttribute("draggable", isEditing);
+      if (isEditing) {
+        item.addEventListener("dragstart", handleDragStart);
+        item.addEventListener("dragend", handleDragEnd);
+      } else {
+        item.removeEventListener("dragstart", handleDragStart);
+        item.removeEventListener("dragend", handleDragEnd);
+      }
+    });
+
+    if (!isEditing) saveState();
+  };
+
+  const toggleInventory = (forceOff = false) => {
+    const isOpen = forceOff ? false : !inventory.classList.contains("show");
+    inventory.classList.toggle("show", isOpen);
+  };
+
+  inventoryBtn.addEventListener("click", () => toggleInventory());
+
+  let draggedElement = null;
+  function handleDragStart(event) {
+    draggedElement = this;
+    this.classList.add("is-dragging");
+    event.dataTransfer.effectAllowed = "move";
+    event.dataTransfer.setData("text/plain", "");
+    inventory.classList.add("show");
+  }
+
+  function handleDragEnd() {
+    this.classList.remove("is-dragging");
+    inventory.classList.remove("show");
+    draggedElement = null;
+    saveState();
+  }
+
+  navList.addEventListener("dragover", (event) => {
+    if (!isEditing) return;
+    event.preventDefault();
+    const afterElement = getDragAfterElement(navList, event.clientY);
+    if (afterElement == null) {
+      navList.appendChild(draggedElement);
+    } else {
+      navList.insertBefore(draggedElement, afterElement);
+    }
+  });
+
+  inventory.addEventListener("dragover", (event) => {
+    event.preventDefault();
+    inventory.querySelector(".inventory-slots").appendChild(draggedElement);
+  });
+
+  function getDragAfterElement(container, y) {
+    const draggableElements = [...container.querySelectorAll(".sidebar__nav-item:not(.is-dragging)")];
+    return draggableElements.reduce((closest, child) => {
+      const box = child.getBoundingClientRect();
+      const offset = y - box.top - box.height / 2;
+      if (offset < 0 && offset > closest.offset) {
+        return {offset: offset, element: child};
+      } else {
+        return closest;
+      }
+    }, {offset: Number.NEGATIVE_INFINITY}).element;
+  }
+
+  editBtn.addEventListener("click", () => toggleEditMode());
+  document.getElementById("sidebar-exit").addEventListener("click", () => {
+    toggleEditMode(true);
+    toggleInventory(true);
+  });
+
+  document.addEventListener("mousedown", (event) => {
+    if (!isEditing) return;
+    if (!event.target.closest("aside.sidebar") && !event.target.closest("#sidebar-inventory") && !event.target.closest("#editing-banner")) {
+      toggleEditMode(forceOff = true);
+    }
+  });
+
+  await loadState();
 }
 
 function str_rand(length) {
