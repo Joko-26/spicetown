@@ -76,6 +76,9 @@ function addDevlogImprovement() {
     <button data-md="bold" title="Bold">
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 12h9a4 4 0 0 1 0 8H7a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h7a4 4 0 0 1 0 8"/></svg>
     </button>
+    <button data-md="strikethrough" title="Strikethrough">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-strikethrough-icon lucide-strikethrough"><path d="M16 4H9a3 3 0 0 0-2.83 4"/><path d="M14 12a4 4 0 0 1 0 8H6"/><line x1="4" x2="20" y1="12" y2="12"/></svg>
+    </button>
     <button data-md="h1" title="Heading 1">
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h8"/><path d="M4 18V6"/><path d="M12 18V6"/><path d="m17 12 3-2v8"/></svg>
     </button>
@@ -168,6 +171,11 @@ function addDevlogImprovement() {
         newSelectStart = selectStart + (selectedText ? 2 : 2);
         newSelectEnd = selectStart + insertText.length - 2;
         break;
+      case "strikethrough":
+        insertText = selectedText ? `~~${selectedText}~~`: "~~MD Edtior by Spicetown~~";
+        newSelectStart = selectStart + (selectedText ? 2 : 2);
+        newSelectEnd = selectStart + insertText.length - 2;
+        break;
       case "h1":
         insertText = selectedText ? `# ${selectedText}` : '# MD Editor by Spicetown';
         newSelectStart = selectStart + (selectedText ? 2 : 2);
@@ -241,6 +249,7 @@ function addDevlogImprovement() {
     else if (e.shiftKey && key === "i") type = "image";
     else if (e.shiftKey && key === "b") type = "blockquote";
     else if (e.shiftKey && key === "c") type = "inline-code";
+    else if (e.shiftKey && key === "s") type = "strikethrough";
     else if (key === "i") type = "italic";
     else if (key === "b") type = "bold";
     else if (key === "l") type = "list";
@@ -303,7 +312,6 @@ function addDevlogImprovement() {
       .replace(/\*(.*?)\*/g, "<em>$1</em>")
       .replace(/__(.*?)__/g, "<strong>$1</strong>")
       .replace(/_(.*?)_/g, "<em>$1</em>")
-      .replace(/\+\+(.*?)\+\+/g, "<u>$1</u>")
       .replace(/~~(.*?)~~/g, "<del>$1</del>")
       .replace(/`([^`]+)`/g, "<code>$1</code>");
 
