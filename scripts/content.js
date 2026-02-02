@@ -2859,7 +2859,7 @@ async function addSidebarEditor() {
 
   const saveState = async () => {
     const config = {
-      visible: Array.from(navList.children).map(li => li.outerHTML),
+      visible: Array.from(navList.children).map(li => getItemId(li)),
       hidden: Array.from(inventory.querySelector(".inventory-slots").children).map(li => getItemId(li))
     };
     await chrome.storage.local.set({[storageKey]: config});
@@ -2869,14 +2869,23 @@ async function addSidebarEditor() {
     const result = await chrome.storage.local.get([storageKey]);
     if (!result[storageKey]) return;
 
-    const { visible, hidden } = result[storageKey];
+    const {visible, hidden} = result[storageKey];
     const slots = inventory.querySelector(".inventory-slots");
 
     const allItems = [...navList.children, ...slots.children];
     const itemMap = new Map(allItems.map(li => [getItemId(li), li]));
 
-    if (visible) visible.forEach(id => {if(itemMap.has(id)) navList.appendChild(itemMap.get(id));});
-    if (hidden) hidden.forEach(id => {if(itemMap.has(id)) slots.appendChild(itemMap.get(id));});
+    if (visible) {
+      visible.forEach(id => {
+        if (itemMap.has(id)) navList.appendChild(itemMap.get(id));
+      });
+    }
+
+    if (hidden) {
+      hidden.forEach(id => {
+        if (itemMap.has(id)) slots.appendChild(itemMap.get(id));
+      });
+    }
 
     addKeybinds();
   };
