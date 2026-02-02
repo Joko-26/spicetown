@@ -1165,6 +1165,9 @@ body.sidebar-editing #sidebar-banner {
   flex-direction: column;
   gap: .5rem;
 }
+.file-upload .file-upload__preview-image {
+  height: auto !important;
+}
 
 /** ANIMATIONS **/
 
