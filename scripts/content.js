@@ -110,6 +110,44 @@ function addDevlogImprovement() {
 
   devlogTextContainer.after(devlogMdActions);
 
+  const inputLabel = document.querySelector(".projects-new__field .input__label");
+  if (inputLabel) {
+    inputLabel.innerHTML = `
+      <div class="devlog-tabs">
+        <button class="devlog-tab active" data-tab="write">Write</button>
+        <button class="devlog-tab" data-tab="preview">Preview</button>
+      </div>
+    `;
+  }
+
+  const editorWrapper = document.createElement("div");
+  editorWrapper.className = "devlog-editor-wrapper";
+  devlogTextContainer.before(editorWrapper);
+  editorWrapper.appendChild(devlogMdActions);
+  editorWrapper.appendChild(devlogTextContainer);
+
+  const previewContainer = document.createElement("div");
+  previewContainer.classList.add("post__body", "devlog-preview-container");
+  previewContainer.style.display = "none";
+  editorWrapper.after(previewContainer);
+
+  inputLabel.addEventListener("click", (event) => {
+    const tab = event.target.closest(".devlog-tab");
+    if (!tab) return;
+
+    inputLabel.querySelectorAll(".devlog-tab").forEach(tab => tab.classList.remove("active"));
+    tab.classList.add("active");
+
+    if (tab.dataset.tab === "preview") {
+      editorWrapper.style.display = "none";
+      previewContainer.style.display = "block";
+      updatePreview();
+    } else {
+      editorWrapper.style.display = "flex";
+      previewContainer.style.display = "none";
+    }
+  });
+
   // am too lazy to add it to every single one :P
   const applyMarkdown = (mdType) => {
     const [selectStart, selectEnd] = [devlogTextContainer.selectionStart, devlogTextContainer.selectionEnd];
@@ -216,9 +254,7 @@ function addDevlogImprovement() {
   })
 
   const parentContainer = document.querySelector(".projects-new__form > .projects-new__card > .projects-new__field");
-  parentContainer.classList.add("projects-new__devlog-text")
-  const previewContainer = document.createElement("div");
-  previewContainer.classList.add("post__body");
+  parentContainer.classList.add("projects-new__devlog-text");
 
   function parser(text) {
     if (!text) return "";
@@ -276,7 +312,6 @@ function addDevlogImprovement() {
     previewContainer.innerHTML = parser(devlogTextContainer.value); // wowie parser
   };
 
-  parentContainer.appendChild(previewContainer);
   updatePreview();
   
   devlogTextContainer.addEventListener("input", () => {

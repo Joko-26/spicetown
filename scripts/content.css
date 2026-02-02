@@ -1123,6 +1123,49 @@ body.sidebar-editing #sidebar-banner {
 .sidebar--pinned .sidebar__edit-btn {
   opacity: 1;
 }
+.projects-new__field .input__label {
+  display: flex;
+  gap: .5rem;
+  pointer-events: auto !important;
+}
+.devlog-tabs {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+.devlog-tab {
+  background: none;
+  border: none;
+  color: inherit;
+  padding: .25rem 1rem;
+  cursor: pointer;
+  font-size: 1rem;
+}
+.devlog-tab.active {
+  font-weight: bold;
+}
+.devlog-preview-container {
+  padding: var(--space-m) var(--space-m);
+  border-radius: calc(var(--border-radius) * .8);
+  border: none;
+  background-color: var(--color-bg);
+  font-size: var(--font-size-m);
+  color: var(--color-text-body);
+  outline: none;
+  box-shadow: 0 0 0 0px rgba(0, 0, 0, 0);
+  transition: box-shadow .2s ease;
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  min-height: 6rem;
+  line-height: var(--line-height-body);
+  padding-top: var(--space-m);
+}
+.devlog-editor-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+}
 
 /** ANIMATIONS **/
 
@@ -1716,7 +1759,8 @@ body.sidebar-editing #sidebar-banner {
 [data-theme] .projects-show__timeline::before {
   background-image: var(--projects-show-timeline-url) !important;
 }
-[data-theme] .input__field.input__field--textarea {
+[data-theme] .input__field.input__field--textarea,
+[data-theme] .post__body.devlog-preview-container {
   background-color: var(--surface-dark) !important;
   color: var(--text-primary) !important;
 }
