@@ -27,7 +27,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with: 
-          name: spicetown-ext-build
+          name: spicetown-unzip-this
           path: spicetown-use-this.zip
           retention-days: 5
           if-no-files-found: error
