@@ -327,6 +327,7 @@
   border-radius: 6px !important;
   background: rgba(255, 255, 255, 0.7) !important;
   overflow: hidden;
+  transition: all 300ms ease;
 }
 .shop-goals__heading-progress-bar-fill {
   position: relative;

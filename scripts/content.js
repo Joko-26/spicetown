@@ -845,17 +845,28 @@ async function addImprovedShop() {
         const endNeeded = Math.max(0, itemTotal - contribution);
         const prefix = useProjected ? "🍪~" : "🍪";
 
-        const startNeeded = parseFloat(progressTxt.textContent.replace(/[^\d.]/g, "")) || 0;
+        if (endNeeded <= 0) {
+          progressTxt.textContent = "✅ Ready!";
+          item.classList.add("shop-goals__progress-fill--complete");
+        } else {
+          item.classList.remove("shop-goals__progress-fill--complete");
 
-        let startTime = null;
-        const itemStep = (time) => {
-          if (!startTime) startTime = time;
-          const p = Math.min((time - startTime) / 500, 1);
-          const value = Math.floor(p * (endNeeded - startNeeded) + startNeeded);
-          progressTxt.textContent = `${prefix}${value.toLocaleString()} more needed`;
-          if (p < 1) window.requestAnimationFrame(itemStep);
-        };
-        window.requestAnimationFrame(itemStep);
+          const startNeeded = parseFloat(progressTxt.textContent.replace(/[^\d.]/g, "")) || 0;
+
+          let startTime = null;
+          const itemStep = (time) => {
+            if (!startTime) startTime = time;
+            const p = Math.min((time - startTime) / 500, 1);
+            const value = Math.floor(p * (endNeeded - startNeeded) + startNeeded);
+            if (value <= 0 && endNeeded <= 0) {
+              progressTxt.textContent = "✅ Ready";
+            } else {
+              progressTxt.textContent = `${prefix}${value.toLocaleString()} more needed`;
+            }
+            if (p < 1) window.requestAnimationFrame(itemStep);
+          };
+          window.requestAnimationFrame(itemStep);
+        }
       }
 
       const itemPercent = itemTotal === 0 ? 100 : (contribution / itemTotal) * 100;
@@ -876,10 +887,18 @@ async function addImprovedShop() {
     }
     
     const percent = totalRequiredCost === 0 ? 100 : Math.min(100, (effectiveBalance / totalRequiredCost) * 100);
+    const targetCurrent = Math.floor(effectiveBalance);
+    const targetTotal = Math.floor(totalRequiredCost);
+
+    const currentPercentValue = parseFloat(allPercentText.textContent.replace("%", "")) || 0;
+    animateValue(allPercentText, currentPercentValue, percent, 500, true);
+
+    const currentBalanceValue = parseFloat(allCurrentText.textContent.replace(/,/g, "")) || 0;
+    animateValue(allCurrentText, currentBalanceValue, targetCurrent, 500);
+
+    allTotalText.textContent = targetTotal.toLocaleString();
+
     if (allFill) allFill.style.width = `${percent}%`;
-    if (allCurrentText) allCurrentText.textContent = Math.floor(effectiveBalance).toLocaleString();
-    if (allTotalText) allTotalText.textContent = Math.floor(totalRequiredCost).toLocaleString();
-    if (allPercentText) allPercentText.textContent = (Math.round((percent + Number.EPSILON) * 100) / 100).toLocaleString() + "%";
   }
 
   let useProjected = false;
