@@ -2542,36 +2542,42 @@ async function addDevlogStreak() {
   const kitchenIndex = document.querySelector(".kitchen-index");
   if (!kitchenIndex) return;
 
-  const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-
   const userLink = document.querySelector(".sidebar__user-details").querySelector("a");
   if (!userLink) return;
   const userLinkHref = userLink.pathname;
+  const cacheKey = `devlog_streak_cache_${userLinkHref}`;
+
   try {
-    const cacheKey = `devlog_streak_cache_${userLinkHref}`;
-    const cachedData = await chrome.storage.local.get([cacheKey]);
     const now = Date.now();
     const todayString = new Date().toISOString().split("T")[0];
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const yesterdayString = yesterday.toISOString().split("T")[0];
 
     const updateStreakUI = (streakValue, datesSet) => {
-      kitchenIndex.querySelector(".state-card__streak").innerHTML = `${streakValue} <small>days</small>`;
-      if (datesSet.has(todayString)) {
-        kitchenIndex.querySelector(".state-card__streak").classList.add("state-card__streak--done");
-      } else {
-        kitchenIndex.querySelector(".state-card__streak").classList.remove("state-card__streak--done");
-      }
+      const element = kitchenIndex.querySelector(".state-card__streak");
+      if (!element) return;
+      element.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="39" height="47" viewBox="0 0 39 47" fill="none" class="achievements__icon-svg">
+          <linearGradient id="streak-gradient" x2="0" y2="1">
+            <stop offset="0%" stop-color="var(--initial)"/>
+            <stop offset="100%" stop-color="var(--end)"/>
+          </linearGradient>
+          <path d="M31.2138 43.3002C29.9396 44.2804 28.2733 45.2115 26.362 45.8977C25.9699 46.0447 25.5778 45.6526 25.6758 45.2605C25.9699 44.0353 26.1659 42.7611 26.1659 41.4379C26.1659 34.6257 21.3631 28.8427 19.6968 26.9804C19.3538 26.6373 18.8147 26.6373 18.5206 26.9804C16.8543 28.7937 12.0515 34.5767 12.0515 41.4379C12.0515 42.9571 12.2965 44.4764 12.6886 45.8486C12.7866 46.2407 12.4436 46.6328 12.0515 46.5348C8.76793 45.6526 6.12147 44.2314 5.14131 43.4472C-2.84707 36.6841 -0.053587 26.0492 3.67105 20.4623C7.78776 14.1402 12.6886 8.74927 12.4436 1.20197C12.3946 0.319816 13.3747 -0.268285 14.1589 0.123782C20.0341 3.08453 24.1626 9.32042 25.555 14.5857C25.6633 14.9952 26.1944 15.096 26.452 14.7598C27.6297 13.2234 28.1335 11.1737 28.1753 9.33737C28.1753 8.30819 29.4985 7.7691 30.2336 8.55323C35.8206 14.5813 44.4461 32.9594 31.2138 43.3002Z" fill="currentColor"></path>
+        </svg>
+        ${streakValue}
+      `;
+      element.classList.toggle("state-card__streak--done", datesSet.has(todayString));
     };
 
-    if (cachedData[cacheKey]) {
-      const {streak, lastChecked, dates} = cachedData[cacheKey];
-      const datesSet = new Set(dates || []);
-      if (now - lastChecked < 600000) {
-        updateStreakUI(streak, datesSet);
-        return
-      }; // 10 mins??? if math is mathing (IT WAS 6 MINS; changed it to 10)
+    const cached = await chrome.storage.local.get([cacheKey]);
+    if (cached[cacheKey] && (now - cached[cacheKey].lastChecked < 600000)) {
+      updateStreakUI(cached[cacheKey].streak, new Set(cached[cacheKey].dates));
+      return;
     }
 
     await refreshApiKey();
+
     const userResponse = await fetch(`https://flavortown.hackclub.com/api/v1${userLinkHref}`, {
       method: "GET",
       headers: {
@@ -2580,74 +2586,52 @@ async function addDevlogStreak() {
       }
     });
     const userData = await userResponse.json();
-
     const projectIds = userData.project_ids || [];
-    const projectPromises = projectIds.map(id =>
-      fetch(`https://flavortown.hackclub.com/api/v1/projects/${id}`,{
-        headers: {
-          "Authorization": `Bearer ${apiKey}`,
-          "Accept": "application/json"
-        }
-      }).then(resolve => resolve.json())
-    );
-    const projects = await Promise.all(projectPromises);
 
-    const allDevlogIds = projects.flatMap(project => project.devlog_ids || []).sort((a, b) => b - a);
-    const uniqueDates = new Set();
+    const allDates = new Set();
 
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-    const yesterdayString = yesterday.toISOString().split("T")[0];
+    for (const projectId of projectIds) {
+      let currentPage = 1;
+      let totalPages = 1;
 
-    for (const id of allDevlogIds) {
-      await wait(250);
-      const devlogResponse = await fetch(`https://flavortown.hackclub.com/api/v1/devlogs/${id}`, {
-        headers: {
-          "Authorization": `Bearer ${apiKey}`,
-          "Accept": "application/json"
-        }
-      });
-      const devlog = await devlogResponse.json();
-      if (!devlog || !devlog.created_at) continue;
-      const logDate = devlog.created_at.split("T")[0];
+      while (currentPage <= totalPages) {
+        const devlogResponse = await fetch(`https://flavortown.hackclub.com/api/v1/projects/${projectId}/devlogs?page=${currentPage}`, {
+          headers: {
+            "Authorization": `Bearer ${apiKey}`,
+            "Accept": "application/json"
+          }
+        });
+        const data = await devlogResponse.json();
+        if (!data.devlogs || data.devlogs.length === 0) break;
+        data.devlogs.forEach(devlog => {
+          if (devlog.created_at) allDates.add(devlog.created_at.split("T")[0]);
+        });
 
-      if (uniqueDates.size === 0 && logDate !== todayString && logDate !== yesterdayString) break;
-      if (!uniqueDates.has(logDate)) {
-        if (uniqueDates.size > 0) {
-          const lastDate = new Date([...uniqueDates].pop());
-          lastDate.setDate(lastDate.getDate() - 1);
-          if (logDate !== lastDate.toISOString().split("T")[0]) break;
-        }
-        uniqueDates.add(logDate);
+        totalPages = data.pagination?.total_pages || 1;
+        currentPage++;
       }
     }
 
-    const activeDates = [...uniqueDates].sort((a, b) => new Date(b) - new Date(a));
-    if (activeDates.length === 0) return;
-
-    if (activeDates[0] !== todayString && activeDates[0] !== yesterdayString) return;
-
+    const activeDates = [...allDates].sort((a, b) => new Date(b) - new Date(a));
     let streak = 0;
-    let checkDate = new Date(activeDates[0]);
-
-    for (let i = 0; i < activeDates.length; i++) {
-      const currentDateString = activeDates[i];
-      const expectedDateString = checkDate.toISOString().split("T")[0];
-      if (currentDateString === expectedDateString) {
-        streak++;
-        checkDate.setDate(checkDate.getDate() - 1);
-      } else {
-        break;
+    
+    if (activeDates.length > 0) {
+      if (activeDates[0] === todayString || activeDates[0] === yesterdayString) {
+        let checkDate = new Date(activeDates[0]);
+        const dateLookup = new Set(activeDates);
+        while (dateLookup.has(checkDate.toISOString().split("T")[0])) {
+          streak++;
+          checkDate.setDate(checkDate.getDate() - 1);
+        }
       }
     }
 
-    updateStreakUI(streak, uniqueDates);
-
+    updateStreakUI(streak, allDates);
     await chrome.storage.local.set({
       [cacheKey]: {
-        streak: streak,
+        streak,
         lastChecked: Date.now(),
-        dates: [...uniqueDates]
+        dates: [...allDates]
       }
     });
   } catch (error) {
@@ -3158,6 +3142,10 @@ async function addSidebarEditor() {
   });
 
   await loadState();
+}
+
+async function addPocketWatcher() {
+  // Coming soon! Stay tuned :eyes_wtf:
 }
 
 function str_rand(length) {

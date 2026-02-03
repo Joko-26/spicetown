@@ -842,13 +842,25 @@
   margin-top: .5rem;
 }
 .state-card__streak {
-  font-size: 3rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  font-size: 4rem;
   font-weight: 600;
 }
 .state-card__streak--done {
-  background-image: linear-gradient(180deg, var(--color-yellow-600) 0%, var(--color-yellow-500) 100%);
-  color: transparent;
+  --initial: var(--color-brown-400);
+  --end: var(--color-tan-400);
+  background: linear-gradient(180deg, var(--initial) 0%, var(--end) 100%);
   background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-stroke: .75rem transparent;
+}
+.state-card__streak--done svg path {
+  fill: url(#streak-gradient) !important;
+  color: transparent;
 }
 .btn-view-more-votes {
   display: block;
@@ -2436,7 +2448,8 @@ body.sidebar-editing #sidebar-banner {
   color: var(--text-primary);
 }
 [data-theme] .state-card__streak--done {
-  background-image: linear-gradient(180deg, var(--accent) 0%, var(--accent-darker) 100%);
+  --initial: var(--accent);
+  --end: var(--accent-darker);
 }
 [data-theme] .markdown-content,
 [data-theme] .shop-order__stock-indicator,
