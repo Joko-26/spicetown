@@ -1513,6 +1513,8 @@ async function addUserExplore() {
       `).join('');
 
       targetElement.insertAdjacentHTML("beforeend", html);
+
+      addUserSearcher();
     }
 
     function setupPagination(pagination, wrapper) {
@@ -3146,6 +3148,93 @@ async function addSidebarEditor() {
 
 async function addPocketWatcher() {
   // Coming soon! Stay tuned :eyes_wtf:
+}
+
+function addUserSearcher() {
+  const mainContainer = document.querySelector(".explore");
+  const usersWrapper = document.getElementById("users-container");
+  const usersDiv = document.getElementById("users");
+  if (!mainContainer || !usersWrapper || document.querySelector(".user-list__searcher")) return;
+
+  const searchContainer = document.createElement("div");
+  searchContainer.classList.add("project-list__search-container", "user-search-container");
+
+  const searchInput = document.createElement("input");
+  searchInput.placeholder = "Search users...";
+  searchInput.classList.add("user-list__searcher", "input__field");
+
+  const searchBtn = document.createElement("button");
+  searchBtn.classList.add("project-list__action-btn");
+  searchBtn.innerHTML = `<svg width="24" height="24" viewBox="0 0 40 40" fill="none"><path d="M39.0527 34.2126L29.8565 25.0156C31.419 22.5281 32.3258 19.5879 32.3258 16.4326C32.3258 7.50574 25.0891 0.27002 16.1626 0.27002C7.23605 0.27002 0 7.50574 0 16.4326C0 25.3598 7.23571 32.5948 16.1626 32.5948C19.5964 32.5948 22.777 31.5213 25.3942 29.6971L34.481 38.7846C35.1124 39.4154 35.9402 39.7295 36.7669 39.7295C37.5946 39.7295 38.4213 39.4154 39.0537 38.7846C40.3155 37.5215 40.3155 35.4754 39.0527 34.2126ZM16.1626 27.3584C10.1291 27.3584 5.23745 22.4671 5.23745 16.4333C5.23745 10.3994 10.1291 5.50781 16.1626 5.50781C22.1964 5.50781 27.0877 10.3994 27.0877 16.4333C27.0877 22.4671 22.1964 27.3584 16.1626 27.3584Z" fill="currentColor"></path></svg>`;
+
+  searchContainer.appendChild(searchInput);
+  searchContainer.appendChild(searchBtn);
+
+  usersWrapper.insertBefore(searchContainer, usersDiv);
+
+  let currentPage = 1;
+
+  const handleUserSearch = async (append = false) => {
+    if (!append) {
+      currentPage = 1;
+      usersDiv.innerHTML = `<p class="explore__end">Finding users...</p>`;
+    }
+
+    try {
+      refreshApiKey();
+      const query = encodeURIComponent(searchInput.value);
+      const response = await fetch(`https://flavortown.hackclub.com/api/v1/users?query=${query}&page=${currentPage}`, {
+        headers: {
+          "Authorization": `Bearer ${apiKey}`,
+          "Accept": "application/json"
+        }
+      });
+
+      const data = await response.json();
+
+      if (data.error) {
+        usersDiv.innerHTML = `<p class="explore__end">${data.error === "rate_limited" ? "Slow down! Wait 1 min." : "API key error"}</p>`;
+        return;
+      }
+
+      renderUsers(data.users, usersDiv, append);
+    } catch (error) {
+      console.error("user searcher failed ", error);
+    }
+  };
+
+  searchBtn.addEventListener("click", () => handleUserSearch(false));
+  searchBtn.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") handleUserSearch(false);
+  });
+
+  function renderUsers(users, targetElement, append = false) {
+    if (!users || users.length === 0) {
+      if (!append) targetElement.innerHTML = `<p class="explore__end">No users found.</p>`;
+      return;
+    }
+
+    const html = users.map(user => `
+      <div class="user-card">
+        <p class="user-card__id">#${user.id}</p>
+        <img src="${user.avatar}" class="user-avatar"/>
+        <h3 class="user-card__title">
+          <a href="https://flavortown.hackclub.com/users/${user.id}"">
+            ${user.display_name}
+          </a>
+        </h3>
+        ${user.cookies ? `<p class="user-card__cookies">🍪 ${user.cookies}</p>` : ''}
+      </div>
+    `).join('');
+
+    if (append) {
+      const statusMsg = targetElement.querySelector(".explore__end");
+      if (statusMsg) statusMsg.remove();
+      targetElement.insertAdjacentHTML("beforeend", html);
+    } else {
+      targetElement.innerHTML = html;
+    }
+  }
 }
 
 function str_rand(length) {
