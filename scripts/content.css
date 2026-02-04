@@ -1576,11 +1576,12 @@ body.sidebar-editing #sidebar-banner {
 [data-theme] .project-show-card,
 [data-theme] .btn--brown,
 [data-theme] .btn.btn--red,
-[data-theme] .btn.btn-primary,
 [data-theme] .projects-board__grid-item > .project-card {
   background-color: var(--surface-dark) !important;
   border-color: var(--border-color) !important;
   color: var(--text-primary) !important;
+}
+[data-theme] .btn.btn-primary {
   transition: background-color 300ms ease !important;
 }
 [data-theme] .btn.btn-primary:hover {
