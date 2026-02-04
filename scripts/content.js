@@ -46,7 +46,8 @@ async function initialize() {
     addNextShipEstimation,
     addShopItemEstimation,
     addInlineDevlogCreator,
-    addSidebarEditor
+    addSidebarEditor,
+    addPocketWatcher
   ];
   uiEnhancements.forEach(func => func());
 
@@ -3147,7 +3148,42 @@ async function addSidebarEditor() {
 }
 
 async function addPocketWatcher() {
-  // Coming soon! Stay tuned :eyes_wtf:
+  const userProfile = document.querySelector(".user-profile__left");
+  if (!userProfile) return;
+
+  const match = window.location.pathname.match(/\/users\/(\d+)/);
+  if (!match) return;
+
+  const userId = match[1];
+
+  try {
+    refreshApiKey();
+    const response = await fetch(`https://flavortown.hackclub.com/api/v1/users/${userId}`, {
+      method: "GET",
+      headers: {
+        "Authorization": `Bearer ${apiKey}`,
+        "Accept": "application/json"
+      }
+    });
+
+    if (!response.ok) throw new Error(`api error: ${response.status}`);
+
+    const data = await response.json();
+
+    if (data.cookies !== null && data.cookies !== undefined) {
+      const pocketWatcherDiv = document.createElement("div");
+      pocketWatcherDiv.className = "user-profile__card";
+      pocketWatcherDiv.innerHTML = `
+        <h2 style="text-align: left; font-weight: normal; margin-bottom: .5rem;">Pocket Watcher</h2>
+        <p style="text-align: left;">🍪${data.cookies}</p>
+      `;
+      userProfile.insertBefore(pocketWatcherDiv, userProfile.querySelector(".user-profile__achievements").parentElement);
+    } else {
+      console.log("this user has not opted in to the leaderboard!");
+    }
+  } catch (error) {
+    console.error("pocket watcher failed: ", error)
+  }
 }
 
 function addUserSearcher() {
