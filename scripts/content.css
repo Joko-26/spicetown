@@ -975,7 +975,8 @@
   border-radius: 10px;
 }
 .shop__buttons,
-.shop__nav {
+.shop__nav,
+.explore__nav {
   position: relative;
   z-index: 6700 !important;
   overflow: visible !important;
@@ -1880,25 +1881,30 @@ body.sidebar-editing #sidebar-banner {
   fill: var(--input-sub-text) !important;
 }
 [data-theme] .shop__filters .dropdown > .dropdown__label,
-[data-theme] .shop__buttons .dropdown > .dropdown__label {
+[data-theme] .shop__buttons .dropdown > .dropdown__label,
+[data-theme] .explore__nav .dropdown > .dropdown__label {
   color: var(--text-highlight) !important;
   background-color: var(--accent) !important;
 }
 [data-theme] .shop__filters .dropdown .dropdown__button,
 [data-theme] .shop__filters #sort-btn,
 [data-theme] .shop__buttons .dropdown .dropdown__button,
+[data-theme] .explore__nav .dropdown .dropdown__button,
 [data-theme] .shop__filters .dropdown .dropdown__menu > .dropdown__item:hover,
-[data-theme] .shop__buttons .dropdown .dropdown__menu > .dropdown__item:hover {
+[data-theme] .shop__buttons .dropdown .dropdown__menu > .dropdown__item:hover,
+[data-theme] .explore__nav .dropdown .dropdown__menu > .dropdown__item:hover {
   background-color: var(--accent-darker) !important;
 }
 [data-theme] .shop__filters .dropdown .dropdown__menu,
 [data-theme] .shop__filters #sort-btn > span,
-[data-theme] .shop__buttons .dropdown .dropdown__menu {
+[data-theme] .shop__buttons .dropdown .dropdown__menu,
+[data-theme] .explore__nav .dropdown .dropdown__menu {
   background-color: var(--accent) !important;
 }
 [data-theme] .shop__filters .dropdown .dropdown__menu > .dropdown__item,
 [data-theme] .shop__filters #sort-btn > span > svg,
-[data-theme] .shop__buttons .dropdown .dropdown__menu > .dropdown__item {
+[data-theme] .shop__buttons .dropdown .dropdown__menu > .dropdown__item,
+[data-theme] .explore__nav .dropdown .dropdown__menu > .dropdown__item {
   transition: all 200ms ease;
   color: var(--text-primary) !important;
 }
@@ -3045,4 +3051,7 @@ body[data-theme="bg-color-aurora"] {
 }
 [data-theme] .shop-suggestion-modal__close {
   color: var(--text-primary) !important;
+}
+[data-theme] .explore__nav--type.explore__nav--desktop {
+  border-color: var(--border-color) !important;
 }

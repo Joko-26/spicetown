@@ -1540,7 +1540,7 @@ async function addUserExplore() {
     getUsers();
   });
 
-  exploreNav.insertBefore(usersComponent, exploreNav.querySelector(".explore__nav-component[href='/explore/following']"));
+  exploreNav.querySelector(".explore__nav--type.explore__nav--desktop").appendChild(usersComponent);
 }
 
 // function addAchievementInfo() { // deprecate
