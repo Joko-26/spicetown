@@ -78,11 +78,6 @@
     <td>✓</td>
   </tr>
   <tr>
-    <td>Copyable API Key</td>
-    <td>×</td>
-    <td>✓</td>
-  </tr>
-  <tr>
     <td>Website</td>
     <td>×</td>
     <td>✓</td>
