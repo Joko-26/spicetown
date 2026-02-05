@@ -134,7 +134,7 @@
   </tr>
   <tr>
     <td>Inline Devlogging</td>
-    <td>Partial (Dec 21)</td>
+    <td>✓ (Dec 21)</td>
     <td>✓ (Jan 31)</td>
   </tr>
   <tr>
