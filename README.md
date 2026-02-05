@@ -118,6 +118,11 @@
     <td>✓</td>
   </tr>
   <tr>
+    <td>Themes (Count)</td>
+    <td>6</td>
+    <td>9</td>
+  </tr>
+  <tr>
     <td>Public Votes</td>
     <td>Partial</td>
     <td>✓</td>
@@ -125,6 +130,16 @@
   <tr>
     <td>Themes</td>
     <td>Partial</td>
+    <td>✓</td>
+  </tr>
+  <tr>
+    <td>Extra Proj. Info</td>
+    <td>✓</td>
+    <td>✓</td>
+  </tr>
+  <tr>
+    <td>Markdown Editor</td>
+    <td>✓</td>
     <td>✓</td>
   </tr>
   <tr>
@@ -158,19 +173,9 @@
     <td>✓ (Jan 28)</td>
   </tr>
   <tr>
-    <td>Themes (Count)</td>
-    <td>6</td>
-    <td>9</td>
-  </tr>
-  <tr>
     <td>Shop Item Extra Info</td>
     <td>✓ (Different)</td>
     <td>✓ (Different)</td>
-  </tr>
-  <tr>
-    <td>Markdown Editor</td>
-    <td>✓</td>
-    <td>✓</td>
   </tr>
   <tr>
     <td>Markdown Previewer</td>
@@ -181,11 +186,6 @@
     <td>Better Shop Goals</td>
     <td>✓ (Different)</td>
     <td>✓ (Different)</td>
-  </tr>
-  <tr>
-    <td>Extra Proj. Info</td>
-    <td>✓</td>
-    <td>✓</td>
   </tr>
   <tr>
     <td>Exposed Achievements</td>
