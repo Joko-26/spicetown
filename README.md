@@ -118,21 +118,6 @@
     <td>✓</td>
   </tr>
   <tr>
-    <td>Shop Item Extra Info</td>
-    <td>Partial</td>
-    <td>✓</td>
-  </tr>
-  <tr>
-    <td>Markdown Editor</td>
-    <td>Partial</td>
-    <td>✓</td>
-  </tr>
-  <tr>
-    <td>Markdown Previewer</td>
-    <td>Flawed</td>
-    <td>✓</td>
-  </tr>
-  <tr>
     <td>Public Votes</td>
     <td>Partial</td>
     <td>✓</td>
@@ -144,7 +129,7 @@
   </tr>
   <tr>
     <td>Themes</td>
-    <td>Flawed</td>
+    <td>Partial</td>
     <td>✓</td>
   </tr>
   <tr>
@@ -181,6 +166,21 @@
     <td>Themes (Count)</td>
     <td>6</td>
     <td>9</td>
+  </tr>
+  <tr>
+    <td>Shop Item Extra Info</td>
+    <td>✓ (Different)</td>
+    <td>✓ (Different)</td>
+  </tr>
+  <tr>
+    <td>Markdown Editor</td>
+    <td>✓ (Different)</td>
+    <td>✓ (Different)</td>
+  </tr>
+  <tr>
+    <td>Markdown Previewer</td>
+    <td>✓ (Different)</td>
+    <td>✓ (Different)</td>
   </tr>
   <tr>
     <td>Better Shop Goals</td>
@@ -279,7 +279,7 @@
   </tr>
 </table>
 
-Footnotes for the statuses will be here soon. If you have any issues with this being biased, feel free to contact me on Slack!
+**Shop Item Extra Info**: 
 
 <h3 id="project-stats+">Project Stats+</h3>
 <i><u>Also known as "Extra Project Stats"</u></i>
