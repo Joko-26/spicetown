@@ -73,11 +73,6 @@
     <th>Spicetown</th>
   </tr>
   <tr>
-    <td>Screenshare Mode</td>
-    <td>×</td>
-    <td>✓</td>
-  </tr>
-  <tr>
     <td>Website</td>
     <td>×</td>
     <td>✓</td>
