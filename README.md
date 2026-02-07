@@ -191,7 +191,7 @@ Leafy is the opposite to Ruby consisting of dark green forest like colors
 #### Aurora
 
 **Aurora** is a sleak blue grey high contrast theme (made by Flux3tor).
-![Screenshot Aurora](https://i.ibb.co/4ZHxCG4M/Screenshot-2026-02-07-110803.png)
+![Screenshot Aurora](https://i.ibb.co/dsSzJsSq/Screenshot-2026-02-07-110803.png)
 
 
 
