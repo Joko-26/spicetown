@@ -11,19 +11,14 @@ Spicetown is a QoL-focused extension for Chrome and Firefox that improves the fl
   - [Utils Comparison](#utils-comparison)
   - [Project Stats+](#project-stats)
     - [Examples](#examples-project-stats)
+  - [Voting+](#voting)
+  - [Exposed Archivements (deprecated)](#exposed-archivements-deprecated)
+  - [Sidebar+](#sidebar)
   - [Settings+](#settings)
   - [Themes (WIP)](#themes)
-    - [Implementing Themes (V2, WIP)](#implementing-themes)
-    - [Ruby (WIP)](#themes-ruby)
-    - [Catppuccin (WIP)](#themes-catppuccin)
-      - [Catppuccin Mocha (WIP)](#themes-catppuccin-mocha)
-      - [Catppuccin Macchiato (WIP)](#themes-catppuccin-macchiato)
-    - [Charcoal (WIP)](#themes-charcoal)
-    - [Midnight (WIP)](#themes-midnight)
 - [Installation](#installation)
   - [From Source](#from-source)
   - [From Webstore](#from-webstore)
-- [Improvements](#improvements)
 - [Providers](#providers)
   - [Chrome Web Store](#providers-chrome)
   - [Firefox Add-Ons](#providers-firefox)
@@ -31,7 +26,7 @@ Spicetown is a QoL-focused extension for Chrome and Firefox that improves the fl
 
 ## Features
 
-Spicetown-integrated features are the main focus of Spicetown. These usually improve the flow of Flavortown. Currently, there are **3** features available for public use. Feel free to contribute and add new features.
+Spicetown-integrated features are the main focus of Spicetown. These usually improve the flow of Flavortown. Currently, there are **5** features available for public use. Feel free to contribute and add new features.
 
 ### Utils Comparison
 
@@ -81,6 +76,7 @@ Spicetown-integrated features are the main focus of Spicetown. These usually imp
 
 *Checked by Utils owner, Hridya*
 
+
 ### Project Stats+
 
 _Also known as "Extra Project Stats"_
@@ -112,6 +108,24 @@ These are all randomly selected projects (except for Spicetown).
 ![Screenshot 2025 12 20 122934](https://i.ibb.co/wNV0f1L7/Screenshot-2025-12-20-122934.png)
 ![Screenshot 2025 12 20 123044](https://i.ibb.co/FkKthN5S/Screenshot-2025-12-20-123044.png)
 
+### Voting+ 
+_Also konwn as "Better Voting"_
+
+Voting+ improves the voting experience.
+
+### Exposed Archivements (Deprecated)
+_Also known as "Visible Archivements"_
+
+Exposed Archivements exposes the earning conditions for Flavortown archivements.
+
+### Sidebar+ 
+_Also know as "Better Sidebar"_
+
+Sidebar+ adds:
+- the abbility to pin the sidebar making it visible in every page.
+- hotkey support navigate with ctrl + 1-6.
+- the abbility to modify the side bar to your liking by changing the order and even hiding pages.
+
 ### Settings+
 
 _Also known as "Spicetown Settings"_
@@ -128,10 +142,13 @@ Spicetown supports themes for Flavortown, modifying the colors and vibe to your 
 
 | Theme | Color | Released | Maintained | Issues |
 | --- | --- | --- | --- | --- |
-| Ruby | Red | TBD (In-dev 19/12/25) | Yes | None |
-| Catppuccin Mocha | Lavender | TBD (In-dev 21/12/25) | Yes | None |
-| Catppuccin Macchiato | Mauve | TBD (In-dev 21/12/25) | Yes | None |
-| Charcoal | Gray | TBD (In-dev 23/12/25) | Yes | None |
+| [Ruby](#ruby) | Red | TBD (In-dev 19/12/25) | Yes | None |
+| [Leafy](#leafy) | Green | TBD (In-dev 19/12/25) | Yes | None |
+| [Catppuccin Mocha](#catppuccin-mocha) | Lavender | TBD (In-dev 21/12/25) | Yes | None |
+| [Catppuccin Macchiato](#catppuccin-macchiato) | Mauve | TBD (In-dev 21/12/25) | Yes | None |
+| [Charcoal] | Gray | TBD (In-dev 23/12/25) | Yes | None |
+| Midnight | dark Blue-Grey | 1/5/2026 | No | None |
+| Aurora | Blue & Grey | 2/1/2026 | No | None
 
 #### Implementing Themes
 
@@ -140,26 +157,49 @@ To implement themes, open the `content.css` file in `/scripts`. You will find `[
 #### Ruby
 
 Ruby is the first custom theme of Spicetown (and probably Flavortown as a whole). It is in heavy development. You can enable the Ruby theme via the Themes page (inaccessible to non-Spicetown users). It consists of mostly dark-ish red.
+![Screenshot Ruby](https://i.ibb.co/39FMNtfK/Screenshot-2026-02-07-110822.png)
 
-#### Catppuccin
+#### Leafy 
+
+Leafy is the opposite to Ruby consisting of dark green forest like colors
+![Screenshot Leafy](https://i.ibb.co/R4G50C9w/Screenshot-2026-02-07-110829.png)
+
+#### **Catppuccin**
 
 **Catppuccin** is the most requested theme family for **Spicetown**. The first Catppuccin theme was released (in-dev) on **21/12/25**. This is also the first theme family for **Spicetown**.
 
 ##### Catppuccin Mocha
 
 **Catppuccin Mocha** is the first Catppuccin theme to be added. It is the second theme added to **Spicetown** after Ruby. It uses a lavender-based design.
+![Screenshot Catppuccin Mocha](https://i.ibb.co/21VbFkST/Screenshot-2026-02-07-110854.png)
 
 ##### Catppuccin Macchiato
 
 **Catppuccin Macchiato** is the second Catppuccin theme to be added. It is the third theme added to **Spicetown** after Catppuccin Mocha. Because of Neon, one of the Flavortown dev requests, this theme uses a mauve design. This theme is a work in progress.
+![Screenshot Catppuccin Macchiato](https://i.ibb.co/gLPctQys/Screenshot-2026-02-07-110901.png)
 
 #### Charcoal
 
-**Charcoal** is the fourth theme added to **Spicetown** after Catppuccin Macchiato. Originally the theme would have everything on fire, but it looked too much like a Halloween theme. Until more projects ship so I can test voting CSS, this is a work in progress.
+**Charcoal** is the fourth theme added to **Spicetown** after Catppuccin Macchiato (made by Aperaine). Originally the theme would have everything on fire, but it looked too much like a Halloween theme. Until more projects ship so I can test voting CSS, this is a work in progress. 
+![Screenshot Charcoal](https://i.ibb.co/fYhm5qJn/Screenshot-2026-02-07-110809.png)
 
 #### Midnight
 
-**Midnight** is the fifth theme added to **Spicetown** after Charcoal (made by Joko26). This theme is designed to be a dark-mode theme inspired by the dark and cozy feel of Dracula themes.
+**Midnight** (made by Joko26) is designed to be a dark-mode theme inspired by the dark and cozy feel of Dracula themes.
+![Screenshot Midnight](https://i.ibb.co/xSLGsxwm/Screenshot-2026-02-07-110816.png)
+
+#### Aurora
+
+**Aurora** is a sleak blue grey high contrast theme (made by Flux3tor).
+![Screenshot Aurora](https://i.ibb.co/4ZHxCG4M/Screenshot-2026-02-07-110803.png)
+
+
+
+
+
+
+
+
 
 ## Installation
 
@@ -173,15 +213,6 @@ Click on "Code", download the zip, go to `chrome://extensions` (or the equivalen
 | --- | --- |
 | Chromium (Chrome, Arc, Edge, etc) | [Chrome Web Store](https://chromewebstore.google.com/detail/spicetown/kbcbgiihiopcbgimdopcfcemikagemgl) |
 | Firefox | [Firefox Addons](https://addons.mozilla.org/en-US/firefox/addon/spicetown/) |
-
-## Improvements
-
-Spicetown regularly improves existing Flavortown features. These improvements either update the UI or add hidden, scrapped Flavortown functionality back into Flavortown.
-
-| Improvement | Page / Feature | Released | Maintained | Issues |
-| --- | --- | --- | --- | --- |
-| Exposed Achievements | Achievements | TBD (In-dev 19/12/25) | No (Deprecated) | None |
-| Voting+ | Voting | TBD (In-dev 19/12/25) | No | None |
 
 ## Providers
 
