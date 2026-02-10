@@ -146,9 +146,9 @@ Spicetown supports themes for Flavortown, modifying the colors and vibe to your 
 | [Leafy](#leafy) | Green | TBD (In-dev 19/12/25) | Yes | None |
 | [Catppuccin Mocha](#catppuccin-mocha) | Lavender | TBD (In-dev 21/12/25) | Yes | None |
 | [Catppuccin Macchiato](#catppuccin-macchiato) | Mauve | TBD (In-dev 21/12/25) | Yes | None |
-| [Charcoal] | Gray | TBD (In-dev 23/12/25) | Yes | None |
-| Midnight | dark Blue-Grey | 1/5/2026 | No | None |
-| Aurora | Blue & Grey | 2/1/2026 | No | None
+| [Charcoal](#charcoal) | Gray | TBD (In-dev 23/12/25) | No | None |
+| [Midnight](#midnight) | dark Blue-Grey | 1/5/2026 | Yes | None |
+| [Aurora](#aurora) | Blue & Grey | 2/1/2026 | No | None
 
 #### Implementing Themes
 
